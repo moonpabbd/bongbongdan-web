@@ -1,0 +1,28 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+/* Global responsive utilities */
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .hidden.md\:flex, .hidden.lg\:block {
+    display: none !important;
+  }
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #FDFCFA;
+}
+
+/* Responsive activity cards */
+@media (max-width: 640px) {
+  .activities-card {
+    grid-template-columns: 1fr !important;
+  }
+}
