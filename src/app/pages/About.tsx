@@ -99,7 +99,7 @@ function TabIntro() {
               BONGBONGDAN · BBD
             </p>
             <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px, 4vw, 46px)', fontWeight: '900', lineHeight: '1.25', marginBottom: '24px' }}>
-              의협을 실천하는<br className="hidden md:block" /> 봉사문파, 봉봉단
+              의협을 실천하는 <br className="hidden md:block" /> 봉사문파, 봉봉단
             </h2>
             <p style={{ color: '#374151', fontSize: '16px', lineHeight: '1.9', marginBottom: '18px' }}>
               봉봉단은 <strong>무협의 의협(義俠) 정신</strong>을 현대 봉사 문화에 녹여낸 비영리 봉사 단체입니다.

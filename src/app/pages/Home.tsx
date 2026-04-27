@@ -111,7 +111,7 @@ function IdentitySection() {
         <Reveal>
           <p style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '4px', marginBottom: '24px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>SILENT ACTION</p>
           <h2 style={{ fontSize: 'clamp(40px,6vw,80px)', fontWeight: '900', color: '#fff', lineHeight: '1.1', marginBottom: '40px', letterSpacing: '-2px' }}>
-            현장은 거짓말을<br className="hidden md:block" /> 하지 않으니까.
+            현장은 거짓말을 <br className="hidden md:block" /> 하지 않으니까.
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 'clamp(17px,2vw,20px)', lineHeight: '1.9', maxWidth: '720px', margin: '0 auto' }}>
             거창한 구호나 화려한 미사여구보다,<br className="hidden md:block" />
@@ -180,8 +180,8 @@ export function Home() {
             fontSize: 'clamp(44px, 7vw, 84px)', fontWeight: '900',
             lineHeight: '1.1', marginBottom: '28px', letterSpacing: '-1.5px', color: '#fff',
           }}>
-            의협을 실천하는<br className="hidden md:block" />
-            <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>,<br className="hidden md:block" />
+            의협을 실천하는 <br className="hidden md:block" />
+            <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>, <br className="hidden md:block" />
             봉봉단
           </h1>
 
@@ -241,10 +241,10 @@ export function Home() {
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '20px', ...gradientText(G.goldTextBg) }}>EASY & SIMPLE</p>
             <h2 style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: '900', lineHeight: '1.2', color: '#1E3A5F', marginBottom: '28px' }}>
-              신청만 하면<br className="hidden md:block" /> 봉봉단이<br className="hidden md:block" /> 알아서 준비합니다.
+              신청만 하면 <br className="hidden md:block" /> 봉봉단이 <br className="hidden md:block" /> 알아서 준비합니다.
             </h2>
             <p style={{ color: '#6B7280', fontSize: '18px', lineHeight: '1.9', marginBottom: '36px' }}>
-              봉사 신청부터 봉사가 끝날 때까지<br className="hidden md:block" />
+              봉사 신청부터 봉사가 끝날 때까지 <br className="hidden md:block" />
               누구나 쉽고 편하게 봉사할 수 있도록 만들어 갑니다.
             </p>
             <a
@@ -278,7 +278,7 @@ export function Home() {
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>IMPACT</p>
             <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: '900', color: '#fff', marginBottom: '72px', lineHeight: '1.3' }}>
-              협객들이 만들어가는<br className="hidden md:block" /> 숫자들
+              협객들이 만들어가는 <br className="hidden md:block" /> 숫자들
             </h2>
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '56px' }}>
@@ -306,7 +306,7 @@ export function Home() {
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '20px', ...gradientText(G.goldTextBg) }}>NEXT CHAPTER</p>
             <h2 style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: '900', lineHeight: '1.2', color: '#1E3A5F', marginBottom: '28px' }}>
-              유기견 봉사에서<br className="hidden md:block" /> 더 넓은<br className="hidden md:block" /> 세상으로.
+              유기견 봉사에서 <br className="hidden md:block" /> 더 넓은 <br className="hidden md:block" /> 세상으로.
             </h2>
             <p style={{ color: '#6B7280', fontSize: '17px', lineHeight: '1.9', marginBottom: '36px' }}>
               봉봉단의 다음 출정지는<br className="hidden md:block" /> 무궁무진합니다.
@@ -353,7 +353,7 @@ export function Home() {
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
           <Reveal>
             <h2 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: '900', color: '#fff', lineHeight: '1.25', marginBottom: '48px' }}>
-              단순한 봉사 모임이<br className="hidden md:block" /> 아닙니다.
+              단순한 봉사 모임이 <br className="hidden md:block" /> 아닙니다.
             </h2>
           </Reveal>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'left' }}>
@@ -401,7 +401,7 @@ export function Home() {
           <Reveal style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '24px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>JOIN US</p>
             <h2 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: '900', color: '#fff', lineHeight: '1.2', marginBottom: '24px' }}>
-              함께 출정할<br className="hidden md:block" /> 협객을 기다립니다.
+              함께 출정할 <br className="hidden md:block" /> 협객을 기다립니다.
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '18px', lineHeight: '1.8', marginBottom: '52px' }}>
               봉사가 처음이어도 괜찮습니다.<br className="hidden md:block" /> 봉봉단이 함께합니다.

@@ -193,7 +193,7 @@ function TabMethod() {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ color: '#fff', fontSize: 'clamp(24px,4vw,40px)', fontWeight: '900', marginBottom: '24px', lineHeight: '1.3' }}>
-              뚜벅이도 걱정 없는<br className="hidden md:block" /> 봉봉단만의 <span style={{ color: '#F5C875' }}>AI 픽업 매칭</span>
+              뚜벅이도 걱정 없는 <br className="hidden md:block" /> 봉봉단만의 <span style={{ color: '#F5C875' }}>AI 픽업 매칭</span>
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '16px', lineHeight: '1.8', maxWidth: '720px', margin: '0 auto', wordBreak: 'keep-all' }}>
               단순히 '가까운 사람'을 태우는 매칭이 아닙니다.<br className="hidden md:block" /> 탑승자 조합부터 최적의 집결지 선정, 실시간 재조정까지<br className="hidden md:block" /> <strong>카풀의 전 과정을 AI 알고리즘이 완벽하게 최적화합니다.</strong>
@@ -608,7 +608,7 @@ function TabShelters() {
           <RevealDiv>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>PARTNER SHELTERS</p>
             <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px,3.5vw,38px)', fontWeight: '900', marginBottom: '16px' }}>
-              유기견의 소중한 보금자리,<br className="hidden md:block" /> 파트너 보호소를 소개합니다.
+              유기견의 소중한 보금자리, <br className="hidden md:block" /> 파트너 보호소를 소개합니다.
             </h2>
             <p style={{ color: '#9CA3AF', fontSize: '13px', fontWeight: '500', opacity: 0.7 }}>
               * 각 보호소의 내부 상황 및 운영 방침에 따라 기재된 정보가 실제와 상이할 수 있습니다.
