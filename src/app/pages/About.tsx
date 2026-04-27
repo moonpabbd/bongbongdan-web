@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { logoImg, logoSloganImg, symbolImg, symbol3DImg } from '../imageAssets';
+import { logoImg, logoSloganImg, symbolImg, symbol3DImg, groupPhotoImg } from '../imageAssets';
 import { PhotoSlider } from '../components/PhotoSlider';
 import {
   Shield, Star, Users, Clock,
@@ -124,8 +124,19 @@ function TabIntro() {
               ))}
             </div>
           </RevealDiv>
-          <RevealDiv delay={200} style={{ display: 'flex', justifyContent: 'center' }}>
-            <PhotoSlider />
+          <RevealDiv delay={200} style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <img 
+              src={groupPhotoImg} 
+              alt="봉봉단 봉사 활동" 
+              style={{ 
+                width: '100%', 
+                maxWidth: '900px', 
+                borderRadius: '32px', 
+                boxShadow: '0 20px 50px rgba(0,0,0,0.12)',
+                objectFit: 'cover',
+                aspectRatio: '16/10'
+              }} 
+            />
           </RevealDiv>
         </div>
       </div>
