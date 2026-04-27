@@ -93,7 +93,7 @@ function TabMethod() {
   return (
     <div>
       {/* 1. 어떤 봉사를 하나요? */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.warmSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: G.warmSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '52px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>WHAT WE DO</p>
@@ -127,7 +127,7 @@ function TabMethod() {
       </div>
 
       {/* 2. 일정 및 단계 */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: '#fff' }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: '#fff' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '52px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>JOURNEY</p>
@@ -189,10 +189,10 @@ function TabMethod() {
 
 
       {/* 3. AI 픽업 매칭 시스템 */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.darkSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{ color: '#fff', fontSize: 'clamp(28px,4vw,40px)', fontWeight: '900', marginBottom: '24px', lineHeight: '1.3' }}>
+            <h2 style={{ color: '#fff', fontSize: 'clamp(24px,4vw,40px)', fontWeight: '900', marginBottom: '24px', lineHeight: '1.3' }}>
               뚜벅이도 걱정 없는<br className="hidden md:block" /> 봉봉단만의 <span style={{ color: '#F5C875' }}>AI 픽업 매칭</span>
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '16px', lineHeight: '1.8', maxWidth: '720px', margin: '0 auto', wordBreak: 'keep-all' }}>
@@ -229,7 +229,7 @@ function TabMethod() {
                   style={{
                   display: 'flex', gap: '24px', alignItems: 'center',
                   background: 'linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01))',
-                  border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: '32px 40px',
+                  border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: 'clamp(24px, 5vw, 32px) clamp(20px, 5vw, 40px)',
                   position: 'relative', overflow: 'hidden'
                 }}>
                   {/* Background Step Number */}
@@ -256,10 +256,10 @@ function TabMethod() {
       </div>
 
       {/* 4. 준비물 및 참가비 안내 (영수증 스타일) */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: '#F9FAFB' }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: '#F9FAFB' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '52px' }}>
-            <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px,3.5vw,38px)', fontWeight: '900', marginBottom: '12px' }}>봉사 준비는 봉봉단이 다 해드려요</h2>
+            <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(22px,3.5vw,38px)', fontWeight: '900', marginBottom: '12px' }}>봉사 준비는 봉봉단이 다 해드려요</h2>
             <p style={{ color: '#6B7280', fontSize: '16px', lineHeight: '1.6' }}>설레는 마음만 준비해서 오세요.</p>
           </RevealDiv>
 
@@ -271,7 +271,7 @@ function TabMethod() {
                 <div 
                   className="hover-lift"
                   style={{
-                  background: '#fff', borderRadius: '24px', padding: '40px', height: '100%', boxSizing: 'border-box',
+                  background: '#fff', borderRadius: '24px', padding: 'clamp(24px, 6vw, 40px)', height: '100%', boxSizing: 'border-box',
                   border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 8px 32px rgba(0,0,0,0.03)',
                   position: 'relative', overflow: 'hidden'
                 }}>
@@ -312,7 +312,7 @@ function TabMethod() {
                 <div 
                   className="hover-lift"
                   style={{
-                  background: '#1E3A5F', borderRadius: '24px', padding: '40px', height: '100%', boxSizing: 'border-box',
+                  background: '#1E3A5F', borderRadius: '24px', padding: 'clamp(24px, 6vw, 40px)', height: '100%', boxSizing: 'border-box',
                   color: '#fff', position: 'relative', overflow: 'hidden',
                   boxShadow: '0 8px 32px rgba(30,58,95,0.15)'
                 }}>
@@ -603,7 +603,7 @@ function TabShelters() {
   return (
     <div>
       {/* 도입부 & 보안 안내 */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px) 40px', background: G.warmSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px) 40px', background: G.warmSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <RevealDiv>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>PARTNER SHELTERS</p>
@@ -666,12 +666,12 @@ function TabShelters() {
                       </span>
                     </div>
 
-                    <h3 style={{ color: '#111827', fontWeight: '900', fontSize: 'clamp(32px, 4vw, 42px)', marginBottom: '32px', letterSpacing: '-0.5px' }}>
+                    <h3 style={{ color: '#111827', fontWeight: '900', fontSize: 'clamp(24px, 4vw, 42px)', marginBottom: '32px', letterSpacing: '-0.5px' }}>
                       {shelter.name}
                     </h3>
 
                     {/* 주요 스탯 */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '36px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '24px', marginBottom: '36px' }}>
                       <div>
                         <p style={{ fontSize: '13px', color: '#6B7280', marginBottom: '6px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <PawPrint size={14} /> 보유 개체수

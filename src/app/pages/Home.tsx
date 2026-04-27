@@ -232,7 +232,7 @@ export function Home() {
       </div>
 
       {/* ── 2. 신청은 딱 한 번 ── */}
-      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: '#fff' }}>
+      <div style={{ padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 40px)', background: '#fff' }}>
         <div style={{
           maxWidth: '1100px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))',
@@ -273,7 +273,7 @@ export function Home() {
       </div>
 
       {/* ── 3. 협객들이 만든 숫자 ── */}
-      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: G.darkSection }}>
+      <div style={{ padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>IMPACT</p>
@@ -297,7 +297,7 @@ export function Home() {
 
 
       {/* ── 5. 다음 출정지 ── */}
-      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: '#fff' }}>
+      <div style={{ padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 40px)', background: '#fff' }}>
         <div style={{
           maxWidth: '1100px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))',
@@ -349,7 +349,7 @@ export function Home() {
       </div>
 
       {/* ── 6. 운영에 진심 ── */}
-      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: G.darkSection }}>
+      <div style={{ padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
           <Reveal>
             <h2 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: '900', color: '#fff', lineHeight: '1.25', marginBottom: '48px' }}>
@@ -395,7 +395,7 @@ export function Home() {
       <IdentitySection />
 
       {/* ── 7. CTA ── */}
-      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: G.darkHero, textAlign: 'center' }}>
+      <div style={{ padding: 'clamp(80px, 15vw, 160px) clamp(20px, 5vw, 40px)', background: G.darkHero, textAlign: 'center' }}>
         <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
           <div style={{ position: 'absolute', top: '-80px', left: '50%', transform: 'translateX(-50%)', width: '500px', height: '500px', background: G.heroOrb1, filter: 'blur(100px)', pointerEvents: 'none', opacity: 0.5 }} />
           <Reveal style={{ position: 'relative', zIndex: 1 }}>

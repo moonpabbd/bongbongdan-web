@@ -88,7 +88,7 @@ function TabIntro() {
   return (
     <div>
       {/* 메인 소개 */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.warmSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: G.warmSection }}>
         <div style={{
           maxWidth: '1100px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -98,7 +98,7 @@ function TabIntro() {
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText(G.goldTextBg) }}>
               BONGBONGDAN · BBD
             </p>
-            <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: '900', lineHeight: '1.25', marginBottom: '24px' }}>
+            <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px, 4vw, 46px)', fontWeight: '900', lineHeight: '1.25', marginBottom: '24px' }}>
               의협을 실천하는<br className="hidden md:block" /> 봉사문파, 봉봉단
             </h2>
             <p style={{ color: '#374151', fontSize: '16px', lineHeight: '1.9', marginBottom: '18px' }}>
@@ -132,7 +132,7 @@ function TabIntro() {
 
 
       {/* 연혁 타임라인 */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.pureSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: G.pureSection }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '72px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>HISTORY</p>
@@ -194,7 +194,7 @@ function TabIntro() {
       </div>
 
       {/* ── 통합 섹션 1: 미션·비전·목표 ── */}
-      <div style={{ padding: '100px clamp(20px, 5vw, 40px) 80px', background: G.coolSection }}>
+      <div style={{ padding: 'clamp(80px, 12vw, 100px) clamp(20px, 5vw, 40px) 80px', background: G.coolSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '56px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>MISSION · VISION · OPERATION</p>
@@ -231,7 +231,7 @@ function TabIntro() {
       </div>
 
       {/* ── 통합 섹션 2: 핵심 가치 6가지 ── */}
-      <div style={{ padding: '100px clamp(20px, 5vw, 40px)', background: G.warmSection }}>
+      <div style={{ padding: 'clamp(80px, 12vw, 100px) clamp(20px, 5vw, 40px)', background: G.warmSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '56px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>CORE VALUES</p>
@@ -267,7 +267,7 @@ function TabIntro() {
             ].map((v, i) => (
               <RevealDiv key={v.title} delay={i * 80}>
                 <div style={{
-                  background: v.bg, borderRadius: '22px', padding: '36px',
+                  background: v.bg, borderRadius: '22px', padding: 'clamp(24px, 5vw, 36px)',
                   border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
                   height: '100%', boxSizing: 'border-box',
                 }}>
@@ -288,7 +288,7 @@ function TabIntro() {
       </div>
 
       {/* CI 섹션 */}
-      <div style={{ padding: '100px clamp(20px, 5vw, 40px)', background: G.pureSection }}>
+      <div style={{ padding: 'clamp(80px, 12vw, 100px) clamp(20px, 5vw, 40px)', background: G.pureSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>
@@ -320,7 +320,7 @@ function TabIntro() {
               </div>
 
               {/* 설명 영역 */}
-              <div style={{ padding: '48px 44px' }}>
+              <div style={{ padding: 'clamp(32px, 6vw, 48px) clamp(28px, 5vw, 44px)' }}>
                 <p style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '3px', color: '#9CA3AF', marginBottom: '8px' }}>SYMBOL</p>
                 <h3 style={{ color: '#1E3A5F', fontWeight: '900', fontSize: '22px', marginBottom: '10px', lineHeight: '1.3' }}>
                   봉봉단 심볼의 의미
@@ -340,10 +340,10 @@ function TabIntro() {
                     { icon: '✚', title: '의료 봉사', sub: '십자가' },
                   ].map(item => (
                     <div key={item.title} style={{
-                      display: 'flex', alignItems: 'center', gap: '10px',
+                      display: 'flex', alignItems: 'center', gap: '8px',
                       background: 'rgba(200,150,62,0.05)',
                       border: '1px solid rgba(200,150,62,0.15)',
-                      borderRadius: '10px', padding: '10px 14px',
+                      borderRadius: '10px', padding: '10px clamp(10px, 3vw, 14px)',
                     }}>
                       <span style={{ fontSize: '20px', flexShrink: 0 }}>{item.icon}</span>
                       <div>
@@ -576,7 +576,7 @@ function TabRanks() {
   return (
     <div>
       {/* ── 직급 섹션 ── */}
-      <div style={{ padding: '80px clamp(20px, 5vw, 40px) 100px', background: G.coolSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px) clamp(80px, 12vw, 100px)', background: G.coolSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '64px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>
@@ -638,7 +638,7 @@ function TabRanks() {
       </div>
 
       {/* ── 직책 섹션 ── */}
-      <div style={{ padding: '100px clamp(20px, 5vw, 40px)', background: G.pureSection }}>
+      <div style={{ padding: 'clamp(80px, 12vw, 100px) clamp(20px, 5vw, 40px)', background: G.pureSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '64px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>
