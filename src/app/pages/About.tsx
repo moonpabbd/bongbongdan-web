@@ -673,20 +673,20 @@ function TabRanks() {
 
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />
-                {!isMobile && <div style={{ width: '120px', height: '2px', background: 'rgba(200,150,62,0.4)' }} />}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: isMobile ? '0' : '118px' }}>
-                  {!isMobile && <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />}
-                  {!isMobile && <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />}
+                <div style={{ width: isMobile ? '100px' : '120px', height: '2px', background: 'rgba(200,150,62,0.4)' }} />
+                <div style={{ display: 'flex', justifyContent: 'center', gap: isMobile ? '98px' : '118px' }}>
+                  <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />
+                  <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />
                 </div>
               </div>
 
               {/* 중단: 장로 (ELDER) */}
               <div style={{ 
                 display: 'flex', 
-                flexDirection: isMobile ? 'column' : 'row',
+                flexDirection: 'row',
                 justifyContent: 'center', 
                 alignItems: 'center', 
-                gap: isMobile ? '12px' : '40px', 
+                gap: isMobile ? '8px' : '40px', 
                 marginBottom: '30px' 
               }}>
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
