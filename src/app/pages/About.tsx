@@ -573,6 +573,13 @@ function HierarchyLine() {
 }
 
 function TabRanks() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 850);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 850);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   return (
     <div>
       {/* ── 직급 섹션 ── */}
@@ -655,20 +662,30 @@ function TabRanks() {
           {/* 상세 조직도 */}
           <RevealDiv style={{ marginBottom: '56px' }}>
             <div style={{
-              background: '#f8fafc', borderRadius: '24px', padding: '60px 40px',
-              border: '1px solid #e2e8f0', overflowX: 'auto', minWidth: '800px', boxShadow: '0 4px 24px rgba(0,0,0,0.04)'
+              background: '#f8fafc', borderRadius: '24px', padding: isMobile ? '40px 20px' : '60px 40px',
+              border: '1px solid #e2e8f0', overflowX: isMobile ? 'visible' : 'auto', 
+              boxShadow: '0 4px 24px rgba(0,0,0,0.04)'
             }}>
               {/* 상단 장로 - 단장 - 장로 */}
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '30px', marginBottom: '30px' }}>
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row',
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                gap: isMobile ? '12px' : '30px', 
+                marginBottom: isMobile ? '20px' : '30px' 
+              }}>
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
+                {!isMobile && <div style={{ width: '20px', height: '2px', background: 'rgba(200,150,62,0.3)' }} />}
                 <HierarchyNode title="단장" en="MASTER" gradient={G.goldBadge} Icon={Crown} inline />
+                {!isMobile && <div style={{ width: '20px', height: '2px', background: 'rgba(200,150,62,0.3)' }} />}
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
               </div>
 
               <div style={{ width: '2px', height: '30px', background: 'rgba(200,150,62,0.4)', margin: '0 auto' }} />
 
               {/* 대장 */}
-              <div style={{ width: 'fit-content', minWidth: '260px', margin: '0 auto', background: 'linear-gradient(135deg, #FFFFFF, #F1F5F9)', borderRadius: '22px', padding: '24px 40px', border: '1px solid rgba(0,0,0,0.05)', color: '#1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
+              <div style={{ width: isMobile ? '100%' : 'fit-content', minWidth: isMobile ? '0' : '260px', margin: '0 auto', background: 'linear-gradient(135deg, #FFFFFF, #F1F5F9)', borderRadius: '22px', padding: '24px 40px', border: '1px solid rgba(0,0,0,0.05)', color: '#1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: G.redBadge, borderRadius: '10px',
@@ -689,7 +706,7 @@ function TabRanks() {
               <div style={{ width: '2px', height: '30px', background: 'rgba(200,150,62,0.4)', margin: '0 auto' }} />
 
               {/* 부대장 */}
-              <div style={{ width: 'fit-content', minWidth: '260px', margin: '0 auto', background: G.blueCard, borderRadius: '22px', padding: '24px 40px', border: '1px solid rgba(46,82,152,0.2)', color: '#374151', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.15)' }}>
+              <div style={{ width: isMobile ? '100%' : 'fit-content', minWidth: isMobile ? '0' : '260px', margin: '0 auto', background: G.blueCard, borderRadius: '22px', padding: '24px 40px', border: '1px solid rgba(46,82,152,0.2)', color: '#374151', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.15)' }}>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: G.blueBadge, borderRadius: '10px',
@@ -710,23 +727,34 @@ function TabRanks() {
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '50%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)', marginLeft: '50%' }} />
-                  <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '100%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)' }} />
-                  <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '100%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)' }} />
-                  <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '50%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)', marginRight: '5ㅌ0%' }} />
-                  <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
-                </div>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', 
+                maxWidth: '1000px', 
+                margin: '0 auto', 
+                width: '100%',
+                gap: isMobile ? '20px' : '0'
+              }}>
+                {!isMobile && (
+                  <>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ width: '50%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)', marginLeft: '50%' }} />
+                      <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ width: '100%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)' }} />
+                      <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ width: '100%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)' }} />
+                      <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ width: '50%', height: '2px', borderTop: '2px solid rgba(200,150,62,0.4)', marginRight: '50%' }} />
+                      <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
+                    </div>
+                  </>
+                )}
 
                 {/* 4개 부서 카드 */}
                 {[
