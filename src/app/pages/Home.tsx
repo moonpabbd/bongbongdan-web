@@ -85,7 +85,7 @@ function IdentitySection() {
 
   return (
     <div style={{
-      padding: '240px 40px',
+      padding: '240px clamp(20px, 5vw, 40px)',
       position: 'relative',
       overflow: 'hidden',
       background: '#0A111A',
@@ -111,11 +111,11 @@ function IdentitySection() {
         <Reveal>
           <p style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '4px', marginBottom: '24px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>SILENT ACTION</p>
           <h2 style={{ fontSize: 'clamp(40px,6vw,80px)', fontWeight: '900', color: '#fff', lineHeight: '1.1', marginBottom: '40px', letterSpacing: '-2px' }}>
-            현장은 거짓말을<br />하지 않으니까.
+            현장은 거짓말을<br className="hidden md:block" /> 하지 않으니까.
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 'clamp(17px,2vw,20px)', lineHeight: '1.9', maxWidth: '720px', margin: '0 auto' }}>
-            거창한 구호나 화려한 미사여구보다,<br />
-            우리는 현장에서 흘리는 땀방울의 가치를 믿습니다.<br />
+            거창한 구호나 화려한 미사여구보다,<br className="hidden md:block" />
+            우리는 현장에서 흘리는 땀방울의 가치를 믿습니다.<br className="hidden md:block" />
             봉봉단이 머문 자리에는 항상 변화가 시작됩니다.
           </p>
         </Reveal>
@@ -156,7 +156,7 @@ export function Home() {
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           position: 'relative', overflow: 'hidden',
-          padding: '120px 40px 80px', textAlign: 'center',
+          padding: '120px clamp(20px, 5vw, 40px) 80px', textAlign: 'center',
         }}>
         <div style={{ position: 'absolute', top: '-120px', right: '-120px', width: '700px', height: '700px', background: G.heroOrb1, filter: 'blur(100px)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-180px', left: '-180px', width: '600px', height: '600px', background: G.heroOrb2, filter: 'blur(120px)', pointerEvents: 'none' }} />
@@ -180,13 +180,13 @@ export function Home() {
             fontSize: 'clamp(44px, 7vw, 84px)', fontWeight: '900',
             lineHeight: '1.1', marginBottom: '28px', letterSpacing: '-1.5px', color: '#fff',
           }}>
-            의협을 실천하는<br />
-            <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>,<br />
+            의협을 실천하는<br className="hidden md:block" />
+            <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>,<br className="hidden md:block" />
             봉봉단
           </h1>
 
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 'clamp(16px,2vw,20px)', lineHeight: '1.8', marginBottom: '48px' }}>
-            약한 자를 돕고 올바른 것을 실천하는 협객의 마음으로<br />더 나은 세상을 만들어 갑니다.
+            약한 자를 돕고 올바른 것을 실천하는 협객의 마음으로<br className="hidden md:block" /> 더 나은 세상을 만들어 갑니다.
           </p>
 
 
@@ -232,7 +232,7 @@ export function Home() {
       </div>
 
       {/* ── 2. 신청은 딱 한 번 ── */}
-      <div style={{ padding: '160px 40px', background: '#fff' }}>
+      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: '#fff' }}>
         <div style={{
           maxWidth: '1100px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))',
@@ -241,16 +241,17 @@ export function Home() {
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '20px', ...gradientText(G.goldTextBg) }}>EASY & SIMPLE</p>
             <h2 style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: '900', lineHeight: '1.2', color: '#1E3A5F', marginBottom: '28px' }}>
-              신청만 하면<br />봉봉단이<br />알아서 준비합니다.
+              신청만 하면<br className="hidden md:block" /> 봉봉단이<br className="hidden md:block" /> 알아서 준비합니다.
             </h2>
             <p style={{ color: '#6B7280', fontSize: '18px', lineHeight: '1.9', marginBottom: '36px' }}>
-              봉사 신청부터 봉사가 끝날 때까지<br />
+              봉사 신청부터 봉사가 끝날 때까지<br className="hidden md:block" />
               누구나 쉽고 편하게 봉사할 수 있도록 만들어 갑니다.
             </p>
             <a
               href="https://forms.gle/8CdE8FyFmPAvJhVKA"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover-scale"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 color: '#A87830', fontWeight: '700', fontSize: '16px', textDecoration: 'none',
@@ -272,12 +273,12 @@ export function Home() {
       </div>
 
       {/* ── 3. 협객들이 만든 숫자 ── */}
-      <div style={{ padding: '160px 40px', background: G.darkSection }}>
+      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>IMPACT</p>
             <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: '900', color: '#fff', marginBottom: '72px', lineHeight: '1.3' }}>
-              협객들이 만들어가는<br />숫자들
+              협객들이 만들어가는<br className="hidden md:block" /> 숫자들
             </h2>
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '56px' }}>
@@ -296,7 +297,7 @@ export function Home() {
 
 
       {/* ── 5. 다음 출정지 ── */}
-      <div style={{ padding: '160px 40px', background: '#fff' }}>
+      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: '#fff' }}>
         <div style={{
           maxWidth: '1100px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))',
@@ -305,10 +306,10 @@ export function Home() {
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '20px', ...gradientText(G.goldTextBg) }}>NEXT CHAPTER</p>
             <h2 style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: '900', lineHeight: '1.2', color: '#1E3A5F', marginBottom: '28px' }}>
-              유기견 봉사에서<br />더 넓은<br />세상으로.
+              유기견 봉사에서<br className="hidden md:block" /> 더 넓은<br className="hidden md:block" /> 세상으로.
             </h2>
             <p style={{ color: '#6B7280', fontSize: '17px', lineHeight: '1.9', marginBottom: '36px' }}>
-              봉봉단의 다음 출정지는<br />무궁무진합니다.
+              봉봉단의 다음 출정지는<br className="hidden md:block" /> 무궁무진합니다.
             </p>
             <Link to="/activities" style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
@@ -348,11 +349,11 @@ export function Home() {
       </div>
 
       {/* ── 6. 운영에 진심 ── */}
-      <div style={{ padding: '160px 40px', background: G.darkSection }}>
+      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
           <Reveal>
             <h2 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: '900', color: '#fff', lineHeight: '1.25', marginBottom: '48px' }}>
-              단순한 봉사 모임이<br />아닙니다.
+              단순한 봉사 모임이<br className="hidden md:block" /> 아닙니다.
             </h2>
           </Reveal>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'left' }}>
@@ -394,22 +395,23 @@ export function Home() {
       <IdentitySection />
 
       {/* ── 7. CTA ── */}
-      <div style={{ padding: '160px 40px', background: G.darkHero, textAlign: 'center' }}>
+      <div style={{ padding: '160px clamp(20px, 5vw, 40px)', background: G.darkHero, textAlign: 'center' }}>
         <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
           <div style={{ position: 'absolute', top: '-80px', left: '50%', transform: 'translateX(-50%)', width: '500px', height: '500px', background: G.heroOrb1, filter: 'blur(100px)', pointerEvents: 'none', opacity: 0.5 }} />
           <Reveal style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '24px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>JOIN US</p>
             <h2 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: '900', color: '#fff', lineHeight: '1.2', marginBottom: '24px' }}>
-              함께 출정할<br />협객을 기다립니다.
+              함께 출정할<br className="hidden md:block" /> 협객을 기다립니다.
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '18px', lineHeight: '1.8', marginBottom: '52px' }}>
-              봉사가 처음이어도 괜찮습니다.<br />봉봉단이 함께합니다.
+              봉사가 처음이어도 괜찮습니다.<br className="hidden md:block" /> 봉봉단이 함께합니다.
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <a
                 href="https://forms.gle/8CdE8FyFmPAvJhVKA"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="hover-scale"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: 'linear-gradient(135deg,#C8963E,#E8B060)',

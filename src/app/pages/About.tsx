@@ -88,7 +88,7 @@ function TabIntro() {
   return (
     <div>
       {/* 메인 소개 */}
-      <div style={{ padding: '80px 40px', background: G.warmSection }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.warmSection }}>
         <div style={{
           maxWidth: '1100px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -99,7 +99,7 @@ function TabIntro() {
               BONGBONGDAN · BBD
             </p>
             <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: '900', lineHeight: '1.25', marginBottom: '24px' }}>
-              의협을 실천하는<br />봉사문파, 봉봉단
+              의협을 실천하는<br className="hidden md:block" /> 봉사문파, 봉봉단
             </h2>
             <p style={{ color: '#374151', fontSize: '16px', lineHeight: '1.9', marginBottom: '18px' }}>
               봉봉단은 <strong>무협의 의협(義俠) 정신</strong>을 현대 봉사 문화에 녹여낸 비영리 봉사 단체입니다.
@@ -132,7 +132,7 @@ function TabIntro() {
 
 
       {/* 연혁 타임라인 */}
-      <div style={{ padding: '80px 40px', background: G.pureSection }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.pureSection }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '72px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>HISTORY</p>
@@ -194,7 +194,7 @@ function TabIntro() {
       </div>
 
       {/* ── 통합 섹션 1: 미션·비전·목표 ── */}
-      <div style={{ padding: '100px 40px 80px', background: G.coolSection }}>
+      <div style={{ padding: '100px clamp(20px, 5vw, 40px) 80px', background: G.coolSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '56px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>MISSION · VISION · OPERATION</p>
@@ -231,7 +231,7 @@ function TabIntro() {
       </div>
 
       {/* ── 통합 섹션 2: 핵심 가치 6가지 ── */}
-      <div style={{ padding: '100px 40px', background: G.warmSection }}>
+      <div style={{ padding: '100px clamp(20px, 5vw, 40px)', background: G.warmSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '56px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>CORE VALUES</p>
@@ -288,7 +288,7 @@ function TabIntro() {
       </div>
 
       {/* CI 섹션 */}
-      <div style={{ padding: '100px 40px', background: G.pureSection }}>
+      <div style={{ padding: '100px clamp(20px, 5vw, 40px)', background: G.pureSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>
@@ -326,7 +326,7 @@ function TabIntro() {
                   봉봉단 심볼의 의미
                 </h3>
                 <p style={{ color: '#6B7280', fontSize: '14px', lineHeight: '1.7', marginBottom: '28px' }}>
-                  심볼 중앙의 <strong style={{ color: '#1E3A5F' }}>검과 포권례</strong>는 의협을 실천하는 협객을 상징하며,<br />
+                  심볼 중앙의 <strong style={{ color: '#1E3A5F' }}>검과 포권례</strong>는 의협을 실천하는 협객을 상징하며,<br className="hidden md:block" />
                   주변을 둘러싼 <strong style={{ color: '#1E3A5F' }}>5가지 심볼</strong>은 봉봉단이 나아갈 봉사 영역을 나타냅니다.
                 </p>
 
@@ -376,7 +376,7 @@ function TabIntro() {
                   <img src={symbol3DImg} alt="봉봉단 3D 심볼" style={{ height: '100px', objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(200,150,62,0.4))' }} />
                 </div>
                 <p style={{ color: '#6B7280', fontSize: '13px', lineHeight: '1.7' }}>
-                  입체감을 살린 3D 렌더링 심볼<br />홈페이지·영상 등 디지털 콘텐츠에 사용합니다.
+                  입체감을 살린 3D 렌더링 심볼<br className="hidden md:block" />홈페이지·영상 등 디지털 콘텐츠에 사용합니다.
                 </p>
               </div>
             </RevealDiv>
@@ -397,7 +397,7 @@ function TabIntro() {
                   <img src={logoSloganImg || logoImg} alt="봉봉단 시그니처" style={{ height: '64px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
                 </div>
                 <p style={{ color: '#6B7280', fontSize: '13px', lineHeight: '1.7' }}>
-                  로고 + 슬로건이 결합된 시그니처 타입<br />공식 문서·배너·명찰 등에 사용합니다.
+                  로고 + 슬로건이 결합된 시그니처 타입<br className="hidden md:block" />공식 문서·배너·명찰 등에 사용합니다.
                 </p>
               </div>
             </RevealDiv>
@@ -576,7 +576,7 @@ function TabRanks() {
   return (
     <div>
       {/* ── 직급 섹션 ── */}
-      <div style={{ padding: '80px 40px 100px', background: G.coolSection }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px) 100px', background: G.coolSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '64px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>
@@ -638,7 +638,7 @@ function TabRanks() {
       </div>
 
       {/* ── 직책 섹션 ── */}
-      <div style={{ padding: '100px 40px', background: G.pureSection }}>
+      <div style={{ padding: '100px clamp(20px, 5vw, 40px)', background: G.pureSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '64px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>
@@ -1024,7 +1024,7 @@ export function About() {
             단체 소개
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '17px', lineHeight: '1.7' }}>
-            유기견 봉사를 넘어 새로운 봉사 영역을 만들어나가는 <br />
+            유기견 봉사를 넘어 새로운 봉사 영역을 만들어나가는 <br className="hidden md:block" />
             봉봉단(BBD)을 소개합니다
           </p>
         </div>

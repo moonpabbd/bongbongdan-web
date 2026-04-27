@@ -93,7 +93,7 @@ function TabMethod() {
   return (
     <div>
       {/* 1. 어떤 봉사를 하나요? */}
-      <div style={{ padding: '80px 40px', background: G.warmSection }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.warmSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '52px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>WHAT WE DO</p>
@@ -103,7 +103,9 @@ function TabMethod() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '20px' }}>
             {newVolunteerTypes.map((v, i) => (
               <RevealDiv key={v.title} delay={i * 90}>
-                <div style={{
+                <div 
+                  className="hover-lift"
+                  style={{
                   background: v.bg, borderRadius: '22px', padding: '36px 32px',
                   border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
                   height: '100%', boxSizing: 'border-box',
@@ -125,7 +127,7 @@ function TabMethod() {
       </div>
 
       {/* 2. 일정 및 단계 */}
-      <div style={{ padding: '80px 40px', background: '#fff' }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: '#fff' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '52px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>JOURNEY</p>
@@ -156,7 +158,9 @@ function TabMethod() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', paddingTop: '32px' }}>
             {journeyPhases.map((phase, i) => (
               <RevealDiv key={phase.step} delay={i * 100}>
-                <div style={{
+                <div 
+                  className="hover-lift"
+                  style={{
                   background: phase.bg, borderRadius: '24px', padding: '48px 32px 36px',
                   position: 'relative', overflow: 'visible', height: '100%', boxSizing: 'border-box',
                   border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
@@ -185,14 +189,14 @@ function TabMethod() {
 
 
       {/* 3. AI 픽업 매칭 시스템 */}
-      <div style={{ padding: '80px 40px', background: G.darkSection }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ color: '#fff', fontSize: 'clamp(28px,4vw,40px)', fontWeight: '900', marginBottom: '24px', lineHeight: '1.3' }}>
-              뚜벅이도 걱정 없는<br />봉봉단만의 <span style={{ color: '#F5C875' }}>AI 픽업 매칭</span>
+              뚜벅이도 걱정 없는<br className="hidden md:block" /> 봉봉단만의 <span style={{ color: '#F5C875' }}>AI 픽업 매칭</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '16px', lineHeight: '1.8', maxWidth: '700px', margin: '0 auto', wordBreak: 'keep-all' }}>
-              단순히 '가까운 사람'을 태우는 매칭이 아닙니다.<br />탑승자 조합부터 최적의 집결지 선정, 실시간 재조정까지<br /><strong>카풀의 전 과정을 AI 알고리즘이 완벽하게 최적화합니다.</strong>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '16px', lineHeight: '1.8', maxWidth: '720px', margin: '0 auto', wordBreak: 'keep-all' }}>
+              단순히 '가까운 사람'을 태우는 매칭이 아닙니다.<br className="hidden md:block" /> 탑승자 조합부터 최적의 집결지 선정, 실시간 재조정까지<br className="hidden md:block" /> <strong>카풀의 전 과정을 AI 알고리즘이 완벽하게 최적화합니다.</strong>
             </p>
           </RevealDiv>
 
@@ -220,7 +224,9 @@ function TabMethod() {
               }
             ].map((item, i) => (
               <RevealDiv key={item.step} delay={i * 100}>
-                <div style={{
+                <div 
+                  className="hover-lift"
+                  style={{
                   display: 'flex', gap: '24px', alignItems: 'center',
                   background: 'linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01))',
                   border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: '32px 40px',
@@ -250,7 +256,7 @@ function TabMethod() {
       </div>
 
       {/* 4. 준비물 및 참가비 안내 (영수증 스타일) */}
-      <div style={{ padding: '80px 40px', background: '#F9FAFB' }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px)', background: '#F9FAFB' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '52px' }}>
             <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px,3.5vw,38px)', fontWeight: '900', marginBottom: '12px' }}>봉사 준비는 봉봉단이 다 해드려요</h2>
@@ -262,7 +268,9 @@ function TabMethod() {
             {/* 왼쪽: Packing List */}
             <div style={{ flex: '1 1 400px', display: 'flex' }}>
               <RevealDiv delay={100} style={{ width: '100%' }}>
-                <div style={{
+                <div 
+                  className="hover-lift"
+                  style={{
                   background: '#fff', borderRadius: '24px', padding: '40px', height: '100%', boxSizing: 'border-box',
                   border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 8px 32px rgba(0,0,0,0.03)',
                   position: 'relative', overflow: 'hidden'
@@ -290,7 +298,7 @@ function TabMethod() {
                         <Heart size={16} /> 봉사자 준비물
                       </h4>
                       <p style={{ color: '#1E3A5F', fontSize: '18px', fontWeight: '800', lineHeight: '1.6', margin: 0, wordBreak: 'keep-all' }}>
-                        세상을 바꾸는<br />'따뜻한 의협심' 하나면 충분합니다.
+                        세상을 바꾸는<br className="hidden md:block" /> '따뜻한 의협심' 하나면 충분합니다.
                       </p>
                     </div>
                   </div>
@@ -301,7 +309,9 @@ function TabMethod() {
             {/* 오른쪽: 참가비 영수증 */}
             <div style={{ flex: '1 1 400px', display: 'flex' }}>
               <RevealDiv delay={200} style={{ width: '100%' }}>
-                <div style={{
+                <div 
+                  className="hover-lift"
+                  style={{
                   background: '#1E3A5F', borderRadius: '24px', padding: '40px', height: '100%', boxSizing: 'border-box',
                   color: '#fff', position: 'relative', overflow: 'hidden',
                   boxShadow: '0 8px 32px rgba(30,58,95,0.15)'
@@ -593,12 +603,12 @@ function TabShelters() {
   return (
     <div>
       {/* 도입부 & 보안 안내 */}
-      <div style={{ padding: '80px 40px 40px', background: G.warmSection }}>
+      <div style={{ padding: '80px clamp(20px, 5vw, 40px) 40px', background: G.warmSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <RevealDiv>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>PARTNER SHELTERS</p>
             <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px,3.5vw,38px)', fontWeight: '900', marginBottom: '16px' }}>
-              유기견의 소중한 보금자리,<br />파트너 보호소를 소개합니다.
+              유기견의 소중한 보금자리,<br className="hidden md:block" /> 파트너 보호소를 소개합니다.
             </h2>
             <p style={{ color: '#9CA3AF', fontSize: '13px', fontWeight: '500', opacity: 0.7 }}>
               * 각 보호소의 내부 상황 및 운영 방침에 따라 기재된 정보가 실제와 상이할 수 있습니다.
@@ -614,7 +624,7 @@ function TabShelters() {
       `}</style>
 
       {/* 정기 출정 보호소 리스트 (매거진 스타일 뷰) */}
-      <div style={{ padding: '40px 40px 80px', background: G.warmSection }}>
+      <div style={{ padding: '40px clamp(20px, 5vw, 40px) 80px', background: G.warmSection }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '80px' }}>
           {activeShelters.map((shelter, i) => {
             const isEven = i % 2 === 0;
@@ -776,7 +786,7 @@ export function Activities() {
     <div>
       {/* 페이지 히어로 */}
       <div style={{
-        padding: '140px 40px 0',
+        padding: '140px clamp(20px, 5vw, 40px) 0',
         background: G.darkHero,
         position: 'relative', overflow: 'hidden',
       }}>

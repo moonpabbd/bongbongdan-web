@@ -470,6 +470,7 @@ export function Navbar() {
           href={APPLY_URL}
           target="_blank"
           rel="noopener noreferrer"
+          className="hover-scale"
           style={{
             marginTop: '16px',
             background: G.goldBtn,
