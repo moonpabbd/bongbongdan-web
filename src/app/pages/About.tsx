@@ -666,19 +666,30 @@ function TabRanks() {
               border: '1px solid #e2e8f0', overflowX: isMobile ? 'visible' : 'auto', 
               boxShadow: '0 4px 24px rgba(0,0,0,0.04)'
             }}>
-              {/* 상단 장로 - 단장 - 장로 */}
+              {/* 상단: 단장 (MASTER) */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                <HierarchyNode title="단장" en="MASTER" gradient={G.goldBadge} Icon={Crown} inline />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />
+                {!isMobile && <div style={{ width: '120px', height: '2px', background: 'rgba(200,150,62,0.4)' }} />}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: isMobile ? '0' : '118px' }}>
+                  {!isMobile && <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />}
+                  {!isMobile && <div style={{ width: '2px', height: '20px', background: 'rgba(200,150,62,0.4)' }} />}
+                </div>
+              </div>
+
+              {/* 중단: 장로 (ELDER) */}
               <div style={{ 
                 display: 'flex', 
                 flexDirection: isMobile ? 'column' : 'row',
                 justifyContent: 'center', 
                 alignItems: 'center', 
-                gap: isMobile ? '12px' : '30px', 
-                marginBottom: isMobile ? '20px' : '30px' 
+                gap: isMobile ? '12px' : '40px', 
+                marginBottom: '30px' 
               }}>
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
-                {!isMobile && <div style={{ width: '20px', height: '2px', background: 'rgba(200,150,62,0.3)' }} />}
-                <HierarchyNode title="단장" en="MASTER" gradient={G.goldBadge} Icon={Crown} inline />
-                {!isMobile && <div style={{ width: '20px', height: '2px', background: 'rgba(200,150,62,0.3)' }} />}
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
               </div>
 
