@@ -16,10 +16,10 @@ import collie02 from '../../imports/collie_02.jpg';
 import collie03 from '../../imports/collie_03.jpg';
 import collie04 from '../../imports/collie_04.jpg';
 
-import banryeo01 from '../../imports/banryeo_01.jpg';
-import banryeo02 from '../../imports/banryeo_02.jpg';
-import banryeo03 from '../../imports/banryeo_03.jpg';
-import banryeo04 from '../../imports/banryeo_04.jpg';
+import banryeo01 from '../../imports/banryeo_01.jpeg';
+import banryeo02 from '../../imports/banryeo_02.jpeg';
+import banryeo03 from '../../imports/banryeo_03.jpeg';
+import banryeo04 from '../../imports/banryeo_04.jpeg';
 
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
@@ -197,11 +197,11 @@ function TabMethod() {
       <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{ 
-              color: '#fff', 
-              fontSize: 'clamp(24px,4.5vw,40px)', 
-              fontWeight: '900', 
-              marginBottom: '24px', 
+            <h2 style={{
+              color: '#fff',
+              fontSize: 'clamp(24px,4.5vw,40px)',
+              fontWeight: '900',
+              marginBottom: '24px',
               lineHeight: '1.3',
               wordBreak: 'keep-all',
               wordWrap: 'break-word'
