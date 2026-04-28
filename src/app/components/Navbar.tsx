@@ -407,7 +407,7 @@ export function Navbar() {
           <X size={24} />
         </button>
 
-        {user && profile && (
+        {import.meta.env.DEV && user && profile && (
           <div style={{
             background: 'rgba(200,150,62,0.10)',
             border: '1px solid rgba(200,150,62,0.25)',

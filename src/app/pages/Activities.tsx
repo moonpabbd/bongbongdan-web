@@ -223,7 +223,7 @@ function TabMethod() {
                 desc: '과적 차량 분산(Rebalance), 집결지 기준 탑승자 교환(Swap), 근거리 운전자 통합(Consolidation)을 통해 빈틈없이 최적화합니다.'
               },
               {
-                step: '04', title: '배차 결과 자동 생성 및 해설', icon: MessageSquare, color: '#6BA0F0',
+                step: '04', title: '배차 결과 자동 생성 및\u00A0해설', icon: MessageSquare, color: '#6BA0F0',
                 desc: '모든 연산이 끝나면 AI가 각 차량의 집결지 선정 이유(예: "목적지 방향 50% 전진, 경부선 진입 용이")를 텍스트로 친절하게 안내합니다.'
               },
               {
@@ -251,7 +251,7 @@ function TabMethod() {
                   {/* Text Content */}
                   <div style={{ flex: 1, zIndex: 1 }}>
                     <p style={{ color: item.color, fontSize: '13px', fontWeight: '800', letterSpacing: '2px', marginBottom: '6px' }}>STEP {item.step}</p>
-                    <h3 style={{ color: '#fff', fontSize: '22px', fontWeight: '800', margin: 0, marginBottom: '8px' }}>{item.title}</h3>
+                    <h3 style={{ color: '#fff', fontSize: '22px', fontWeight: '800', margin: 0, marginBottom: '8px', wordBreak: 'keep-all' }}>{item.title}</h3>
                     <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6', margin: 0 }}>
                       {item.desc}
                     </p>
@@ -339,7 +339,7 @@ function TabMethod() {
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
                     <li style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                       <CheckCircle size={20} color="#F5C875" style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '15px', lineHeight: '1.6', wordBreak: 'keep-all' }}>소중한 약속을 지키기 위한 노쇼(No-Show) 방지</span>
+                      <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '15px', lineHeight: '1.6', wordBreak: 'keep-all' }}>소중한 약속을 지키기 위한 노쇼(No-Show)&nbsp;방지</span>
                     </li>
                     <li style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                       <CheckCircle size={20} color="#F5C875" style={{ flexShrink: 0, marginTop: '2px' }} />

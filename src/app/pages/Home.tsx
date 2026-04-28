@@ -182,7 +182,7 @@ export function Home() {
             wordBreak: 'keep-all', wordWrap: 'break-word'
           }}>
             의협을 실천하는 <br className="hidden md:block" />
-            <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>, <br className="hidden md:block" />
+            <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>,<br className="md:hidden" /> <br className="hidden md:block" />
             봉봉단
           </h1>
 
