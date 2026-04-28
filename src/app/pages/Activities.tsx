@@ -51,6 +51,11 @@ import onebreath02 from '../../imports/onebreath_02.jpeg';
 import onebreath03 from '../../imports/onebreath_03.jpeg';
 import onebreath04 from '../../imports/onebreath_04.jpeg';
 
+import dangledangle01 from '../../imports/dangledangle_01.jpeg';
+import dangledangle02 from '../../imports/dangledangle_02.jpeg';
+import dangledangle03 from '../../imports/dangledangle_03.jpeg';
+import dangledangle04 from '../../imports/dangledangle_04.jpeg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -623,7 +628,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#잔디운동장', '#시골길정취', '#소장님매력', '#소규모사설'],
     notice: '시·군 보호소에서 구조된 많은 아이들을 품고 있는 사설 보호소로, 봉사자와 후원자의 손길이 운영의 핵심이 되는 소중한 곳입니다. 진입로가 좁은 시골길이라 운전에 주의가 필요하지만, 보호소 내부에 약 5대 정도 주차가 가능합니다. 최근 잔디 공사를 마친 야외 운동장에서 아이들이 자유롭게 뛰노는 모습을 볼 수 있습니다. 소장님 홀로 헌신적으로 관리하시며, 가끔 봉사자보다 아이들을 더 예뻐하시는 소장님의 따뜻하고 인간적인 면모가 매력적인 보호소입니다.',
     headerGradient: 'linear-gradient(135deg,#4B3D6B,#6E5B94)',
-    images: [mockImages[4], mockImages[5], mockImages[6]]
+    images: [dangledangle01, dangledangle02, dangledangle03, dangledangle04]
   },
   {
     name: '이용녀 보호소',
