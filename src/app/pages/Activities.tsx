@@ -16,6 +16,11 @@ import collie02 from '../../imports/collie_02.jpg';
 import collie03 from '../../imports/collie_03.jpg';
 import collie04 from '../../imports/collie_04.jpg';
 
+import banryeo01 from '../../imports/banryeo_01.jpg';
+import banryeo02 from '../../imports/banryeo_02.jpg';
+import banryeo03 from '../../imports/banryeo_03.jpg';
+import banryeo04 from '../../imports/banryeo_04.jpg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -497,7 +502,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#국내최대규모', '#테마파크형', '#폴라로이드', '#준비물불필요'],
     notice: '경기도가 조성한 국내 최대 규모의 반려동물 복합문화공간으로, 보호와 입양은 물론 교육과 문화가 어우러진 테마파크형 시설입니다. 쾌적한 환경 속에서 별도의 준비물 없이도 봉사가 가능하며, 전문 담당자분들의 체계적인 인솔 덕분에 초보 봉사자도 쉽게 적응할 수 있습니다. 아이들과 산책하며 폴라로이드 추억을 남기거나 그림일기를 작성하는 등 정서적 교감을 나누는 특별한 프로그램도 경험할 수 있습니다.',
     headerGradient: 'linear-gradient(135deg,#2D5C40,#4A7C59)',
-    images: [mockImages[3], mockImages[4], mockImages[5]]
+    images: [banryeo01, banryeo02, banryeo03, banryeo04]
   },
   {
     name: '아크보호소',
