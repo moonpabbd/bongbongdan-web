@@ -98,7 +98,14 @@ function TabIntro() {
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText(G.goldTextBg) }}>
               BONGBONGDAN · BBD
             </p>
-            <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px, 4vw, 46px)', fontWeight: '900', lineHeight: '1.25', marginBottom: '24px' }}>
+            <h2 style={{ 
+              color: '#1E3A5F', 
+              fontSize: 'clamp(26px, 4.5vw, 46px)', 
+              fontWeight: '900', 
+              lineHeight: '1.25', 
+              marginBottom: '24px',
+              wordBreak: 'keep-all'
+            }}>
               의협을 실천하는 <br className="hidden md:block" /> 봉사문파, 봉봉단
             </h2>
             <p style={{ color: '#374151', fontSize: '16px', lineHeight: '1.9', marginBottom: '18px' }}>
@@ -1045,6 +1052,8 @@ export function About() {
     if (!TABS.find(t => t.key === currentTab)) {
       navigate('/about?tab=intro', { replace: true });
     }
+    // 탭 전환 시 상단으로 스크롤 초기화
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentTab, navigate]);
 
   const renderTab = () => {

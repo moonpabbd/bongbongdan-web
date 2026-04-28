@@ -177,8 +177,9 @@ export function Home() {
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(44px, 7vw, 84px)', fontWeight: '900',
+            fontSize: 'clamp(36px, 7vw, 84px)', fontWeight: '900',
             lineHeight: '1.1', marginBottom: '28px', letterSpacing: '-1.5px', color: '#fff',
+            wordBreak: 'keep-all', wordWrap: 'break-word'
           }}>
             의협을 실천하는 <br className="hidden md:block" />
             <span style={gradientText('linear-gradient(135deg,#C8963E 0%,#F5C875 50%,#E8B060 100%)')}>봉사문파</span>, <br className="hidden md:block" />
@@ -240,7 +241,14 @@ export function Home() {
         }}>
           <Reveal>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '20px', ...gradientText(G.goldTextBg) }}>EASY & SIMPLE</p>
-            <h2 style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: '900', lineHeight: '1.2', color: '#1E3A5F', marginBottom: '28px' }}>
+            <h2 style={{ 
+              fontSize: 'clamp(32px,5vw,60px)', 
+              fontWeight: '900', 
+              lineHeight: '1.2', 
+              color: '#1E3A5F', 
+              marginBottom: '28px',
+              wordBreak: 'keep-all'
+            }}>
               신청만 하면 <br className="hidden md:block" /> 봉봉단이 <br className="hidden md:block" /> 알아서 준비합니다.
             </h2>
             <p style={{ color: '#6B7280', fontSize: '18px', lineHeight: '1.9', marginBottom: '36px' }}>

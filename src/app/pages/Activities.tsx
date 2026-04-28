@@ -192,8 +192,16 @@ function TabMethod() {
       <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px)', background: G.darkSection }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <RevealDiv style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{ color: '#fff', fontSize: 'clamp(24px,4vw,40px)', fontWeight: '900', marginBottom: '24px', lineHeight: '1.3' }}>
-              뚜벅이도 걱정 없는 <br className="hidden md:block" /> 봉봉단만의 <span style={{ color: '#F5C875' }}>AI 픽업 매칭</span>
+            <h2 style={{ 
+              color: '#fff', 
+              fontSize: 'clamp(24px,4.5vw,40px)', 
+              fontWeight: '900', 
+              marginBottom: '24px', 
+              lineHeight: '1.3',
+              wordBreak: 'keep-all',
+              wordWrap: 'break-word'
+            }}>
+              뚜벅이도 걱정 없는 <br className="hidden md:block" /> 봉봉단만의 <span style={{ color: '#F5C875', whiteSpace: 'nowrap' }}>AI 픽업 매칭</span>
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '16px', lineHeight: '1.8', maxWidth: '720px', margin: '0 auto', wordBreak: 'keep-all' }}>
               단순히 '가까운 사람'을 태우는 매칭이 아닙니다.<br className="hidden md:block" /> 탑승자 조합부터 최적의 집결지 선정, 실시간 재조정까지<br className="hidden md:block" /> <strong>카풀의 전 과정을 AI 알고리즘이 완벽하게 최적화합니다.</strong>
@@ -772,6 +780,8 @@ export function Activities() {
     if (!TABS.find(t => t.key === currentTab)) {
       navigate('/activities?tab=method', { replace: true });
     }
+    // 탭 변경 시 상단으로 스크롤 이동 (모바일 사용자 경험 개선)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentTab, navigate]);
 
   const renderTab = () => {
