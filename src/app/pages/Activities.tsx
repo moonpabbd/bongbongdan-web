@@ -676,6 +676,54 @@ function TabShelters() {
         .hide-scrollbar::-webkit-scrollbar { display: none; }
       `}</style>
 
+      {/* 🚀 Quick View Navigation (Option A: Horizontal Scroll) */}
+      <div style={{ padding: '0 clamp(20px, 5vw, 40px) 40px', background: G.warmSection }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <RevealDiv delay={100}>
+            <div
+              className="hide-scrollbar"
+              style={{
+                display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '24px', scrollSnapType: 'x mandatory'
+              }}
+            >
+              {activeShelters.map((shelter) => (
+                <div
+                  key={`quick-${shelter.name}`}
+                  className="hover-lift"
+                  onClick={() => {
+                    const el = document.getElementById(`shelter-${shelter.name}`);
+                    if (el) {
+                      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }}
+                  style={{
+                    flex: '0 0 auto', scrollSnapAlign: 'start', cursor: 'pointer',
+                    background: '#fff', borderRadius: '20px', padding: '24px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.05)',
+                    minWidth: '240px', display: 'flex', flexDirection: 'column', gap: '12px'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '18px', fontWeight: '900', color: '#1E3A5F' }}>{shelter.name}</span>
+                    <div style={{ background: 'rgba(200,150,62,0.1)', color: '#A87830', fontSize: '12px', fontWeight: '800', padding: '6px 10px', borderRadius: '12px' }}>
+                      {shelter.location.split(' ')[0]}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                    <PawPrint size={14} color="#6B7280" />
+                    <span style={{ fontSize: '14px', color: '#6B7280', fontWeight: '600' }}>{shelter.animalCount}</span>
+                  </div>
+                  <div style={{ fontSize: '13px', fontWeight: '800', color: '#4A7C59', marginTop: '4px' }}>
+                    {shelter.tags[0]} {shelter.tags[1] && shelter.tags[1]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </RevealDiv>
+        </div>
+      </div>
+
       {/* 정기 출정 보호소 리스트 (매거진 스타일 뷰) */}
       <div style={{ padding: '40px clamp(20px, 5vw, 40px) 80px', background: G.warmSection }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '80px' }}>
@@ -683,7 +731,9 @@ function TabShelters() {
             const isEven = i % 2 === 0;
             return (
               <RevealDiv key={shelter.name} delay={0}>
-                <div style={{
+                <div 
+                  id={`shelter-${shelter.name}`}
+                  style={{
                   display: 'flex',
                   flexDirection: isEven ? 'row' : 'row-reverse',
                   flexWrap: 'wrap',
