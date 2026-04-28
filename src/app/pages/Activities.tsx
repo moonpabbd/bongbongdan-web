@@ -26,6 +26,11 @@ import ark02 from '../../imports/ark_02.jpeg';
 import ark03 from '../../imports/ark_03.jpeg';
 import ark04 from '../../imports/ark_04.jpeg';
 
+import bigdog01 from '../../imports/bigdog_01.jpeg';
+import bigdog02 from '../../imports/bigdog_02.jpeg';
+import bigdog03 from '../../imports/bigdog_03.jpeg';
+import bigdog04 from '../../imports/bigdog_04.jpeg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -533,7 +538,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#큰개들의숲', '#노견특화', '#체계적시스템', '#신발커버필수'],
     notice: '대형견과 노견들을 중심으로 구조와 보호, 입양을 지원하는 ‘큰 개들의 숲’입니다. 정부 지원 없이 오직 후원과 봉사의 힘으로 운영되는 곳임에도 불구하고, 매우 체계적인 산책과 청소 시스템을 갖추고 있습니다. 총 4개의 동이 색상별로 구분되어 관리되며, 동별로 소수의 아이들을 집중 케어하여 관리가 수월한 것이 특징입니다. 활동 시 물청소가 위주로 진행되므로 신발 커버를 필수로 지참해 주세요.',
     headerGradient: 'linear-gradient(135deg,#4B3D6B,#6E5B94)',
-    images: [mockImages[9], mockImages[0], mockImages[1]]
+    images: [bigdog01, bigdog02, bigdog03, bigdog04]
   },
   {
     name: '포캣멍센터',
