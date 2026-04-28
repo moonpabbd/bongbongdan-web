@@ -680,7 +680,7 @@ function TabShelters() {
                       </div>
                       <div>
                         <p style={{ fontSize: '13px', color: '#6B7280', marginBottom: '6px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Users size={14} /> 최대 정원
+                          <Users size={14} /> 최대 봉사자 수
                         </p>
                         <p style={{ fontSize: '18px', fontWeight: '800', color: '#1E3A5F' }}>{shelter.capacity}</p>
                       </div>
