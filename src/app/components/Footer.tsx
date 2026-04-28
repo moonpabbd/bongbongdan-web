@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import { Mail, Instagram } from 'lucide-react';
+import { Mail, Instagram, ExternalLink } from 'lucide-react';
 import { logoSloganImg } from '../imageAssets';
 import { G, gradientText } from '../styles/gradients';
 
@@ -17,6 +18,13 @@ const footerLinks = [
 });
 
 export function Footer() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   return (
     <footer style={{ background: G.warmSection, color: '#1E3A5F', padding: '64px 40px 32px', borderTop: '1px solid rgba(200,150,62,0.15)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -62,10 +70,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 style={{ color: '#A87830', fontSize: '13px', fontWeight: '700', letterSpacing: '2px', marginBottom: '20px' }}>
-              연락처
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: isMobile ? '0' : '33px' }}>
               <a
                 href="mailto:info@bbd.or.kr"
                 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}
@@ -81,6 +86,28 @@ export function Footer() {
               >
                 <Instagram size={16} color="#C8963E" />
                 @bongbongdan_official
+              </a>
+              <a
+                href="https://blog.naver.com/moonpabbd"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}
+              >
+                <div style={{ 
+                  width: '16px', 
+                  height: '16px', 
+                  border: '1.5px solid #C8963E', 
+                  color: '#C8963E', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  borderRadius: '3px', 
+                  fontSize: '10px', 
+                  fontWeight: '900', 
+                  lineHeight: 1,
+                  flexShrink: 0
+                }}>N</div>
+                Naver Blog
               </a>
             </div>
           </div>
