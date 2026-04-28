@@ -41,6 +41,16 @@ import wangwang02 from '../../imports/wangwang_02.jpeg';
 import wangwang03 from '../../imports/wangwang_03.jpeg';
 import wangwang04 from '../../imports/wangwang_04.jpeg';
 
+import freedom01 from '../../imports/freedom_01.jpeg';
+import freedom02 from '../../imports/freedom_02.jpeg';
+import freedom03 from '../../imports/freedom_03.jpeg';
+import freedom04 from '../../imports/freedom_04.jpeg';
+
+import onebreath01 from '../../imports/onebreath_01.jpeg';
+import onebreath02 from '../../imports/onebreath_02.jpeg';
+import onebreath03 from '../../imports/onebreath_03.jpeg';
+import onebreath04 from '../../imports/onebreath_04.jpeg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -587,7 +597,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#저수지산책', '#훈련전문가', '#원상복구철저', '#낭만봉사'],
     notice: '경기도 오산에 위치한 민간 보호소로, 아이들이 안전한 환경에서 장기 보호를 받으며 입양으로 나아갈 수 있도록 돕는 공간입니다. 훈련에 능숙하신 소장님께서 직접 시연과 영상 가이드를 통해 체계적으로 봉사 교육을 진행해 주시는 것이 큰 특징입니다. 인근 저수지를 한 바퀴 도는 낭만적인 산책 코스도 경험할 수 있습니다. 단, 견사 청소 시에는 물품의 위치와 크기가 바뀌지 않도록 청소 전 상태를 반드시 촬영한 뒤, 처음 모습 그대로 완벽하게 원상복구해야 합니다.',
     headerGradient: 'linear-gradient(135deg,#2D5C40,#4A7C59)',
-    images: [mockImages[8], mockImages[9], mockImages[0]]
+    images: [onebreath01, onebreath02, onebreath03, onebreath04]
   },
   {
     name: '동물자유연대',
@@ -600,7 +610,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#제1_2온센터', '#최첨단복지', '#수의사상주', '#전문인솔'],
     notice: '국내 최초이자 최대 규모를 자랑하는 복지형 보호소로, 남양주(개 중심)와 파주(고양이 전문) 온센터를 통해 체계적인 구조와 재활을 지원하는 대한민국 대표 보호시설입니다. 24시간 수의사와 전문 스태프가 상주하며 의료와 돌봄이 통합된 시스템을 갖추고 있습니다. 담당자분들의 친절한 인솔 하에 견사 및 묘사 청소, 산책, 사회화 훈련 보조 등 매우 체계적이고 전문적인 봉사 경험을 할 수 있는 곳입니다.',
     headerGradient: 'linear-gradient(135deg,#A87830,#C8963E)',
-    images: [mockImages[1], mockImages[2], mockImages[3]]
+    images: [freedom01, freedom02, freedom03, freedom04]
   },
   {
     name: '댕글댕글',
