@@ -243,7 +243,7 @@ export function FAQ() {
                 카카오 채널이나 이메일로 문의 주시면 빠르게 답변드립니다.
               </p>
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <a href="https://pf.kakao.com/example" target="_blank" rel="noopener noreferrer"
+                <a href="http://pf.kakao.com/_zxcZIX/chat" target="_blank" rel="noopener noreferrer"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: G.yellowBtn, color: '#191919', padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '15px', fontWeight: '700', boxShadow: '0 4px 16px rgba(254,229,0,0.3)' }}
                 >
                   <MessageCircle size={16} /> 카카오로 문의

@@ -6,7 +6,7 @@ export function KakaoFloat() {
 
   return (
     <a
-      href="https://pf.kakao.com/example"
+      href="http://pf.kakao.com/_zxcZIX/chat"
       target="_blank"
       rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}

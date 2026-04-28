@@ -164,7 +164,7 @@ export function Members() {
 
               <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #F0F0F0' }}>
                 <a
-                  href="https://pf.kakao.com/example"
+                  href="http://pf.kakao.com/_zxcZIX/chat"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: '#9CA3AF', fontSize: '13px', textDecoration: 'none' }}
