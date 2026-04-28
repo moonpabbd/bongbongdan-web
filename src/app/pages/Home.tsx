@@ -255,18 +255,16 @@ export function Home() {
               봉사 신청부터 봉사가 끝날 때까지 <br className="hidden md:block" />
               누구나 쉽고 편하게 봉사할 수 있도록 만들어 갑니다.
             </p>
-            <a
-              href="https://forms.gle/8CdE8FyFmPAvJhVKA"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/apply"
               className="hover-scale"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 color: '#A87830', fontWeight: '700', fontSize: '16px', textDecoration: 'none',
               }}
             >
-              봉사 신청하러 가기 <ChevronRight size={18} />
-            </a>
+              집결 신청하러 가기 <ChevronRight size={18} />
+            </Link>
           </Reveal>
           <Reveal delay={150}>
             <div style={{ borderRadius: '28px', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.12)' }}>
@@ -415,10 +413,8 @@ export function Home() {
               봉사가 처음이어도 괜찮습니다.<br className="hidden md:block" /> 봉봉단이 함께합니다.
             </p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <a
-                href="https://forms.gle/8CdE8FyFmPAvJhVKA"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/apply"
                 className="hover-scale"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
@@ -428,8 +424,8 @@ export function Home() {
                   boxShadow: '0 12px 40px rgba(200,150,62,0.45)',
                 }}
               >
-                봉사 신청하기 <ChevronRight size={20} />
-              </a>
+                집결 신청하기 <ChevronRight size={20} />
+              </Link>
             </div>
           </Reveal>
         </div>

@@ -11,6 +11,7 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { AdminDB } from './pages/AdminDB';
 import { EditProfile } from './pages/EditProfile';
+import { ApplyVolunteer } from './pages/ApplyVolunteer';
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: 'signup', Component: Signup },
       { path: 'admin/db', Component: AdminDB },
       { path: 'profile-edit', Component: EditProfile },
+      { path: 'apply', Component: ApplyVolunteer },
     ],
   },
 ]);

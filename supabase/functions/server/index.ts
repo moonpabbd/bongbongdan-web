@@ -63,7 +63,7 @@ app.post("/server/auth/signup", async (c) => {
     } = body;
 
     // 필수 필드 검증
-    if (!username || !password || !name || !gender || !phone || !birthdate || !joinPath || !kakaoId) {
+    if (!username || !password || !name || !gender || !phone || !birthdate || !kakaoId) {
       return c.json({ error: "필수 항목이 누락되었습니다." }, 400);
     }
 
@@ -115,8 +115,8 @@ app.post("/server/auth/signup", async (c) => {
       gender,
       phone,
       birthdate,
-      joinPath,
-      joinPathDetail: joinPath === '기타' ? (joinPathDetail || '') : '',
+      joinPath: joinPath || '',
+      joinPathDetail: joinPathDetail || '',
       kakaoId,
       marketingAgreement: !!marketingAgreement,
       createdAt: new Date().toISOString(),
@@ -255,7 +255,7 @@ app.put("/server/auth/profile", async (c) => {
     if (error || !user) return c.json({ error: `인증 실패: ${error?.message}` }, 401);
 
     const body = await c.req.json();
-    const { name, username, birthdate, phone, kakaoId, marketingAgreement, newPassword } = body;
+    const { name, username, birthdate, phone, kakaoId, gender, marketingAgreement, newPassword } = body;
 
     const profile = await kv.get(`bbd:member:profile:${user.id}`);
     if (!profile) return c.json({ error: "프로필 정보를 찾을 수 없습니다." }, 404);
@@ -291,6 +291,7 @@ app.put("/server/auth/profile", async (c) => {
     if (birthdate) profile.birthdate = birthdate;
     if (phone) profile.phone = phone;
     if (kakaoId) profile.kakaoId = kakaoId;
+    if (gender) profile.gender = gender;
     if (marketingAgreement !== undefined) profile.marketingAgreement = marketingAgreement;
 
     await kv.set(`bbd:member:profile:${user.id}`, profile);
@@ -507,6 +508,111 @@ app.get("/server/analytics/stats", async (c) => {
   } catch (err) {
     console.log("Analytics fetch error:", err);
     return c.json({ error: `서버 오류` }, 500);
+  }
+});
+// ─── 알림톡 발송 (웹 자체 백엔드) ──────────────────────────────────────────────────
+app.post("/server/alimtalk/send", async (c) => {
+  try {
+    const { phone, userName, volunteerDate } = await c.req.json();
+    
+    if (!phone || !userName || !volunteerDate) {
+      return c.json({ error: "필수 데이터(phone, userName, volunteerDate)가 누락되었습니다." }, 400);
+    }
+
+    const API_KEY = 'NCSF27E2PRZLD2RJ';
+    const API_SECRET = '5XBABORHQJFEDT3SJYUOGWOXZ2WRDH8M';
+    const PF_ID = 'KA01PF260220043757420jLYwT98C7yO'; 
+    const TEMPLATE_ID = 'KA01TP260319050552072xv1PWUJb6Rm';
+    
+    const payload = {
+      "message": {
+        "to": phone,
+        "from": "01050646613",
+        "text": `[봉봉단] ${userName} 단원님, ${volunteerDate} 집결 신청이 완료되었소!`,
+        "kakaoOptions": {
+          "pfId": PF_ID,
+          "templateId": TEMPLATE_ID,
+          "variables": {
+            "#{이름}": userName,
+            "#{봉사명}": volunteerDate
+          }
+        }
+      }
+    };
+
+    const isoDate = new Date().toISOString();
+    const salt = Math.random().toString(36).substring(2, 12);
+
+    // HMAC SHA-256 서명 생성 (Web Crypto API 사용)
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(API_SECRET);
+    const msgData = encoder.encode(isoDate + salt);
+    
+    const key = await crypto.subtle.importKey(
+      "raw", keyData, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+    );
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, msgData);
+    const signatureArray = Array.from(new Uint8Array(signatureBuffer));
+    const signature = signatureArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    const url = 'https://api.solapi.com/messages/v4/send';
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `HMAC-SHA256 apiKey=${API_KEY}, date=${isoDate}, salt=${salt}, signature=${signature}`
+      },
+      body: JSON.stringify(payload)
+    };
+
+    const res = await fetch(url, options);
+    const responseText = await res.text();
+    let isSuccess = res.ok;
+    
+    // KV 로그 저장용 데이터 구성
+    const logData = {
+      timestamp: isoDate,
+      phone,
+      userName,
+      volunteerDate,
+      success: isSuccess,
+      response: responseText
+    };
+
+    // KV에 저장 (접두사 bbd:alimtalk:log:)
+    const logId = Date.now() + salt;
+    await kv.set(`bbd:alimtalk:log:${logId}`, logData);
+
+    if (!isSuccess) {
+      console.log("Alimtalk Solapi Error: ", responseText);
+      return c.json({ error: "솔라피 발송 실패", details: responseText }, 500);
+    }
+
+    return c.json({ success: true });
+  } catch (err) {
+    console.log("Alimtalk trigger error:", err);
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+// ─── 알림톡 발송 현황 조회 API (관리자용) ───────────────────────────────────────
+app.get("/server/alimtalk/logs", async (c) => {
+  try {
+    const adminPassword = c.req.header('X-Admin-Password');
+    if (adminPassword !== 'pjb0812') {
+      return c.json({ error: "접근 권한이 없습니다." }, 403);
+    }
+    
+    // KV 저장소에서 모든 알림톡 로그 조회
+    const logs = await kv.getByPrefix('bbd:alimtalk:log:');
+    
+    // 최신순 정렬
+    logs.sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime());
+
+    return c.json({ logs });
+  } catch (err) {
+    console.log("Alimtalk logs fetch error:", err);
+    return c.json({ error: `서버 오류: ${err}` }, 500);
   }
 });
 

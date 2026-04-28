@@ -5,7 +5,7 @@ import { logoImg } from '../imageAssets';
 import { G } from '../styles/gradients';
 import { useAuth } from '../context/AuthContext';
 
-const APPLY_URL = 'https://forms.gle/8CdE8FyFmPAvJhVKA';
+const APPLY_URL = '/apply';
 
 const navItems = [
   {
@@ -233,9 +233,8 @@ export function Navbar() {
             })}
 
             {/* 봉사 신청 버튼 (데스크탑) */}
-            <a
-              href={APPLY_URL}
-              target="_blank"
+            <Link
+              to={APPLY_URL}
               rel="noopener noreferrer"
               style={{
                 background: G.goldBtn,
@@ -261,8 +260,8 @@ export function Navbar() {
                 (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(200,150,62,0.35)';
               }}
             >
-              봉사 신청
-            </a>
+              집결 신청
+            </Link>
 
             {/* 로그인/사용자 메뉴 (로컬 개발 환경에서만 표시) */}
             {import.meta.env.DEV && (user ? (
@@ -466,9 +465,8 @@ export function Navbar() {
         })}
 
         {/* 봉사 신청 버튼 (모바일) */}
-        <a
-          href={APPLY_URL}
-          target="_blank"
+        <Link
+          to={APPLY_URL}
           rel="noopener noreferrer"
           className="hover-scale"
           style={{
@@ -487,8 +485,8 @@ export function Navbar() {
             gap: '6px',
           }}
         >
-          봉사 신청하기
-        </a>
+          집결 신청하기
+        </Link>
 
         <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {/* 로그인/사용자 메뉴 (로컬 개발 환경에서만 표시) */}

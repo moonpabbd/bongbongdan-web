@@ -17,6 +17,7 @@ export function EditProfile() {
   
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
+  const [gender, setGender] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [phone, setPhone] = useState('');
   const [kakaoId, setKakaoId] = useState('');
@@ -33,6 +34,7 @@ export function EditProfile() {
       } else if (profile) {
         setName(profile.name || '');
         setUsername(profile.username || '');
+        setGender(profile.gender || '');
         setBirthdate(profile.birthdate || '');
         setPhone(profile.phone || '');
         setKakaoId(profile.kakaoId || '');
@@ -109,6 +111,7 @@ export function EditProfile() {
 
     if (!name.trim()) { setError('이름을 입력해주세요.'); return; }
     if (!username.trim()) { setError('아이디를 입력해주세요.'); return; }
+    if (!gender) { setError('성별을 선택해주세요.'); return; }
     if (!birthdate.trim()) { setError('생년월일을 입력해주세요.'); return; }
     if (!phone.trim()) { setError('연락처를 입력해주세요.'); return; }
     if (!kakaoId.trim()) { setError('카카오톡 ID를 입력해주세요.'); return; }
@@ -133,6 +136,7 @@ export function EditProfile() {
         body: JSON.stringify({
           name: name.trim(),
           username: username.trim().toLowerCase(),
+          gender,
           birthdate: birthdate.trim(),
           phone: phone.trim(),
           kakaoId: kakaoId.trim(),
@@ -229,6 +233,31 @@ export function EditProfile() {
               {username !== profile.username && (
                 <p style={{ color: '#9CA3AF', fontSize: '12px', marginTop: '6px' }}>아이디 변경 시 로그아웃되며 새 아이디로 다시 로그인해야 합니다.</p>
               )}
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+                성별 <span style={{ color: '#EF4444' }}>*</span>
+              </label>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                {['남성', '여성'].map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setGender(g)}
+                    style={{
+                      flex: 1, padding: '13px', borderRadius: '10px',
+                      border: gender === g ? '2px solid #C8963E' : '1px solid #E5E7EB',
+                      background: gender === g ? 'rgba(200,150,62,0.1)' : '#F9FAFB',
+                      color: gender === g ? '#B47B2B' : '#4B5563',
+                      fontSize: '15px', fontWeight: gender === g ? '700' : '500',
+                      cursor: 'pointer', transition: 'all 0.2s'
+                    }}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div>

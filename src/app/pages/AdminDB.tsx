@@ -14,13 +14,16 @@ export function AdminDB() {
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
-  const [mainTab, setMainTab] = useState<'members' | 'analytics'>('analytics');
+  const [mainTab, setMainTab] = useState<'members' | 'analytics' | 'alimtalk'>('analytics');
+  const [alimtalkLogs, setAlimtalkLogs] = useState<any[]>([]);
+  const [loadingLogs, setLoadingLogs] = useState(false);
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
       setAuthenticated(true);
       setError(false);
       fetchMembers();
+      fetchAlimtalkLogs();
     } else {
       setError(true);
       setPassword('');
@@ -58,6 +61,26 @@ export function AdminDB() {
       ]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAlimtalkLogs = async () => {
+    setLoadingLogs(true);
+    try {
+      const res = await fetch(`${SERVER}/alimtalk/logs`, {
+        method: 'GET',
+        headers: {
+          'X-Admin-Password': ADMIN_PASSWORD
+        }
+      });
+      const data = await res.json();
+      if (res.ok && data.logs) {
+        setAlimtalkLogs(data.logs);
+      }
+    } catch (err) {
+      console.error('Alimtalk logs fetch error:', err);
+    } finally {
+      setLoadingLogs(false);
     }
   };
 
@@ -169,11 +192,22 @@ export function AdminDB() {
           >
             전체 회원 데이터베이스
           </button>
+          <button 
+            onClick={() => setMainTab('alimtalk')}
+            style={{ 
+              padding: '12px 24px', background: 'none', border: 'none', 
+              borderBottom: mainTab === 'alimtalk' ? '3px solid #1E3A5F' : '3px solid transparent',
+              color: mainTab === 'alimtalk' ? '#1E3A5F' : '#9CA3AF',
+              fontSize: '18px', fontWeight: '800', cursor: 'pointer', marginBottom: '-2px'
+            }}
+          >
+            알림톡 발송 현황
+          </button>
         </div>
 
         {mainTab === 'analytics' ? (
           <AdminAnalytics adminPassword={password} />
-        ) : (
+        ) : mainTab === 'members' ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
               <div>
@@ -265,7 +299,73 @@ export function AdminDB() {
           )}
         </div>
         </>
-        )}
+        ) : mainTab === 'alimtalk' ? (
+          <>
+            <div style={{ marginBottom: '24px' }}>
+              <h1 style={{ color: '#1E3A5F', fontSize: '28px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Users size={28} color="#C8963E" />
+                알림톡 발송 현황
+              </h1>
+              <p style={{ color: '#6B7280', fontSize: '15px', marginTop: '8px' }}>
+                봉사 집결 신청 시 자동 발송된 솔라피 알림톡 내역입니다.
+              </p>
+            </div>
+
+            <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
+              {loadingLogs ? (
+                <div style={{ padding: '60px', textAlign: 'center', color: '#6B7280' }}>데이터를 불러오는 중입니다...</div>
+              ) : alimtalkLogs.length === 0 ? (
+                <div style={{ padding: '60px', textAlign: 'center', color: '#6B7280' }}>
+                  알림톡 발송 기록이 없습니다.
+                </div>
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', whiteSpace: 'nowrap' }}>
+                    <thead>
+                      <tr style={{ background: '#F3F4F6', color: '#374151', textAlign: 'left' }}>
+                        <th style={{ padding: '16px', fontWeight: '700' }}>발송 일시</th>
+                        <th style={{ padding: '16px', fontWeight: '700' }}>수신자</th>
+                        <th style={{ padding: '16px', fontWeight: '700' }}>연락처</th>
+                        <th style={{ padding: '16px', fontWeight: '700' }}>봉사명</th>
+                        <th style={{ padding: '16px', fontWeight: '700' }}>상태</th>
+                        <th style={{ padding: '16px', fontWeight: '700' }}>상세 결과</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {alimtalkLogs.map((log, i) => (
+                        <tr key={i} style={{ borderTop: '1px solid #E5E7EB', color: '#4B5563' }}>
+                          <td style={{ padding: '16px' }}>{new Date(log.timestamp).toLocaleString()}</td>
+                          <td style={{ padding: '16px', fontWeight: '600' }}>{log.userName}</td>
+                          <td style={{ padding: '16px' }}>{log.phone}</td>
+                          <td style={{ padding: '16px', color: '#1E3A5F', fontWeight: '500' }}>{log.volunteerDate}</td>
+                          <td style={{ padding: '16px' }}>
+                            <span style={{ 
+                              background: log.success ? '#D1FAE5' : '#FEE2E2', 
+                              color: log.success ? '#065F46' : '#991B1B', 
+                              padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '700' 
+                            }}>
+                              {log.success ? '성공' : '실패'}
+                            </span>
+                          </td>
+                          <td style={{ padding: '16px', color: '#9CA3AF', fontSize: '12px', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {log.success ? '정상 발송' : (() => {
+                              try {
+                                const parsed = JSON.parse(log.response);
+                                return parsed.errorMessage || parsed.error || log.response;
+                              } catch (e) {
+                                return log.response || '-';
+                              }
+                            })()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </>
+        ) : null}
 
       </div>
     </div>

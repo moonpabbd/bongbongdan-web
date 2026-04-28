@@ -8,10 +8,7 @@ import { formatPhoneNumber } from '../../utils/format';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
-const JOIN_PATHS = [
-  '지인 소개', '인스타그램', '소모임', '스레드', '당근',
-  '블로그', '솜씨당', '검색', '기타',
-];
+
 
 interface FormState {
   // 계정 정보
@@ -24,8 +21,7 @@ interface FormState {
   birthdate: string;
   phone: string;
   kakaoId: string;
-  joinPath: string;
-  joinPathDetail: string;
+
   // 약관
   privacyAgreement: boolean;
   marketingAgreement: boolean;
@@ -53,8 +49,7 @@ export function Signup() {
     birthdate: '',
     phone: '',
     kakaoId: '',
-    joinPath: '',
-    joinPathDetail: '',
+
     privacyAgreement: false,
     marketingAgreement: false,
   });
@@ -119,8 +114,6 @@ export function Signup() {
     if (!form.birthdate) return '생년월일을 입력해주세요.';
     if (!form.phone.trim()) return '연락처를 입력해주세요.';
     if (!form.kakaoId.trim()) return '카카오톡 ID를 입력해주세요.';
-    if (!form.joinPath) return '봉봉단을 알게 된 경로를 선택해주세요.';
-    if (form.joinPath === '기타' && !form.joinPathDetail.trim()) return '기타 경로를 직접 입력해주세요.';
     if (!form.privacyAgreement) return '개인정보 수집 및 이용에 동의해주세요.';
     return '';
   };
@@ -143,8 +136,6 @@ export function Signup() {
           gender: form.gender,
           phone: form.phone.trim(),
           birthdate: form.birthdate,
-          joinPath: form.joinPath,
-          joinPathDetail: form.joinPath === '기타' ? form.joinPathDetail.trim() : '',
           kakaoId: form.kakaoId.trim(),
           marketingAgreement: form.marketingAgreement,
         }),
@@ -501,55 +492,6 @@ export function Signup() {
             <p style={{ fontSize: '12px', marginTop: '6px', color: 'rgba(255,255,255,0.35)' }}>
               봉사 일정 안내 및 소통에 사용됩니다
             </p>
-          </div>
-
-          {/* 가입 경로 */}
-          <div>
-            <label style={labelStyle}>봉봉단을 알게 된 경로 <Required /></label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {JOIN_PATHS.map(p => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => {
-                    setField('joinPath', p);
-                    if (p !== '기타') setField('joinPathDetail', '');
-                  }}
-                  style={{
-                    padding: '9px 16px',
-                    borderRadius: '50px',
-                    border: form.joinPath === p ? '2px solid #C8963E' : '1px solid rgba(255,255,255,0.12)',
-                    background: form.joinPath === p ? 'rgba(200,150,62,0.15)' : 'rgba(255,255,255,0.04)',
-                    color: form.joinPath === p ? '#F5C875' : 'rgba(255,255,255,0.6)',
-                    fontSize: '13px',
-                    fontWeight: form.joinPath === p ? '700' : '400',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-            {/* 기타 선택 시 직접 입력 */}
-            {form.joinPath === '기타' && (
-              <div style={{ marginTop: '10px' }}>
-                <input
-                  type="text"
-                  value={form.joinPathDetail}
-                  onChange={e => setField('joinPathDetail', e.target.value)}
-                  placeholder="어떻게 알게 되셨나요? 직접 입력해주세요"
-                  autoFocus
-                  style={{
-                    ...inputStyle,
-                    borderColor: 'rgba(200,150,62,0.4)',
-                    background: 'rgba(200,150,62,0.06)',
-                  }}
-                  onFocus={e => (e.currentTarget.style.borderColor = '#C8963E')}
-                  onBlur={e => (e.currentTarget.style.borderColor = 'rgba(200,150,62,0.4)')}
-                />
-              </div>
-            )}
           </div>
 
           {/* ── 약관 동의 ── */}

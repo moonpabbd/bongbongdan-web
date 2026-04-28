@@ -129,7 +129,7 @@ export function useAnalytics() {
       // 전환 액션 체크 (봉사 신청, 카카오톡 등)
       let isConversion = false;
       let actionName = '';
-      if (target.closest('a[href*="forms.gle"]') || target.closest('a[href*="docs.google.com"]')) {
+      if (target.closest('a[href*="forms.gle"]') || target.closest('a[href*="docs.google.com"]') || target.closest('a[href="/apply"]')) {
         isConversion = true;
         actionName = 'Apply_Volunteer';
       } else if (target.closest('a[href*="pf.kakao.com"]')) {
