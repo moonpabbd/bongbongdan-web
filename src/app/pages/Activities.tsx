@@ -103,13 +103,13 @@ function TabMethod() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '20px' }}>
             {newVolunteerTypes.map((v, i) => (
               <RevealDiv key={v.title} delay={i * 90}>
-                <div 
+                <div
                   className="hover-lift"
                   style={{
-                  background: v.bg, borderRadius: '22px', padding: '36px 32px',
-                  border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
-                  height: '100%', boxSizing: 'border-box',
-                }}>
+                    background: v.bg, borderRadius: '22px', padding: '36px 32px',
+                    border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
+                    height: '100%', boxSizing: 'border-box',
+                  }}>
                   <div style={{
                     width: '52px', height: '52px', borderRadius: '14px',
                     background: `${v.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -158,14 +158,14 @@ function TabMethod() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', paddingTop: '32px' }}>
             {journeyPhases.map((phase, i) => (
               <RevealDiv key={phase.step} delay={i * 100}>
-                <div 
+                <div
                   className="hover-lift"
                   style={{
-                  background: phase.bg, borderRadius: '24px', padding: '48px 32px 36px',
-                  position: 'relative', overflow: 'visible', height: '100%', boxSizing: 'border-box',
-                  border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
-                  textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'
-                }}>
+                    background: phase.bg, borderRadius: '24px', padding: '48px 32px 36px',
+                    position: 'relative', overflow: 'visible', height: '100%', boxSizing: 'border-box',
+                    border: '1px solid rgba(0,0,0,0.04)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)',
+                    textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'
+                  }}>
                   {/* Floating Icon */}
                   <div style={{
                     position: 'absolute', top: '-32px', left: '50%', transform: 'translateX(-50%)',
@@ -224,14 +224,14 @@ function TabMethod() {
               }
             ].map((item, i) => (
               <RevealDiv key={item.step} delay={i * 100}>
-                <div 
+                <div
                   className="hover-lift"
                   style={{
-                  display: 'flex', gap: '24px', alignItems: 'center',
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01))',
-                  border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: 'clamp(24px, 5vw, 32px) clamp(20px, 5vw, 40px)',
-                  position: 'relative', overflow: 'hidden'
-                }}>
+                    display: 'flex', gap: '24px', alignItems: 'center',
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01))',
+                    border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: 'clamp(24px, 5vw, 32px) clamp(20px, 5vw, 40px)',
+                    position: 'relative', overflow: 'hidden'
+                  }}>
                   {/* Background Step Number */}
                   <div style={{ position: 'absolute', right: '-10px', top: '-10px', fontSize: '100px', fontWeight: '900', color: '#fff', opacity: 0.03, pointerEvents: 'none', lineHeight: '1' }}>
                     {item.step}
@@ -268,13 +268,13 @@ function TabMethod() {
             {/* 왼쪽: Packing List */}
             <div style={{ flex: '1 1 400px', display: 'flex' }}>
               <RevealDiv delay={100} style={{ width: '100%' }}>
-                <div 
+                <div
                   className="hover-lift"
                   style={{
-                  background: '#fff', borderRadius: '24px', padding: 'clamp(24px, 6vw, 40px)', height: '100%', boxSizing: 'border-box',
-                  border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 8px 32px rgba(0,0,0,0.03)',
-                  position: 'relative', overflow: 'hidden'
-                }}>
+                    background: '#fff', borderRadius: '24px', padding: 'clamp(24px, 6vw, 40px)', height: '100%', boxSizing: 'border-box',
+                    border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 8px 32px rgba(0,0,0,0.03)',
+                    position: 'relative', overflow: 'hidden'
+                  }}>
                   {/* Decorative Header */}
                   <div style={{ borderBottom: '2px dashed #E5E7EB', paddingBottom: '24px', marginBottom: '24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -309,13 +309,13 @@ function TabMethod() {
             {/* 오른쪽: 참가비 영수증 */}
             <div style={{ flex: '1 1 400px', display: 'flex' }}>
               <RevealDiv delay={200} style={{ width: '100%' }}>
-                <div 
+                <div
                   className="hover-lift"
                   style={{
-                  background: '#1E3A5F', borderRadius: '24px', padding: 'clamp(24px, 6vw, 40px)', height: '100%', boxSizing: 'border-box',
-                  color: '#fff', position: 'relative', overflow: 'hidden',
-                  boxShadow: '0 8px 32px rgba(30,58,95,0.15)'
-                }}>
+                    background: '#1E3A5F', borderRadius: '24px', padding: 'clamp(24px, 6vw, 40px)', height: '100%', boxSizing: 'border-box',
+                    color: '#fff', position: 'relative', overflow: 'hidden',
+                    boxShadow: '0 8px 32px rgba(30,58,95,0.15)'
+                  }}>
                   {/* Decorative background circle */}
                   <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }}></div>
 
@@ -445,7 +445,7 @@ interface ShelterData {
   regularDay: string;
   timeRange: string;
   capacity: string;
-  tasks: string[];
+  tags: string[];
   notice: string;
   headerGradient: string;
   images: string[];
@@ -472,9 +472,9 @@ const activeShelters: ShelterData[] = [
     animalCount: '약 70마리',
     regularDay: '매월 첫째 토요일',
     timeRange: '10:00 ~ 17:00',
-    capacity: '20명',
-    tasks: ['견사 청소', '보호소 수리 및 보수', '산책'],
-    notice: '보호소장님께서 말씀은 강하시지만 마음이 여리십니다. 비오는 날 가면 똥물. 견사 문 열어놔도 강아지들이 알아서 견사로 돌아옴. 보호소장님께서 봉사자 옆에서도 흡연하심. 산책, 미용, 목욕 봉사 등을 제안할 수 있음.',
+    capacity: '15명',
+    tags: ['#소장님1인운영', '#최근이전', '#따뜻한터프함', '#제안환영'],
+    notice: '소장님 홀로 수십 마리의 아이들을 돌보시는 소규모 보호소로, 최근 새로운 터전으로 이전하였습니다. 한정된 자원 속에서 봉사자와 후원자분들의 도움이 큰 힘이 되는 곳입니다. 소장님은 터프한 매력이 있으시지만, 봉사자들의 의견(산책, 미용, 목욕 제안 등)을 적극적으로 수용해 주시는 따뜻한 분입니다. 격식보다는 실전 위주의 활동이 이뤄지며, 소장님과 소통하며 유동적으로 봉사를 진행할 수 있는 것이 특징입니다.',
     headerGradient: 'linear-gradient(135deg,#163366,#2E5298)',
     images: [collie01, collie02, collie03, collie04]
   },
@@ -486,8 +486,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '비정기 봉사',
     timeRange: '09:00~12:00 / 13:30~15:30',
     capacity: '20명',
-    tasks: ['견사 청소', '사료 배급', '산책'],
-    notice: '경기도청 산하의 유기견보호센터이다보니 규모가 매우 크고, 시설이 깨끗하며 별도 준비물 필요없음! 인솔 안내해주시는 반려마루 직원분들이 많아서, 청소/사료 배급/산책 등 안내에 따라 수행 용이. 봉사 인원이 많지 않을 경우, 산책 시 폴라로이드 촬영 및 그림일기 프로그램 진행.',
+    tags: ['#국내최대규모', '#테마파크형', '#폴라로이드', '#준비물불필요'],
+    notice: '경기도가 조성한 국내 최대 규모의 반려동물 복합문화공간으로, 보호와 입양은 물론 교육과 문화가 어우러진 테마파크형 시설입니다. 쾌적한 환경 속에서 별도의 준비물 없이도 봉사가 가능하며, 전문 담당자분들의 체계적인 인솔 덕분에 초보 봉사자도 쉽게 적응할 수 있습니다. 아이들과 산책하며 폴라로이드 추억을 남기거나 그림일기를 작성하는 등 정서적 교감을 나누는 특별한 프로그램도 경험할 수 있습니다.',
     headerGradient: 'linear-gradient(135deg,#2D5C40,#4A7C59)',
     images: [mockImages[3], mockImages[4], mockImages[5]]
   },
@@ -499,8 +499,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '매월 셋째 토요일',
     timeRange: '10:00 ~ 17:30',
     capacity: '20명',
-    tasks: ['밥/물주기', '견사정리', '배설물 정리', '돌보기'],
-    notice: '요청시 픽업 제공됨(월롱역 공영주차장 오전 9시30분, 3명까지). 대형견 위주. 강아지 무서워하거나 알러지 있는 분들 계시다면 한 조로 나눠주세요. 개들이 뭉쳐있으면 싸울 일이 많아집니다. 절대로 넘어지지 마세요. 큰 소리 금지, 간식 절대 금지. 악세사리 주의.',
+    tags: ['#누렁이전문', '#식용견은없다', '#월롱역픽업', '#대형견천국'],
+    notice: '세계 최초의 ‘누렁이 전문 보호소’로, 식용견이라는 편견 속에서 구조된 중·대형견들의 치료와 재활, 입양을 책임지는 민간 비영리 단체입니다. “식용견은 없다”는 확고한 철학 아래, 생명의 존엄성을 지키며 아이들이 반려견으로서의 평범한 행복을 되찾도록 돕고 있습니다. 대형견 위주의 환경이며, 요청 시 월롱역 인근에서 소수 인원 픽업이 가능합니다. 안전을 위해 큰 소리나 간식 급여는 금지되며, 아이들이 뭉쳐서 다투지 않도록 각별한 주의가 필요합니다.',
     headerGradient: 'linear-gradient(135deg,#A87830,#C8963E)',
     images: [mockImages[6], mockImages[7], mockImages[8]]
   },
@@ -508,12 +508,12 @@ const activeShelters: ShelterData[] = [
     name: '빅독포레스트',
     location: '경기 파주시',
     applyUrl: 'https://www.instagram.com/bigdogforest/',
-    animalCount: '미상',
+    animalCount: '약 100마리',
     regularDay: '매월 둘째 토요일',
     timeRange: '10:00 ~ 13:00',
     capacity: '30명',
-    tasks: ['견사 청소', '교감'],
-    notice: '대중교통(경의중앙선) 방문 용이. 4개 동으로 나뉘어져있으며, 각 견사 내부에 주의 견(아프거나, 물어서 주의가 필요한 견)이 안내되어있음. 청소는 물청소 위주로 진행되어 신발커버 필수.',
+    tags: ['#큰개들의숲', '#노견특화', '#체계적시스템', '#신발커버필수'],
+    notice: '대형견과 노견들을 중심으로 구조와 보호, 입양을 지원하는 ‘큰 개들의 숲’입니다. 정부 지원 없이 오직 후원과 봉사의 힘으로 운영되는 곳임에도 불구하고, 매우 체계적인 산책과 청소 시스템을 갖추고 있습니다. 총 4개의 동이 색상별로 구분되어 관리되며, 동별로 소수의 아이들을 집중 케어하여 관리가 수월한 것이 특징입니다. 활동 시 물청소가 위주로 진행되므로 신발 커버를 필수로 지참해 주세요.',
     headerGradient: 'linear-gradient(135deg,#4B3D6B,#6E5B94)',
     images: [mockImages[9], mockImages[0], mockImages[1]]
   },
@@ -525,8 +525,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '비정기 봉사',
     timeRange: '09:00~12:00 / 16:00~19:00',
     capacity: '15명',
-    tasks: ['견사 및 캔넬 청소', '산책', '설거지', '교감'],
-    notice: '미어캣과 고양이 방 있음. 산책시 공원 진입로 차량 주의. 남자는 개별 실내용 슬리퍼 지참. 건물 내 주차 불가(근처 공용주차장 이용). 청소 전 촬영 불가. 유튜버/블로거 촬영 사전 허가 필수. 아이들 싸움 시 직접 말리지 말고 직원 호출. 털 알러지 고지.',
+    tags: ['#안락사없는보호소', '#평생보호', '#미어캣친구들', '#슬리퍼지참'],
+    notice: '비영리 사단법인이 운영하는 안락사 없는 보호소로, 구조된 개와 고양이들이 사회화를 거쳐 새 가족을 만날 수 있도록 돕고 있습니다. 특히 입양이 어려운 노령 및 질병 동물들을 끝까지 책임지는 ‘평생 보호’를 실천하는 곳입니다. 미어캣과 고양이 전용 방이 있는 것이 특징이며, 산책 시 공원 진입로의 차량을 각별히 주의해야 합니다. 남성 봉사자는 개별 실내용 슬리퍼를 지참해야 하며, 건물 내 주차가 불가하므로 인근 공용주차장을 이용해 주세요. 또한 청소 전 촬영은 금지되며, 유튜버나 블로거의 경우 사전 허가가 필수입니다.',
     headerGradient: 'linear-gradient(135deg,#8C2B3E,#B23A52)',
     images: [mockImages[2], mockImages[3], mockImages[4]]
   },
@@ -538,8 +538,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '매월 둘째 토요일',
     timeRange: '10:00 ~ 13:00',
     capacity: '30명',
-    tasks: ['견사 청소', '산책'],
-    notice: '견사는 야외/비닐하우스 내부로 나뉘어져 있으며 규모가 매우 큼. 보호소 바로 앞이 바닷가로 산책 코스가 좋지만, 진입 직전 1차선 자동차 도로가 있어서 주의 필요.',
+    tags: ['#해안가산책', '#환경개선중', '#바닷바람', '#힐링봉사'],
+    notice: '해변가에 위치하여 겨울철 바닷바람과 추위가 매섭지만, 견사 보온과 확장 공사를 위해 정성을 다해 환경을 개선해 나가고 있는 곳입니다. 봉사자분들은 청소와 산책, 급식 등 아이들의 일상을 돌보며 함께 마음의 위로를 얻는 따뜻한 분위기를 경험할 수 있습니다. 아름다운 해안가 산책이 가능하지만, 보호소 인근 차도가 가까워 이동 시 안전에 각별히 유의해야 합니다.',
     headerGradient: 'linear-gradient(135deg,#163366,#2E5298)',
     images: [mockImages[5], mockImages[6], mockImages[7]]
   },
@@ -551,8 +551,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '매월 넷째 일요일',
     timeRange: '09:00 ~',
     capacity: '15명',
-    tasks: ['견사/마당 청소', '산책'],
-    notice: '견사 청소를 위해 이불, 침대, 밥/물그릇 등 물건을 치울 때 처음 상태를 촬영해서, 청소 후 처음 상태 그대로 원상복구 해야 함. 물품이 실수로 이동되거나 그릇 크기가 바뀌면 안 됨.',
+    tags: ['#저수지산책', '#훈련전문가', '#원상복구철저', '#낭만봉사'],
+    notice: '경기도 오산에 위치한 민간 보호소로, 아이들이 안전한 환경에서 장기 보호를 받으며 입양으로 나아갈 수 있도록 돕는 공간입니다. 훈련에 능숙하신 소장님께서 직접 시연과 영상 가이드를 통해 체계적으로 봉사 교육을 진행해 주시는 것이 큰 특징입니다. 인근 저수지를 한 바퀴 도는 낭만적인 산책 코스도 경험할 수 있습니다. 단, 견사 청소 시에는 물품의 위치와 크기가 바뀌지 않도록 청소 전 상태를 반드시 촬영한 뒤, 처음 모습 그대로 완벽하게 원상복구해야 합니다.',
     headerGradient: 'linear-gradient(135deg,#2D5C40,#4A7C59)',
     images: [mockImages[8], mockImages[9], mockImages[0]]
   },
@@ -564,8 +564,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '비정기 봉사',
     timeRange: '10:00 ~ 12:00',
     capacity: '25명',
-    tasks: ['견사 청소', '산책'],
-    notice: '체계적으로 관리가 잘 되어 있으며, 부관이 필요없을 정도로 봉사지 담당자들이 관리를 잘해줌.',
+    tags: ['#제1_2온센터', '#최첨단복지', '#수의사상주', '#전문인솔'],
+    notice: '국내 최초이자 최대 규모를 자랑하는 복지형 보호소로, 남양주(개 중심)와 파주(고양이 전문) 온센터를 통해 체계적인 구조와 재활을 지원하는 대한민국 대표 보호시설입니다. 24시간 수의사와 전문 스태프가 상주하며 의료와 돌봄이 통합된 시스템을 갖추고 있습니다. 담당자분들의 친절한 인솔 하에 견사 및 묘사 청소, 산책, 사회화 훈련 보조 등 매우 체계적이고 전문적인 봉사 경험을 할 수 있는 곳입니다.',
     headerGradient: 'linear-gradient(135deg,#A87830,#C8963E)',
     images: [mockImages[1], mockImages[2], mockImages[3]]
   },
@@ -577,8 +577,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '비정기 봉사',
     timeRange: '10:00 ~ 13:00',
     capacity: '25명',
-    tasks: ['견사 청소', '수리 및 보수', '목욕', '물놀이', '교감', '켄넬 조립'],
-    notice: '가는 길이 시골 외길 느낌이라 어려울 수 있으나, 회색 문 열고 내부 주차 약 5대 가능. 중/대형견 견사건물 2군데와 새끼 강아지/고양이 컨테이너 1개. 최근 잔디 공사 완료된 야외에서도 풀어둠.',
+    tags: ['#잔디운동장', '#시골길정취', '#소장님매력', '#소규모사설'],
+    notice: '시·군 보호소에서 구조된 많은 아이들을 품고 있는 사설 보호소로, 봉사자와 후원자의 손길이 운영의 핵심이 되는 소중한 곳입니다. 진입로가 좁은 시골길이라 운전에 주의가 필요하지만, 보호소 내부에 약 5대 정도 주차가 가능합니다. 최근 잔디 공사를 마친 야외 운동장에서 아이들이 자유롭게 뛰노는 모습을 볼 수 있습니다. 소장님 홀로 헌신적으로 관리하시며, 가끔 봉사자보다 아이들을 더 예뻐하시는 소장님의 따뜻하고 인간적인 면모가 매력적인 보호소입니다.',
     headerGradient: 'linear-gradient(135deg,#4B3D6B,#6E5B94)',
     images: [mockImages[4], mockImages[5], mockImages[6]]
   },
@@ -590,8 +590,8 @@ const activeShelters: ShelterData[] = [
     regularDay: '매월 넷째 토요일',
     timeRange: '10:30 ~ 14:00',
     capacity: '30명',
-    tasks: ['견사 청소', '수리 및 보수', '이불 빨래', '교감'],
-    notice: '보호소 소장님께서 매우 적극적으로 업무 분담을 해주고, 업무가 항상 많음. 무는 강아지가 거의 없음. 안쪽 견사 들어가자 마자 좌측으로 2층 올라가면 고양이방 있음.',
+    tags: ['#유기견의대모', '#실전형봉사', '#고양이방2층', '#적극적업무분담'],
+    notice: '배우 이용녀님이 2005년부터 사비와 정성을 쏟아 운영해 온 곳으로, ‘유기견의 대모’라 불리는 소장님의 헌신이 깃든 보호소입니다. 구조부터 보호, 입양까지 소장님이 직접 발로 뛰며 챙기시는 만큼 업무가 늘 많지만, 그만큼 적극적인 업무 분담을 통해 보람찬 봉사가 가능합니다. 성격이 순한 아이들이 많아 교감이 수월하며, 안쪽 견사 입구 좌측 2층에는 고양이 전용 공간도 마련되어 있습니다. 연탄 갈기부터 위생 관리까지 소장님의 손길이 닿지 않는 곳이 없는 정성 어린 공간입니다.',
     headerGradient: 'linear-gradient(135deg,#8C2B3E,#B23A52)',
     images: [mockImages[7], mockImages[8], mockImages[9]]
   }
@@ -710,13 +710,13 @@ function TabShelters() {
                       </div>
                     </div>
 
-                    {/* 봉사 내용 태그 */}
+                    {/* 보호소 핵심 키워드 */}
                     <div style={{ marginBottom: '36px' }}>
-                      <p style={{ fontSize: '14px', fontWeight: '700', color: '#374151', marginBottom: '16px' }}>주요 봉사 내용</p>
+                      <p style={{ fontSize: '14px', fontWeight: '700', color: '#374151', marginBottom: '16px' }}>보호소 핵심 키워드</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {shelter.tasks.map(task => (
-                          <span key={task} style={{ background: '#F3F4F6', color: '#4B5563', fontSize: '14px', fontWeight: '600', padding: '8px 16px', borderRadius: '12px' }}>
-                            {task}
+                        {shelter.tags.map(tag => (
+                          <span key={tag} style={{ background: '#F3F4F6', color: '#4B5563', fontSize: '14px', fontWeight: '600', padding: '8px 16px', borderRadius: '12px' }}>
+                            {tag}
                           </span>
                         ))}
                       </div>
@@ -727,7 +727,7 @@ function TabShelters() {
                       <p style={{ fontSize: '13px', fontWeight: '800', color: '#A87830', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Info size={16} /> 특징 및 주의사항
                       </p>
-                      <p style={{ fontSize: '14px', color: '#4B5563', lineHeight: '1.7', margin: 0, whiteSpace: 'pre-wrap' }}>
+                      <p style={{ fontSize: '14px', color: '#4B5563', lineHeight: '1.7', margin: 0, whiteSpace: 'pre-wrap', textAlign: 'justify', wordBreak: 'keep-all' }}>
                         {shelter.notice}
                       </p>
                     </div>
