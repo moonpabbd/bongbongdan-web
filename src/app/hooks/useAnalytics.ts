@@ -63,8 +63,8 @@ export function useAnalytics() {
       data
     });
     
-    // 버퍼가 50개를 넘으면 강제 전송
-    if (eventsBuffer.current.length >= 50) flushEvents();
+    // 버퍼가 20개를 넘으면 강제 전송
+    if (eventsBuffer.current.length >= 20) flushEvents();
   };
 
   // 서버로 데이터 전송 (Beacon 또는 fetch)
@@ -96,15 +96,21 @@ export function useAnalytics() {
     }
   };
 
-  // 1. 페이지 뷰 추적
+  // 1. 페이지 뷰 추적 및 주기적 전송
   useEffect(() => {
     pathEnterTime.current = Date.now();
     lastScrollDepth.current = 0;
 
     logEvent('pageview', { title: document.title });
 
+    // 3초마다 버퍼에 쌓인 이벤트 서버로 자동 전송 (실시간 반영)
+    const interval = setInterval(() => {
+      flushEvents();
+    }, 3000);
+
     return () => {
-      // 페이지를 떠날 때 체류 시간 기록 가능 (옵션)
+      clearInterval(interval);
+      flushEvents(); // 페이지 이동 시 남은 이벤트 전송
     };
   }, [location.pathname]);
 
