@@ -32,9 +32,14 @@ import bigdog03 from '../../imports/bigdog_03.jpeg';
 import bigdog04 from '../../imports/bigdog_04.jpeg';
 
 import forcatmung01 from '../../imports/forcatmung_01.jpeg';
-import forcatmung02 from '../../imports/forcatmung_02.png';
+import forcatmung02 from '../../imports/forcatmung_photo02.png';
 import forcatmung03 from '../../imports/forcatmung_03.jpeg';
 import forcatmung04 from '../../imports/forcatmung_04.jpeg';
+
+import wangwang01 from '../../imports/wangwang_01.jpeg';
+import wangwang02 from '../../imports/wangwang_02.jpeg';
+import wangwang03 from '../../imports/wangwang_03.jpeg';
+import wangwang04 from '../../imports/wangwang_04.jpeg';
 
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
@@ -569,7 +574,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#해안가산책', '#환경개선중', '#바닷바람', '#힐링봉사'],
     notice: '해변가에 위치하여 겨울철 바닷바람과 추위가 매섭지만, 견사 보온과 확장 공사를 위해 정성을 다해 환경을 개선해 나가고 있는 곳입니다. 봉사자분들은 청소와 산책, 급식 등 아이들의 일상을 돌보며 함께 마음의 위로를 얻는 따뜻한 분위기를 경험할 수 있습니다. 아름다운 해안가 산책이 가능하지만, 보호소 인근 차도가 가까워 이동 시 안전에 각별히 유의해야 합니다.',
     headerGradient: 'linear-gradient(135deg,#163366,#2E5298)',
-    images: [mockImages[5], mockImages[6], mockImages[7]]
+    images: [wangwang01, wangwang02, wangwang03, wangwang04]
   },
   {
     name: '원브리스',
