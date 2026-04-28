@@ -583,7 +583,7 @@ const activeShelters: ShelterData[] = [
     images: [mockImages[4], mockImages[5], mockImages[6]]
   },
   {
-    name: '이용녀배우 보호소',
+    name: '이용녀 보호소',
     location: '경기도 포천시',
     applyUrl: 'https://open.kakao.com/o/pEj3iWqi',
     animalCount: '약 100마리',
