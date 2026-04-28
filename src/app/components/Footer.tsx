@@ -9,7 +9,12 @@ const footerLinks = [
   { label: '내 봉사 기록', path: '/my-record' },
   { label: 'FAQ', path: '/faq' },
   { label: '회원 전용', path: '/members' },
-];
+].filter(link => {
+  if (link.path === '/my-record' || link.path === '/members') {
+    return import.meta.env.DEV;
+  }
+  return true;
+});
 
 export function Footer() {
   return (
