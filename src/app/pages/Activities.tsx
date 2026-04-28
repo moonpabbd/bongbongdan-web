@@ -21,6 +21,11 @@ import banryeo02 from '../../imports/banryeo_02.jpeg';
 import banryeo03 from '../../imports/banryeo_03.jpeg';
 import banryeo04 from '../../imports/banryeo_04.jpeg';
 
+import ark01 from '../../imports/ark_01.jpeg';
+import ark02 from '../../imports/ark_02.jpeg';
+import ark03 from '../../imports/ark_03.jpeg';
+import ark04 from '../../imports/ark_04.jpeg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -515,7 +520,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#누렁이전문', '#식용견은없다', '#월롱역픽업', '#대형견천국'],
     notice: '세계 최초의 ‘누렁이 전문 보호소’로, 식용견이라는 편견 속에서 구조된 중·대형견들의 치료와 재활, 입양을 책임지는 민간 비영리 단체입니다. “식용견은 없다”는 확고한 철학 아래, 생명의 존엄성을 지키며 아이들이 반려견으로서의 평범한 행복을 되찾도록 돕고 있습니다. 대형견 위주의 환경이며, 요청 시 월롱역 인근에서 소수 인원 픽업이 가능합니다. 안전을 위해 큰 소리나 간식 급여는 금지되며, 아이들이 뭉쳐서 다투지 않도록 각별한 주의가 필요합니다.',
     headerGradient: 'linear-gradient(135deg,#A87830,#C8963E)',
-    images: [mockImages[6], mockImages[7], mockImages[8]]
+    images: [ark01, ark02, ark03, ark04]
   },
   {
     name: '빅독포레스트',
