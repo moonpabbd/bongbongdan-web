@@ -677,15 +677,20 @@ function TabShelters() {
       `}</style>
 
       {/* 🚀 Quick View Navigation (Option A: Horizontal Scroll) */}
-      <div style={{ padding: '0 clamp(20px, 5vw, 40px) 40px', background: G.warmSection }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <RevealDiv delay={100}>
-            <div
-              className="hide-scrollbar"
-              style={{
-                display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '24px', scrollSnapType: 'x mandatory'
-              }}
-            >
+      <div style={{ background: G.warmSection, paddingBottom: '40px', width: '100%' }}>
+        <RevealDiv delay={100}>
+          <div
+            className="hide-scrollbar"
+            style={{
+              display: 'flex', 
+              gap: '16px', 
+              overflowX: 'auto', 
+              paddingBottom: '24px', 
+              scrollSnapType: 'x mandatory',
+              paddingLeft: 'max(clamp(20px, 5vw, 40px), calc((100% - 1200px) / 2))',
+              paddingRight: 'max(clamp(20px, 5vw, 40px), calc((100% - 1200px) / 2))',
+            }}
+          >
               {activeShelters.map((shelter) => (
                 <div
                   key={`quick-${shelter.name}`}
@@ -721,7 +726,6 @@ function TabShelters() {
               ))}
             </div>
           </RevealDiv>
-        </div>
       </div>
 
       {/* 정기 출정 보호소 리스트 (매거진 스타일 뷰) */}
