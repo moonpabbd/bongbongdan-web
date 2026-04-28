@@ -263,8 +263,8 @@ export function Navbar() {
               집결 신청
             </Link>
 
-            {/* 로그인/사용자 메뉴 (로컬 개발 환경에서만 표시) */}
-            {import.meta.env.DEV && (user ? (
+            {/* 로그인/사용자 메뉴 */}
+            {user ? (
               <div ref={userMenuRef} style={{ position: 'relative' }}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -306,9 +306,9 @@ export function Navbar() {
                         <p style={{ color: isSolid ? '#1E3A5F' : '#F5C875', fontSize: '13px', fontWeight: '700' }}>{profile.name}</p>
                       </div>
                     )}
-                    <DropdownItem to="/my-record" label="내 봉사 기록" isSolid={isSolid} />
+                    {import.meta.env.DEV && <DropdownItem to="/my-record" label="내 봉사 기록" isSolid={isSolid} />}
                     <DropdownItem to="/profile-edit" label="내 정보 변경" isSolid={isSolid} />
-                    <DropdownItem to="/members" label="회원 전용" isSolid={isSolid} />
+                    {import.meta.env.DEV && <DropdownItem to="/members" label="회원 전용" isSolid={isSolid} />}
                     <button
                       onClick={handleLogout}
                       style={{
@@ -359,7 +359,7 @@ export function Navbar() {
               >
                 로그인
               </Link>
-            ))}
+            )}
           </nav>
 
           {/* Mobile Hamburger */}
@@ -407,7 +407,7 @@ export function Navbar() {
           <X size={24} />
         </button>
 
-        {import.meta.env.DEV && user && profile && (
+        {user && profile && (
           <div style={{
             background: 'rgba(200,150,62,0.10)',
             border: '1px solid rgba(200,150,62,0.25)',
@@ -489,12 +489,12 @@ export function Navbar() {
         </Link>
 
         <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {/* 로그인/사용자 메뉴 (로컬 개발 환경에서만 표시) */}
-          {import.meta.env.DEV && (user ? (
+          {/* 로그인/사용자 메뉴 */}
+          {user ? (
             <>
-              <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 봉사 기록</Link>
+              {import.meta.env.DEV && <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 봉사 기록</Link>}
               <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 정보 변경</Link>
-              <Link to="/members" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>회원 전용</Link>
+              {import.meta.env.DEV && <Link to="/members" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>회원 전용</Link>}
               <button
                 onClick={handleLogout}
                 style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'rgba(255,100,80,0.8)', fontSize: '14px', cursor: 'pointer', padding: '0', textAlign: 'left' }}
@@ -504,7 +504,7 @@ export function Navbar() {
             </>
           ) : (
             <Link to="/login" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>로그인</Link>
-          ))}
+          )}
         </div>
       </div>
     </>
