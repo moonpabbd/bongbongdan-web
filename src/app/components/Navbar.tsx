@@ -96,7 +96,7 @@ export function Navbar() {
           borderBottom: headerBorder,
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px', height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(16px, 4vw, 40px)', height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
             <img src={logoImg} alt="봉봉단 BBD" style={{ height: '40px', objectFit: 'contain', filter: logoFilter }} />
           </Link>
