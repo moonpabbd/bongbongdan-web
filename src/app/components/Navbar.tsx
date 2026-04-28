@@ -264,8 +264,8 @@ export function Navbar() {
               봉사 신청
             </a>
 
-            {/* 로그인/사용자 메뉴 */}
-            {user ? (
+            {/* 로그인/사용자 메뉴 (로컬 개발 환경에서만 표시) */}
+            {import.meta.env.DEV && (user ? (
               <div ref={userMenuRef} style={{ position: 'relative' }}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -360,7 +360,7 @@ export function Navbar() {
               >
                 로그인
               </Link>
-            )}
+            ))}
           </nav>
 
           {/* Mobile Hamburger */}
@@ -491,7 +491,8 @@ export function Navbar() {
         </a>
 
         <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {user ? (
+          {/* 로그인/사용자 메뉴 (로컬 개발 환경에서만 표시) */}
+          {import.meta.env.DEV && (user ? (
             <>
               <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 봉사 기록</Link>
               <Link to="/members" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>회원 전용</Link>
@@ -504,7 +505,7 @@ export function Navbar() {
             </>
           ) : (
             <Link to="/login" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>로그인</Link>
-          )}
+          ))}
         </div>
       </div>
     </>
