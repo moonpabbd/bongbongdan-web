@@ -902,7 +902,7 @@ function TabOrgChart() {
     {
       label: '선봉대', en: 'VANGUARD', gradient: 'linear-gradient(135deg,#8B1C1C,#C24B3B)',
       bg: 'linear-gradient(135deg,#FEF0EE,#FADDDA)', border: 'rgba(194,75,59,0.2)',
-      Icon: Flag, names: ['박진범', '강경민', '김지현', '고승아', '안주선'], nameColor: '#9B2C1D', nameBorder: 'rgba(194,75,59,0.2)', nameBg: 'rgba(194,75,59,0.1)',
+      Icon: Flag, names: ['박진범', '강경민', '김지현', '고승아'], nameColor: '#9B2C1D', nameBorder: 'rgba(194,75,59,0.2)', nameBg: 'rgba(194,75,59,0.1)',
     },
     { label: '기획당', en: 'PLANNING', gradient: G.greenBadge, bg: G.greenCard, border: 'rgba(45,92,64,0.2)', Icon: Star, nameColor: '#4A7C59', nameBorder: 'rgba(45,92,64,0.3)', nameBg: 'rgba(45,92,64,0.08)' },
     { label: '운영당', en: 'OPERATION', gradient: G.purpleBadge, bg: G.purpleCard, border: 'rgba(90,60,120,0.2)', Icon: BookOpen, nameColor: '#5A3C78', nameBorder: 'rgba(90,60,120,0.3)', nameBg: 'rgba(90,60,120,0.08)' },
