@@ -416,7 +416,6 @@ export function Navbar() {
             marginBottom: '8px',
           }}>
             <p style={{ color: '#F5C875', fontSize: '14px', fontWeight: '700' }}>{profile.name} 단원</p>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginTop: '2px' }}>{profile.memberNumber}</p>
           </div>
         )}
 
