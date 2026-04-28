@@ -3,7 +3,7 @@ import { createClient, Session, User } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
 
 const supabase = createClient(`https://${projectId}.supabase.co`, publicAnonKey);
-const SERVER = `https://${projectId}.supabase.co/functions/v1/make-server-a57eb6c5`;
+const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
 // 아이디 → 내부 이메일 변환 (서버와 동일 규칙)
 const usernameToEmail = (username: string) => `${username.toLowerCase()}@bbd-member.app`;

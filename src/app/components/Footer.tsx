@@ -71,13 +71,16 @@ export function Footer() {
           {/* Contact */}
           <div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: isMobile ? '0' : '33px' }}>
-              <a
-                href="mailto:info@bbd.or.kr"
-                style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText('Info@bbd.or.kr');
+                  alert('이메일 주소(Info@bbd.or.kr)가 복사되었습니다.');
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', background: 'none', border: 'none', padding: 0, fontSize: '14px', fontWeight: '500', cursor: 'pointer', fontFamily: 'inherit' }}
               >
                 <Mail size={16} color="#C8963E" />
-                info@bbd.or.kr
-              </a>
+                Info@bbd.or.kr
+              </button>
               <a
                 href="https://instagram.com/bongbongdan_official"
                 target="_blank"

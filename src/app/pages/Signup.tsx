@@ -4,8 +4,9 @@ import { Eye, EyeOff, UserPlus, CheckCircle2, ChevronDown, ChevronUp, Check } fr
 import { G } from '../styles/gradients';
 import { logoImg } from '../imageAssets';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { formatPhoneNumber } from '../../utils/format';
 
-const SERVER = `https://${projectId}.supabase.co/functions/v1/make-server-a57eb6c5`;
+const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
 const JOIN_PATHS = [
   '지인 소개', '인스타그램', '소모임', '스레드', '당근',
@@ -476,9 +477,10 @@ export function Signup() {
             <input
               type="tel"
               value={form.phone}
-              onChange={e => setField('phone', e.target.value)}
+              onChange={e => setField('phone', formatPhoneNumber(e.target.value))}
               placeholder="010-0000-0000"
               style={inputStyle}
+              maxLength={13}
               onFocus={e => (e.currentTarget.style.borderColor = '#C8963E')}
               onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)')}
             />
@@ -636,7 +638,7 @@ export function Signup() {
             >
               <Checkbox checked={form.marketingAgreement} />
               <span style={{ color: form.marketingAgreement ? '#F5C875' : 'rgba(255,255,255,0.75)', fontSize: '14px', fontWeight: '600', flex: 1 }}>
-                마케팅 수신 동의 <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px' }}>(선택)</span>
+                마케팅 및 안내 문자 수신 동의 <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px' }}>(선택)</span>
               </span>
               <button
                 type="button"
@@ -657,9 +659,9 @@ export function Signup() {
                   <tbody>
                     {[
                       ['수신 방법', '카카오톡 메시지, SMS, 이메일'],
-                      ['수신 내용', '봉사 일정 안내, 행사·이벤트 정보, 봉봉단 소식'],
+                      ['수신 내용', '비영리 목적의 행사 공유, 봉사 외 친목 모임, 기타 유익한 봉사 관련 정보'],
                       ['수신 거부', '동의 후에도 언제든지 수신 거부 가능'],
-                      ['동의 거부', '동의 거부 시에도 기본 봉사 활동 서비스 이용 가능'],
+                      ['안내 사항', '동의를 거부하셔도 봉봉단 봉사 참여와 관련된 필수적인 기본 안내는 정상적으로 발송됩니다.'],
                     ].map(([key, val]) => (
                       <tr key={key} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                         <td style={{ padding: '8px 10px', color: 'rgba(255,255,255,0.4)', fontWeight: '600', whiteSpace: 'nowrap', verticalAlign: 'top' }}>{key}</td>

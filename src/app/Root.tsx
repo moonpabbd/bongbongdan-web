@@ -4,11 +4,13 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { KakaoFloat } from './components/KakaoFloat';
 import { AuthProvider } from './context/AuthContext';
+import { useAnalytics } from './hooks/useAnalytics';
 
 const NO_FOOTER_PATHS = ['/login', '/signup'];
 
 export function Root() {
   const { pathname } = useLocation();
+  useAnalytics();
 
   useEffect(() => {
     window.scrollTo(0, 0);

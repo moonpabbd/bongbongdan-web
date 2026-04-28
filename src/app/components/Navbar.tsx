@@ -285,7 +285,7 @@ export function Navbar() {
                   }}
                 >
                   <User size={16} />
-                  {profile?.name || '단원'}
+                  마이페이지
                   <ChevronDown size={14} style={{ transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
                 </button>
 
@@ -305,10 +305,10 @@ export function Navbar() {
                     {profile && (
                       <div style={{ padding: '10px 12px', marginBottom: '4px', borderBottom: isSolid ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.08)' }}>
                         <p style={{ color: isSolid ? '#1E3A5F' : '#F5C875', fontSize: '13px', fontWeight: '700' }}>{profile.name}</p>
-                        <p style={{ color: isSolid ? '#6B7280' : 'rgba(255,255,255,0.4)', fontSize: '11px', marginTop: '2px' }}>{profile.memberNumber}</p>
                       </div>
                     )}
                     <DropdownItem to="/my-record" label="내 봉사 기록" isSolid={isSolid} />
+                    <DropdownItem to="/profile-edit" label="내 정보 변경" isSolid={isSolid} />
                     <DropdownItem to="/members" label="회원 전용" isSolid={isSolid} />
                     <button
                       onClick={handleLogout}
@@ -495,6 +495,7 @@ export function Navbar() {
           {import.meta.env.DEV && (user ? (
             <>
               <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 봉사 기록</Link>
+              <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 정보 변경</Link>
               <Link to="/members" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>회원 전용</Link>
               <button
                 onClick={handleLogout}

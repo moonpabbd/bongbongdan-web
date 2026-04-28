@@ -9,6 +9,8 @@ import { FAQ } from './pages/FAQ';
 import { Members } from './pages/Members';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
+import { AdminDB } from './pages/AdminDB';
+import { EditProfile } from './pages/EditProfile';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +26,8 @@ export const router = createBrowserRouter([
       { path: 'members', Component: Members },
       { path: 'login', Component: Login },
       { path: 'signup', Component: Signup },
+      { path: 'admin/db', Component: AdminDB },
+      { path: 'profile-edit', Component: EditProfile },
     ],
   },
 ]);
