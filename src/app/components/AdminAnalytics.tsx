@@ -38,9 +38,7 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
     }
   };
 
-  if (loading || !stats) {
-    return <div style={{ padding: '60px', textAlign: 'center', color: '#6B7280' }}>분석 데이터를 불러오는 중입니다...</div>;
-  }
+  // 얼리 리턴을 여기에서 아래로 이동 (Hook 규칙 준수)
 
   const renderHeatmapInIframe = () => {
     if (!iframeRef.current) return;
@@ -84,11 +82,15 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
 
   // 탭 변경이나 디바이스 변경 시 iframe 내부에 점 다시 그리기
   useEffect(() => {
-    if (activeTab === 'heatmap') {
+    if (activeTab === 'heatmap' && stats && !loading) {
       const timer = setTimeout(renderHeatmapInIframe, 1000); // 로드 대기
       return () => clearTimeout(timer);
     }
-  }, [activeTab, heatmapDevice, stats.heatmap]);
+  }, [activeTab, heatmapDevice, stats, loading]);
+
+  if (loading || !stats) {
+    return <div style={{ padding: '60px', textAlign: 'center', color: '#6B7280' }}>분석 데이터를 불러오는 중입니다...</div>;
+  }
 
   // 데이터 가공
   const totalVisitors = stats.trend.reduce((acc: number, cur: any) => acc + cur.visitors, 0);
