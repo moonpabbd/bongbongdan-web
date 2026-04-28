@@ -47,7 +47,7 @@ export function Navbar() {
   useEffect(() => {
     setOpen(false);
     setUserMenuOpen(false);
-  }, [location.pathname]);
+  }, [location]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
