@@ -56,6 +56,11 @@ import dangledangle02 from '../../imports/dangledangle_02.jpeg';
 import dangledangle03 from '../../imports/dangledangle_03.jpeg';
 import dangledangle04 from '../../imports/dangledangle_04.jpeg';
 
+import lee01 from '../../imports/lee_01.jpeg';
+import lee02 from '../../imports/lee_02.jpeg';
+import lee03 from '../../imports/lee_03.jpeg';
+import lee04 from '../../imports/lee_04.jpeg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -641,7 +646,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#유기견의대모', '#실전형봉사', '#고양이방2층', '#적극적업무분담'],
     notice: '배우 이용녀님이 2005년부터 사비와 정성을 쏟아 운영해 온 곳으로, ‘유기견의 대모’라 불리는 소장님의 헌신이 깃든 보호소입니다. 구조부터 보호, 입양까지 소장님이 직접 발로 뛰며 챙기시는 만큼 업무가 늘 많지만, 그만큼 적극적인 업무 분담을 통해 보람찬 봉사가 가능합니다. 성격이 순한 아이들이 많아 교감이 수월하며, 안쪽 견사 입구 좌측 2층에는 고양이 전용 공간도 마련되어 있습니다. 연탄 갈기부터 위생 관리까지 소장님의 손길이 닿지 않는 곳이 없는 정성 어린 공간입니다.',
     headerGradient: 'linear-gradient(135deg,#8C2B3E,#B23A52)',
-    images: [mockImages[7], mockImages[8], mockImages[9]]
+    images: [lee01, lee02, lee03, lee04]
   }
 ];
 
