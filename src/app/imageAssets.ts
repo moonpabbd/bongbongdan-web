@@ -16,8 +16,8 @@ const keys = Object.keys(pngModules);
 const symbol3DKey = keys.find(k => k.includes('_3D')) ?? '';
 const symbolKey   = keys.find(k => k.endsWith('03.png')) ?? '';
 
-// The two logo files both end with _02.png; sort by path length: shorter = no-slogan logo
-const logoKeys    = keys.filter(k => k.endsWith('_02.png')).sort((a, b) => a.length - b.length);
+// The two logo files both end with _02.png and contain '로고'; sort by path length: shorter = no-slogan logo
+const logoKeys    = keys.filter(k => k.includes('로고') && k.endsWith('_02.png')).sort((a, b) => a.length - b.length);
 const logoKey     = logoKeys[0] ?? '';
 const logoSloganKey = logoKeys[1] ?? '';
 
