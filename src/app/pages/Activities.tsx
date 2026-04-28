@@ -31,6 +31,11 @@ import bigdog02 from '../../imports/bigdog_02.jpeg';
 import bigdog03 from '../../imports/bigdog_03.jpeg';
 import bigdog04 from '../../imports/bigdog_04.jpeg';
 
+import forcatmung01 from '../../imports/forcatmung_01.jpeg';
+import forcatmung02 from '../../imports/forcatmung_02.png';
+import forcatmung03 from '../../imports/forcatmung_03.jpeg';
+import forcatmung04 from '../../imports/forcatmung_04.jpeg';
+
 // ─── Shared ────────────────────────────────────────────────────────────
 function RevealDiv({
   children, delay = 0, style = {},
@@ -551,7 +556,7 @@ const activeShelters: ShelterData[] = [
     tags: ['#안락사없는보호소', '#평생보호', '#미어캣친구들', '#슬리퍼지참'],
     notice: '비영리 사단법인이 운영하는 안락사 없는 보호소로, 구조된 개와 고양이들이 사회화를 거쳐 새 가족을 만날 수 있도록 돕고 있습니다. 특히 입양이 어려운 노령 및 질병 동물들을 끝까지 책임지는 ‘평생 보호’를 실천하는 곳입니다. 미어캣과 고양이 전용 방이 있는 것이 특징이며, 산책 시 공원 진입로의 차량을 각별히 주의해야 합니다. 남성 봉사자는 개별 실내용 슬리퍼를 지참해야 하며, 건물 내 주차가 불가하므로 인근 공용주차장을 이용해 주세요. 또한 청소 전 촬영은 금지되며, 유튜버나 블로거의 경우 사전 허가가 필수입니다.',
     headerGradient: 'linear-gradient(135deg,#8C2B3E,#B23A52)',
-    images: [mockImages[2], mockImages[3], mockImages[4]]
+    images: [forcatmung01, forcatmung02, forcatmung03, forcatmung04]
   },
   {
     name: '왕왕랜드',
