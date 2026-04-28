@@ -439,7 +439,7 @@ app.post("/server/analytics", async (c) => {
       if (heatmapData.length < 5000) {
         const newDots = clickEvents.map((e: any) => ({
           x: e.data.xPercent,
-          y: e.data.yPercent,
+          y: e.data.y, // 절대 픽셀
           path: e.path,
           device: deviceData?.device
         }));

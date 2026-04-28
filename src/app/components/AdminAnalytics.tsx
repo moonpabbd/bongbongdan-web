@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Eye, MousePointerClick, Clock, UserCheck, Activity, Map, Layout, Filter } from 'lucide-react';
 import { projectId } from '/utils/supabase/info';
@@ -14,6 +14,7 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [days, setDays] = useState(7);
   const [heatmapDevice, setHeatmapDevice] = useState<'Desktop'|'Mobile'>('Desktop');
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     fetchStats();
@@ -40,6 +41,54 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
   if (loading || !stats) {
     return <div style={{ padding: '60px', textAlign: 'center', color: '#6B7280' }}>분석 데이터를 불러오는 중입니다...</div>;
   }
+
+  const renderHeatmapInIframe = () => {
+    if (!iframeRef.current) return;
+    try {
+      const doc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
+      if (!doc) return;
+      
+      const oldContainer = doc.getElementById('bbd-heatmap-overlay');
+      if (oldContainer) oldContainer.remove();
+
+      const container = doc.createElement('div');
+      container.id = 'bbd-heatmap-overlay';
+      container.style.position = 'absolute';
+      container.style.top = '0';
+      container.style.left = '0';
+      container.style.width = '100%';
+      container.style.pointerEvents = 'none';
+      container.style.zIndex = '999999';
+
+      const filteredDots = stats.heatmap?.filter((h: any) => h.device === heatmapDevice) || [];
+      filteredDots.forEach((dot: any) => {
+        const div = doc.createElement('div');
+        div.style.position = 'absolute';
+        div.style.left = `${dot.x}%`;
+        // dot.y가 100 이하면 예전 방식(퍼센트)일 수 있으나 일단 px로 처리
+        div.style.top = `${dot.y > 100 ? dot.y : dot.y + 100}px`; 
+        div.style.width = '24px';
+        div.style.height = '24px';
+        div.style.transform = 'translate(-50%, -50%)';
+        div.style.background = 'radial-gradient(circle, rgba(239,68,68,0.8) 0%, rgba(239,68,68,0) 70%)';
+        div.style.borderRadius = '50%';
+        div.style.mixBlendMode = 'multiply';
+        container.appendChild(div);
+      });
+
+      doc.body.appendChild(container);
+    } catch (e) {
+      console.warn("Iframe DOM access failed (CORS or loading)", e);
+    }
+  };
+
+  // 탭 변경이나 디바이스 변경 시 iframe 내부에 점 다시 그리기
+  useEffect(() => {
+    if (activeTab === 'heatmap') {
+      const timer = setTimeout(renderHeatmapInIframe, 1000); // 로드 대기
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, heatmapDevice, stats.heatmap]);
 
   // 데이터 가공
   const totalVisitors = stats.trend.reduce((acc: number, cur: any) => acc + cur.visitors, 0);
@@ -151,25 +200,11 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
             boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
           }}>
             <iframe 
+              ref={iframeRef}
               src="/" 
-              style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }} 
+              onLoad={renderHeatmapInIframe}
+              style={{ width: '100%', height: '100%', border: 'none' }} 
             />
-            {/* 오버레이 (히트맵 렌더링) */}
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 10 }}>
-              {stats.heatmap?.filter((h: any) => h.device === heatmapDevice).map((dot: any, idx: number) => (
-                <div key={idx} style={{
-                  position: 'absolute',
-                  left: `${dot.x}%`,
-                  top: `${dot.y}%`,
-                  width: '24px',
-                  height: '24px',
-                  transform: 'translate(-50%, -50%)',
-                  background: 'radial-gradient(circle, rgba(239,68,68,0.8) 0%, rgba(239,68,68,0) 70%)',
-                  borderRadius: '50%',
-                  mixBlendMode: 'multiply'
-                }} />
-              ))}
-            </div>
           </div>
         </div>
       )}
