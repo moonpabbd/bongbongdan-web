@@ -257,11 +257,7 @@ export function FAQ() {
                 >
                   <MessageCircle size={16} /> 카카오로 문의
                 </a>
-                <a href="mailto:bbd@bbd.or.kr"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: G.navyBtn, color: '#fff', padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '15px', fontWeight: '700', boxShadow: '0 4px 16px rgba(30,58,95,0.3)' }}
-                >
-                  <Mail size={16} /> 이메일 문의
-                </a>
+
               </div>
             </div>
           </RevealDiv>
