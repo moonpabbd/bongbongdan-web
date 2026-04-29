@@ -38,6 +38,7 @@ export const router = createBrowserRouter([
       { path: 'my-record', Component: MyRecord },
       { path: 'profile-edit', Component: EditProfile },
       { path: 'apply', Component: ApplyVolunteer },
+      { path: '*', element: <NotFound /> },
     ],
   },
 ]);
