@@ -712,7 +712,10 @@ function TabShelters() {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: '18px', fontWeight: '900', color: '#1E3A5F' }}>{shelter.name}</span>
                     <div style={{ background: 'rgba(200,150,62,0.1)', color: '#A87830', fontSize: '12px', fontWeight: '800', padding: '6px 10px', borderRadius: '12px' }}>
-                      {shelter.location.split(' ')[0]}
+                      {(() => {
+                        const loc = shelter.location.split(' ');
+                        return loc[0].startsWith('경기') ? loc[1] : loc[0].replace('광역시', '');
+                      })()}
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
