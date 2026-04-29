@@ -154,6 +154,45 @@ app.post("/server/auth/onboard", async (c) => {
 
     const userId = user.id;
 
+    // --- [기존 계정 병합(연동) 로직] ---
+    const targetName = name.trim();
+    const targetPhone = phone.trim().replace(/[^0-9]/g, '');
+    
+    const allMembers = await kv.getByPrefix('bbd:member:profile:');
+    const existingOldProfile = allMembers.find(m => {
+      const dbPhone = (m.phone || '').replace(/[^0-9]/g, '');
+      const dbName = (m.name || '').trim();
+      return dbName === targetName && dbPhone === targetPhone && m.birthdate === birthdate && m.gender === gender;
+    });
+
+    if (existingOldProfile) {
+      const oldUserId = existingOldProfile.userId;
+      
+      // 기존 정보를 유지하되, 새로운 구글 userId로 덮어쓰고 연동 내역 표시
+      const updatedProfile = {
+        ...existingOldProfile,
+        userId: userId,
+        joinPath: existingOldProfile.joinPath?.includes('구글') ? existingOldProfile.joinPath : `${existingOldProfile.joinPath || '일반 가입'} (구글 연동)`,
+      };
+
+      // 새로운 구글 userId 기준으로 저장
+      await kv.set(`bbd:member:profile:${userId}`, updatedProfile);
+      
+      // 기존 userId 기준 데이터 삭제
+      if (oldUserId && oldUserId !== userId) {
+        await kv.delete(`bbd:member:profile:${oldUserId}`);
+        // 중복을 막기 위해 구 Auth 계정은 Admin API로 삭제 시도
+        try {
+          await supabaseAdmin.auth.admin.deleteUser(oldUserId);
+        } catch (e) {
+          console.log("기존 Auth 유저 삭제 실패(무시됨):", e);
+        }
+      }
+
+      return c.json({ success: true, memberNumber: updatedProfile.memberNumber, message: '기존 계정과 성공적으로 연동되었습니다.' });
+    }
+    // -----------------------------------
+
     // 회원 고유번호 채번
     const counterKey = "bbd:member_counter";
     let counter = 1;
