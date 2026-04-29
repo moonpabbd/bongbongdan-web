@@ -592,38 +592,19 @@ export function Signup() {
               <span style={{ color: form.marketingAgreement ? '#F5C875' : 'rgba(255,255,255,0.75)', fontSize: '14px', fontWeight: '600', flex: 1 }}>
                 마케팅 및 안내 문자 수신 동의 <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px' }}>(선택)</span>
               </span>
-              <button
-                type="button"
-                onClick={e => { e.stopPropagation(); setMarketingExpanded(!marketingExpanded); }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', padding: '4px 8px' }}
-              >
-                {marketingExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                {marketingExpanded ? '접기' : '전문 보기'}
-              </button>
             </div>
-            {marketingExpanded && (
-              <div style={{
-                padding: '16px 18px',
-                background: 'rgba(0,0,0,0.2)',
-                borderTop: '1px solid rgba(255,255,255,0.06)',
-              }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
-                  <tbody>
-                    {[
-                      ['수신 방법', '카카오톡 메시지, SMS, 이메일'],
-                      ['수신 내용', '비영리 목적의 행사 공유, 봉사 외 친목 모임, 기타 유익한 봉사 관련 정보'],
-                      ['수신 거부', '동의 후에도 언제든지 수신 거부 가능'],
-                      ['안내 사항', '동의를 거부하셔도 봉봉단 봉사 참여와 관련된 필수적인 기본 안내는 정상적으로 발송됩니다.'],
-                    ].map(([key, val]) => (
-                      <tr key={key} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                        <td style={{ padding: '8px 10px', color: 'rgba(255,255,255,0.4)', fontWeight: '600', whiteSpace: 'nowrap', verticalAlign: 'top' }}>{key}</td>
-                        <td style={{ padding: '8px 10px', lineHeight: '1.6' }}>{val}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            {/* 항상 보이는 혜택 설명 */}
+            <div style={{
+              padding: '16px 18px',
+              background: 'rgba(0,0,0,0.2)',
+              borderTop: '1px solid rgba(255,255,255,0.06)',
+            }}>
+              <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.7' }}>
+                <li style={{ marginBottom: '4px' }}>새로운 봉사 모집이 시작될 때 <strong style={{ color: '#F5C875', fontWeight: '500' }}>가장 먼저</strong> 알려드려요!</li>
+                <li style={{ marginBottom: '4px' }}>봉사 외 다양한 목적의 기획 활동 및 단원 친목 교류 행사 초대</li>
+                <li>기타 유익한 봉사 관련 특별 이벤트 소식 안내</li>
+              </ul>
+            </div>
           </div>
 
           {/* 제출 버튼 */}

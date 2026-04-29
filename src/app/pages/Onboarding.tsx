@@ -266,23 +266,28 @@ export function Onboarding() {
             </div>
 
             {/* 선택 동의 */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', cursor: 'pointer' }} onClick={() => setField('marketingAgreement', !form.marketingAgreement)}>
+            <div style={{
+              border: `1px solid ${form.marketingAgreement ? 'rgba(200,150,62,0.4)' : 'rgba(255,255,255,0.10)'}`,
+              borderRadius: '14px',
+              overflow: 'hidden',
+              marginTop: '12px',
+              transition: 'border-color 0.2s',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', background: form.marketingAgreement ? 'rgba(200,150,62,0.08)' : 'rgba(255,255,255,0.03)', cursor: 'pointer', transition: 'background 0.2s' }} onClick={() => setField('marketingAgreement', !form.marketingAgreement)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '24px', height: '24px', borderRadius: '6px', border: `2px solid ${form.marketingAgreement ? '#F5C875' : 'rgba(255,255,255,0.2)'}`, background: form.marketingAgreement ? '#F5C875' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {form.marketingAgreement && <Check size={16} color="#000" strokeWidth={3} />}
                   </div>
-                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: '500' }}><span style={{ color: 'rgba(255,255,255,0.4)' }}>[선택]</span> 마케팅 및 이벤트 수신 동의</span>
-                </div>
-                <div onClick={(e) => { e.stopPropagation(); setMarketingExpanded(!marketingExpanded); }} style={{ padding: '4px', color: 'rgba(255,255,255,0.4)' }}>
-                  {marketingExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  <span style={{ color: form.marketingAgreement ? '#F5C875' : 'rgba(255,255,255,0.75)', fontSize: '14px', fontWeight: '600' }}>마케팅 및 이벤트 수신 동의 <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px', fontWeight: '400' }}>(선택)</span></span>
                 </div>
               </div>
-              {marketingExpanded && (
-                <div style={{ padding: '16px', background: 'rgba(0,0,0,0.2)', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px', color: 'rgba(255,255,255,0.6)', fontSize: '12px', lineHeight: '1.6', marginTop: '-4px' }}>
-                  봉사 모집 알림, 이벤트, 공지사항 등을 카카오톡이나 문자로 수신하는 데 동의합니다.
-                </div>
-              )}
+              <div style={{ padding: '16px 18px', background: 'rgba(0,0,0,0.2)', color: 'rgba(255,255,255,0.6)', fontSize: '12px', lineHeight: '1.6', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.7' }}>
+                  <li style={{ marginBottom: '4px' }}>새로운 봉사 모집이 시작될 때 <strong style={{ color: '#F5C875', fontWeight: '500' }}>가장 먼저</strong> 알려드려요!</li>
+                  <li style={{ marginBottom: '4px' }}>봉사 외 다양한 목적의 기획 활동 및 단원 친목 교류 행사 초대</li>
+                  <li>기타 유익한 봉사 관련 특별 이벤트 소식 안내</li>
+                </ul>
+              </div>
             </div>
           </div>
 
