@@ -400,12 +400,27 @@ export function Navbar() {
           overflowY: 'auto',
         }}
       >
-        <button
-          onClick={() => setOpen(false)}
-          style={{ position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)' }}
-        >
-          <X size={24} />
-        </button>
+        {/* 상단 헤더 (로그인/로그아웃 & 닫기) */}
+        <div style={{ position: 'absolute', top: '24px', left: '32px', right: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'rgba(255,100,80,0.9)', fontSize: '14px', cursor: 'pointer', padding: 0 }}
+            >
+              <LogOut size={16} /> 로그아웃
+            </button>
+          ) : (
+            <Link to="/login" style={{ color: '#F5C875', fontSize: '15px', fontWeight: '700', textDecoration: 'none' }}>
+              로그인
+            </Link>
+          )}
+          <button
+            onClick={() => setOpen(false)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', padding: 0, display: 'flex' }}
+          >
+            <X size={24} />
+          </button>
+        </div>
 
         {user && profile && (
           <div style={{
@@ -416,6 +431,11 @@ export function Navbar() {
             marginBottom: '8px',
           }}>
             <p style={{ color: '#F5C875', fontSize: '14px', fontWeight: '700' }}>{profile.name} 단원</p>
+            <div style={{ display: 'flex', gap: '14px', marginTop: '12px' }}>
+              <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>내 정보 변경</Link>
+              {import.meta.env.DEV && <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>내 기록</Link>}
+              {import.meta.env.DEV && <Link to="/members" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>회원 전용</Link>}
+            </div>
           </div>
         )}
 
@@ -487,24 +507,8 @@ export function Navbar() {
           집결 신청하기
         </Link>
 
-        <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {/* 로그인/사용자 메뉴 */}
-          {user ? (
-            <>
-              {import.meta.env.DEV && <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 봉사 기록</Link>}
-              <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>내 정보 변경</Link>
-              {import.meta.env.DEV && <Link to="/members" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>회원 전용</Link>}
-              <button
-                onClick={handleLogout}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'rgba(255,100,80,0.8)', fontSize: '14px', cursor: 'pointer', padding: '0', textAlign: 'left' }}
-              >
-                <LogOut size={14} /> 로그아웃
-              </button>
-            </>
-          ) : (
-            <Link to="/login" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', textDecoration: 'none' }}>로그인</Link>
-          )}
-        </div>
+        {/* 하단 여백 유지용 */}
+        <div style={{ marginTop: 'auto', paddingBottom: '24px' }}></div>
       </div>
     </>
   );
