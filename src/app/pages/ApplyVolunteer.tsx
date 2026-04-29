@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { CheckCircle2, ChevronRight, Calendar, User, Phone, AlertCircle, MapPin, Car, Info, Shield, Heart, Copy } from 'lucide-react';
 import { G } from '../styles/gradients';
@@ -57,9 +57,17 @@ export function ApplyVolunteer() {
   // 현재 선택된 봉사가 '픽업 가능한 운전자' 전용인지 확인
   const isDriverOnly = formData.date.includes("픽업 가능한 운전자");
 
-  // 단계(step)가 변경될 때마다 화면 최상단으로 스크롤
+  const formRef = useRef<HTMLDivElement>(null);
+
+  // 단계(step)가 변경될 때마다 스크롤 이동 (모바일은 폼 상단으로, PC는 최상단으로)
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (window.innerWidth < 768 && formRef.current) {
+      const yOffset = -80;
+      const y = formRef.current.getBoundingClientRect().top + window.scrollY + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, [step]);
 
   // 구글 시트에서 날짜 목록(formRanger 기능) 가져오기
@@ -467,7 +475,7 @@ export function ApplyVolunteer() {
           </div>
 
           {/* 오른쪽: 입력 폼 */}
-          <div style={{ background: '#fff', padding: '40px', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.05)' }}>
+          <div ref={formRef} style={{ background: '#fff', padding: '40px', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.05)' }}>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
               {/* 진행률 표시줄 */}
