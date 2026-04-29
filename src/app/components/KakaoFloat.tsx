@@ -18,7 +18,7 @@ export function KakaoFloat() {
         zIndex: 500,
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
+        gap: hovered ? '8px' : '0',
         background: '#FEE500',
         color: '#191919',
         padding: hovered ? '14px 20px' : '14px',
