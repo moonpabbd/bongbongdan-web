@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Lock, Search, Download, Users } from 'lucide-react';
-import { projectId } from '/utils/supabase/info';
+import { projectId, publicAnonKey } from '/utils/supabase/info';
 import { G } from '../styles/gradients';
 import { AdminAnalytics } from '../components/AdminAnalytics';
 
@@ -36,6 +36,7 @@ export function AdminDB() {
       const res = await fetch(`${SERVER}/admin/members`, {
         method: 'GET',
         headers: {
+          'Authorization': `Bearer ${publicAnonKey}`,
           'X-Admin-Password': ADMIN_PASSWORD
         }
       });
@@ -70,6 +71,7 @@ export function AdminDB() {
       const res = await fetch(`${SERVER}/alimtalk/logs`, {
         method: 'GET',
         headers: {
+          'Authorization': `Bearer ${publicAnonKey}`,
           'X-Admin-Password': ADMIN_PASSWORD
         }
       });

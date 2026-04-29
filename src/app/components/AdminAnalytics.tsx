@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { Eye, MousePointerClick, Clock, UserCheck, Activity, Map, Layout, Filter } from 'lucide-react';
-import { projectId } from '/utils/supabase/info';
+import { projectId, publicAnonKey } from '/utils/supabase/info';
 import { G } from '../styles/gradients';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
@@ -25,7 +25,10 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
     try {
       // 로컬 개발이거나 세션이 없어도 어드민 패스워드로 임시 우회 (Production에선 JWT 권장)
       const res = await fetch(`${SERVER}/analytics/stats?days=${days}`, {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: { 
+          'Authorization': `Bearer ${publicAnonKey}`,
+          'X-Admin-Password': adminPassword 
+        }
       });
       if (res.ok) {
         const data = await res.json();
