@@ -147,7 +147,7 @@ export function Home() {
   return (
     <div>
       <Helmet>
-        <title>봉봉단 - 의협을 실천하는 봉사문파</title>
+        <title>봉봉단</title>
         <meta name="description" content="유기견 보호소 자원봉사, 올바른 반려 문화 확산. 봉봉단과 함께 세상을 바꾸는 작은 실천에 동참하세요." />
         <meta property="og:title" content="봉봉단 - 의협을 실천하는 봉사문파" />
         <meta property="og:description" content="유기견 보호소 봉사활동을 통해 따뜻한 세상을 만들어갑니다. 지금 바로 봉사에 참여해 보세요!" />
