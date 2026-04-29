@@ -845,7 +845,7 @@ function TabShelters() {
                       <p style={{ fontSize: '13px', fontWeight: '800', color: '#A87830', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Info size={16} /> 특징 및 주의사항
                       </p>
-                      <p style={{ fontSize: '14px', color: '#4B5563', lineHeight: '1.7', margin: 0, whiteSpace: 'pre-wrap', textAlign: 'justify', wordBreak: 'keep-all' }}>
+                      <p style={{ fontSize: '14px', color: '#4B5563', lineHeight: '1.7', margin: 0, whiteSpace: 'pre-wrap', textAlign: 'left', wordBreak: 'keep-all' }}>
                         {shelter.notice}
                       </p>
                     </div>
