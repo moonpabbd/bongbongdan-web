@@ -32,6 +32,8 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  needsOnboarding: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -41,6 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const needsOnboarding = !!user && !profile && !loading;
 
   const fetchProfile = async (token: string) => {
     try {
@@ -101,6 +105,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   };
 
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+      }
+    });
+    if (error) {
+      console.error("Google sign in error:", error.message);
+    }
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -115,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, loading, login, logout, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, session, loading, needsOnboarding, login, logout, refreshProfile, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

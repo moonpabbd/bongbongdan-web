@@ -4,6 +4,7 @@ import { Eye, EyeOff, UserPlus, CheckCircle2, ChevronDown, ChevronUp, Check } fr
 import { G } from '../styles/gradients';
 import { logoImg } from '../imageAssets';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { useAuth } from '../context/AuthContext';
 import { formatPhoneNumber } from '../../utils/format';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
@@ -29,6 +30,7 @@ interface FormState {
 
 export function Signup() {
   const navigate = useNavigate();
+  const { signInWithGoogle } = useAuth();
   const [step, setStep] = useState<'form' | 'done'>('form');
   const [memberNumber, setMemberNumber] = useState('');
   const [loading, setLoading] = useState(false);
@@ -659,9 +661,42 @@ export function Signup() {
             <UserPlus size={18} />
             {loading ? '가입 중...' : '봉봉단 입문하기'}
           </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
+            <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+            <span style={{ margin: '0 12px', color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>또는</span>
+            <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => signInWithGoogle()}
+            style={{
+              background: '#fff',
+              color: '#333',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '16px',
+              fontSize: '16px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              width: '100%',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              transition: 'transform 0.2s',
+            }}
+            onMouseOver={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
+            onMouseOut={e => (e.currentTarget.style.transform = 'none')}
+          >
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google Logo" />
+            구글 계정으로 시작하기
+          </button>
         </form>
 
-        <div style={{ marginTop: '24px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px' }}>
+        <div style={{ marginTop: '32px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px' }}>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px' }}>
             이미 계정이 있으신가요?{' '}
             <Link to="/login" style={{ color: '#C8963E', fontWeight: '700', textDecoration: 'none' }}>

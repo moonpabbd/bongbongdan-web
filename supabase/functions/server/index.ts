@@ -133,6 +133,63 @@ app.post("/server/auth/signup", async (c) => {
   }
 });
 
+// ─── 소셜 로그인 온보딩 (추가 정보 입력) ──────────────────────────────────────
+app.post("/server/auth/onboard", async (c) => {
+  try {
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
+    if (!accessToken) return c.json({ error: "인증 토큰이 없습니다." }, 401);
+
+    const { data: { user }, error } = await supabaseAdmin.auth.getUser(accessToken);
+    if (error || !user) return c.json({ error: `인증 실패: ${error?.message}` }, 401);
+
+    const existingProfile = await kv.get(`bbd:member:profile:${user.id}`);
+    if (existingProfile) return c.json({ error: "이미 프로필이 존재합니다." }, 400);
+
+    const body = await c.req.json();
+    const { name, gender, phone, birthdate, kakaoId, marketingAgreement } = body;
+
+    if (!name || !gender || !phone || !birthdate || !kakaoId) {
+      return c.json({ error: "필수 항목이 누락되었습니다." }, 400);
+    }
+
+    const userId = user.id;
+
+    // 회원 고유번호 채번
+    const counterKey = "bbd:member_counter";
+    let counter = 1;
+    try {
+      const existing = await kv.get(counterKey);
+      if (existing) counter = Number(existing) + 1;
+    } catch (_) { counter = 1; }
+    await kv.set(counterKey, counter);
+
+    const memberNumber = `BBD-2026-${String(counter).padStart(4, '0')}`;
+    const username = `google_${userId.substring(0, 8)}`; // 가상 username 부여
+
+    const profile = {
+      userId,
+      memberNumber,
+      username,
+      name,
+      gender,
+      phone,
+      birthdate,
+      joinPath: '구글 로그인',
+      joinPathDetail: '',
+      kakaoId,
+      marketingAgreement: !!marketingAgreement,
+      createdAt: new Date().toISOString(),
+    };
+    await kv.set(`bbd:member:profile:${userId}`, profile);
+    await kv.set(`bbd:member:username:${username}`, userId);
+
+    return c.json({ success: true, memberNumber, name });
+  } catch (err) {
+    console.error("Onboarding Error:", err);
+    return c.json({ error: "서버 내부 오류가 발생했습니다." }, 500);
+  }
+});
+
 // ─── 내 프로필 조회 ────────────────────────────────────────────────────────────
 app.get("/server/auth/profile", async (c) => {
   try {

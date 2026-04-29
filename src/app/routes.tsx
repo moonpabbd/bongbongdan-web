@@ -13,6 +13,7 @@ const Terms = lazy(() => import('./pages/Terms').then(m => ({ default: m.Terms }
 const Privacy = lazy(() => import('./pages/Privacy').then(m => ({ default: m.Privacy })));
 const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
 const Signup = lazy(() => import('./pages/Signup').then(m => ({ default: m.Signup })));
+const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const AdminDB = lazy(() => import('./pages/AdminDB').then(m => ({ default: m.AdminDB })));
 const EditProfile = lazy(() => import('./pages/EditProfile').then(m => ({ default: m.EditProfile })));
 const ApplyVolunteer = lazy(() => import('./pages/ApplyVolunteer').then(m => ({ default: m.ApplyVolunteer })));
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
 
       { path: 'login', Component: Login },
       { path: 'signup', Component: Signup },
+      { path: 'onboarding', Component: Onboarding },
       { path: 'admin/db', Component: AdminDB },
       { path: 'my-record', Component: MyRecord },
       { path: 'profile-edit', Component: EditProfile },
