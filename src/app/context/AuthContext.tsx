@@ -34,6 +34,7 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   needsOnboarding: boolean;
+  profileError: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -43,8 +44,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileError, setProfileError] = useState(false);
 
-  const needsOnboarding = !!user && !profile && !loading;
+  // needsOnboarding은 오직 유저가 존재하고, 프로필이 없으며(null), 서버에서 에러(500등)가 난 게 아닐 때(404) 작동합니다.
+  const needsOnboarding = !!user && !profile && !loading && !profileError;
 
   const fetchProfile = async (token: string) => {
     try {
@@ -54,15 +57,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         setProfile(data.profile);
+        setProfileError(false);
         if (data.profile) {
           prefetchRecord(data.profile.name, data.profile.phone, data.profile.birthdate).catch(() => {});
         }
       } else {
         setProfile(null);
+        // 404면 정보가 없는 것. 그 외 에러면 일시적 통신 오류로 간주
+        if (res.status === 404) {
+          setProfileError(false);
+        } else {
+          setProfileError(true);
+        }
       }
     } catch (err) {
       console.log("Profile fetch error:", err);
       setProfile(null);
+      setProfileError(true);
     }
   };
 
@@ -131,7 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, loading, needsOnboarding, login, logout, refreshProfile, signInWithGoogle }}>
+    <AuthContext.Provider value={{ user, profile, session, loading, needsOnboarding, profileError, login, logout, refreshProfile, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

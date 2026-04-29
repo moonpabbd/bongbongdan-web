@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate, ScrollRestoration } from 'react-router';
+import { Outlet, useLocation, useNavigate, ScrollRestoration, Navigate } from 'react-router';
 import { useEffect, Suspense } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { Navbar } from './components/Navbar';
@@ -11,17 +11,19 @@ import { prefetchRankings } from '../utils/apiCache';
 const NO_FOOTER_PATHS = ['/login', '/signup', '/onboarding'];
 
 function RouteGuard({ children }: { children: React.ReactNode }) {
-  const { needsOnboarding } = useAuth();
-  const navigate = useNavigate();
+  const { needsOnboarding, loading } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    if (needsOnboarding && location.pathname !== '/onboarding') {
-      navigate('/onboarding', { replace: true });
-    } else if (!needsOnboarding && location.pathname === '/onboarding') {
-      navigate('/', { replace: true });
-    }
-  }, [needsOnboarding, location.pathname, navigate]);
+  // 아직 로딩 중이면 라우트 가드 무시 (자식 렌더링)
+  if (loading) return <>{children}</>;
+
+  if (needsOnboarding && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  if (!needsOnboarding && location.pathname === '/onboarding') {
+    return <Navigate to="/" replace />;
+  }
 
   return <>{children}</>;
 }
