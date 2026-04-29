@@ -510,6 +510,83 @@ app.get("/server/analytics/stats", async (c) => {
     return c.json({ error: `서버 오류` }, 500);
   }
 });
+// ─── 내 봉사 기록 및 명예의 전당 조회 ─────────────────────────────────────────────
+app.get("/server/my-record", async (c) => {
+  try {
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
+    if (!accessToken) return c.json({ error: "인증 토큰이 없습니다." }, 401);
+
+    const { data: { user }, error } = await supabaseAdmin.auth.getUser(accessToken);
+    if (error || !user) return c.json({ error: `인증 실패: ${error?.message}` }, 401);
+
+    const profile = await kv.get(`bbd:member:profile:${user.id}`);
+    if (!profile) return c.json({ error: "프로필 정보를 찾을 수 없습니다." }, 404);
+
+    const name = profile.name;
+    const phone = profile.phone;
+    const birthdate = profile.birthdate;
+
+    const gasUrl = Deno.env.get('GAS_WEB_APP_URL');
+    
+    if (!gasUrl) {
+      console.log("GAS_WEB_APP_URL이 설정되지 않아 임시 Mock 데이터를 반환합니다.");
+      return c.json({
+        status: "success",
+        count: 12,
+        seasonCount: 3,
+        rank: "숙련 단원",
+        totalCount: 15,
+        upcoming: [
+          { text: "26년 05월 10일 (일) 10:00 경기 사랑의 보호소", time: new Date("2026-05-10T10:00:00").getTime(), dday: 11 }
+        ],
+        past: [
+          { text: "26년 04월 10일 (금) 14:00 희망 유기동물 보호소", time: new Date("2026-04-10T14:00:00").getTime() }
+        ],
+        rankings: {
+          all: {
+            myRank: 15, myCount: 12, percentile: 10, nextRankGap: 3, totalMembers: 150,
+            top10: [
+              { rank: 1, displayName: "김*연", tier: "종사", count: 210 },
+              { rank: 2, displayName: "박*수", tier: "원로", count: 150 },
+              { rank: 3, displayName: "이*호", tier: "사형/사자", count: 80 }
+            ]
+          },
+          season: {
+            myRank: 5, myCount: 3, percentile: 3, nextRankGap: 1, totalMembers: 150,
+            top10: [
+              { rank: 1, displayName: "이*지", tier: "숙련 단원", count: 10 },
+              { rank: 2, displayName: "박*수", tier: "원로", count: 8 },
+              { rank: 3, displayName: "김*연", tier: "종사", count: 6 },
+              { rank: 4, displayName: "홍*동", tier: "정식 단원", count: 4 },
+              { rank: 5, displayName: profile.name[0] + "*" + profile.name[profile.name.length-1], tier: "숙련 단원", count: 3 }
+            ]
+          }
+        },
+        totalMembers: 150,
+        seasonYear: 2026,
+        currentTier: "숙련 단원",
+        nextTier: "고참 단원",
+        nextTierGap: 8
+      });
+    }
+
+    const res = await fetch(gasUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, birthdate })
+    });
+
+    if (!res.ok) {
+      return c.json({ error: "봉사 기록 서버 응답 오류" }, 500);
+    }
+    const data = await res.json();
+    return c.json(data);
+  } catch (err) {
+    console.log("MyRecord fetch error:", err);
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
 // ─── 알림톡 발송 (웹 자체 백엔드) ──────────────────────────────────────────────────
 app.post("/server/alimtalk/send", async (c) => {
   try {

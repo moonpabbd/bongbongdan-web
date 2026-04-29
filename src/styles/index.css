@@ -13,13 +13,19 @@
   }
 }
 
-body {
+html, body {
   font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #FDFCFA;
   word-break: keep-all;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  width: 100%;
+}
+#root {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .keep-all {

@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, useLayoutEffect, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Eye, EyeOff, UserPlus, CheckCircle2, ChevronDown, ChevronUp, Check } from 'lucide-react';
 import { G } from '../styles/gradients';
@@ -39,6 +39,14 @@ export function Signup() {
   const [marketingExpanded, setMarketingExpanded] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'ok' | 'error'>('idle');
   const [usernameMsg, setUsernameMsg] = useState('');
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, 10);
+    return () => clearTimeout(timer);
+  }, []);
 
   const [form, setForm] = useState<FormState>({
     username: '',

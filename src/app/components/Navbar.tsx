@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { Menu, X, User, LogOut, ChevronDown, PawPrint, ClipboardList, Shield, Star, Users, Clock, Award } from 'lucide-react';
-import { logoImg } from '../imageAssets';
+import { Menu, X, User, LogOut, ChevronDown, PawPrint, ClipboardList, Shield, Star, Users, Clock, Award, Trophy } from 'lucide-react';
+import { logoImg, logoSloganImg } from '../imageAssets';
 import { G } from '../styles/gradients';
 import { useAuth } from '../context/AuthContext';
+import { prefetchRecord } from '../../utils/apiCache';
 
 const APPLY_URL = '/apply';
 
@@ -15,6 +16,13 @@ const navItems = [
       { label: '봉사 문파', path: '/about?tab=intro', Icon: Shield },
       { label: '직급·직책', path: '/about?tab=ranks', Icon: Award },
       { label: '조직도', path: '/about?tab=orgchart', Icon: Users },
+    ],
+  },
+  {
+    label: '소식',
+    path: '/news',
+    children: [
+      { label: '명예·혜택', path: '/news', Icon: Trophy },
     ],
   },
   {
@@ -34,9 +42,22 @@ export function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const location = useLocation();
+  const [userRank, setUserRank] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user, profile, logout } = useAuth();
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (profile) {
+      prefetchRecord(profile.name, profile.phone, profile.birthdate)
+        .then(res => {
+          if (res && (res.currentTier || res.rank) && res.status !== 'fail' && !res.error) {
+            setUserRank(res.currentTier || res.rank);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [profile]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -303,12 +324,19 @@ export function Navbar() {
                   }}>
                     {profile && (
                       <div style={{ padding: '10px 12px', marginBottom: '4px', borderBottom: isSolid ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.08)' }}>
-                        <p style={{ color: isSolid ? '#1E3A5F' : '#F5C875', fontSize: '13px', fontWeight: '700' }}>{profile.name}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <p style={{ color: isSolid ? '#1E3A5F' : '#F5C875', fontSize: '13px', fontWeight: '700' }}>{profile.name}</p>
+                          {userRank && (
+                            <span style={{ fontSize: '11px', padding: '2px 6px', background: isSolid ? 'rgba(30,58,95,0.08)' : 'rgba(245,200,117,0.15)', color: isSolid ? '#1E3A5F' : '#F5C875', borderRadius: '4px', fontWeight: '800' }}>
+                              {userRank}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     )}
-                    {import.meta.env.DEV && <DropdownItem to="/my-record" label="내 봉사 기록" isSolid={isSolid} />}
+                    {import.meta.env.DEV && <DropdownItem to="/my-record" label="나의 봉사" isSolid={isSolid} />}
                     <DropdownItem to="/profile-edit" label="내 정보 변경" isSolid={isSolid} />
-                    {import.meta.env.DEV && <DropdownItem to="/members" label="회원 전용" isSolid={isSolid} />}
+
                     <button
                       onClick={handleLogout}
                       style={{
@@ -364,11 +392,12 @@ export function Navbar() {
 
           {/* Mobile Hamburger */}
           <button
-            className="md:hidden"
+            className="flex items-center justify-center md:hidden"
             onClick={() => setOpen(!open)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: textColor, padding: '8px' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', zIndex: 110 }}
+            aria-label="Menu"
           >
-            {open ? <X size={24} /> : <Menu size={24} />}
+            {open ? <X size={26} color={textColor} /> : <Menu size={26} color={textColor} />}
           </button>
         </div>
       </header>
@@ -430,11 +459,18 @@ export function Navbar() {
             padding: '14px 16px',
             marginBottom: '8px',
           }}>
-            <p style={{ color: '#F5C875', fontSize: '14px', fontWeight: '700' }}>{profile.name} 단원</p>
-            <div style={{ display: 'flex', gap: '14px', marginTop: '12px' }}>
-              <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>내 정보 변경</Link>
-              {import.meta.env.DEV && <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>내 기록</Link>}
-              {import.meta.env.DEV && <Link to="/members" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>회원 전용</Link>}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <p style={{ color: '#F5C875', fontSize: '15px', fontWeight: '700' }}>{profile.name}</p>
+              {userRank && (
+                <span style={{ fontSize: '12px', padding: '2px 6px', background: 'rgba(245,200,117,0.15)', color: '#F5C875', borderRadius: '4px', fontWeight: '800' }}>
+                  {userRank}
+                </span>
+              )}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
+              <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>내 정보 변경</Link>
+              {import.meta.env.DEV && <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>나의 봉사</Link>}
+
             </div>
           </div>
         )}

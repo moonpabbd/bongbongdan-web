@@ -5,17 +5,19 @@ import { logoSloganImg } from '../imageAssets';
 import { G, gradientText } from '../styles/gradients';
 
 const footerLinks = [
-  { label: '문파 소개', path: '/about' },
-  { label: '유기견 봉사', path: '/activities' },
-  { label: '내 봉사 기록', path: '/my-record' },
+  { label: '봉사 문파', path: '/about?tab=intro' },
+  { label: '직급·직책', path: '/about?tab=ranks' },
+  { label: '조직도', path: '/about?tab=orgchart' },
+  { label: '명예·혜택', path: '/news' },
+  { label: '봉사 안내', path: '/activities?tab=method' },
+  { label: '보호소 소개', path: '/activities?tab=shelters' },
   { label: 'FAQ', path: '/faq' },
-  { label: '회원 전용', path: '/members' },
-].filter(link => {
-  if (link.path === '/my-record' || link.path === '/members') {
-    return import.meta.env.DEV;
-  }
-  return true;
-});
+];
+
+const policyLinks = [
+  { label: '이용약관', path: '/terms' },
+  { label: '개인정보처리방침', path: '/privacy' },
+];
 
 export function Footer() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -68,6 +70,26 @@ export function Footer() {
             </div>
           </div>
 
+          {/* Policies */}
+          <div>
+            <h4 style={{ color: '#A87830', fontSize: '13px', fontWeight: '700', letterSpacing: '2px', marginBottom: '20px' }}>
+              정책 및 약관
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {policyLinks.map(link => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  style={{ color: '#4B5563', fontSize: '14px', textDecoration: 'none', transition: 'color 0.2s', fontWeight: '500' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#C8963E'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#4B5563'}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* Contact */}
           <div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: isMobile ? '0' : '33px' }}>
@@ -96,17 +118,17 @@ export function Footer() {
                 rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}
               >
-                <div style={{ 
-                  width: '16px', 
-                  height: '16px', 
-                  border: '1.5px solid #C8963E', 
-                  color: '#C8963E', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  borderRadius: '3px', 
-                  fontSize: '10px', 
-                  fontWeight: '900', 
+                <div style={{
+                  width: '16px',
+                  height: '16px',
+                  border: '1.5px solid #C8963E',
+                  color: '#C8963E',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '3px',
+                  fontSize: '10px',
+                  fontWeight: '900',
                   lineHeight: 1,
                   flexShrink: 0
                 }}>N</div>
@@ -117,12 +139,9 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div style={{ borderTop: '1px solid rgba(200,150,62,0.1)', paddingTop: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+        <div style={{ borderTop: '1px solid rgba(200,150,62,0.1)', paddingTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <p style={{ color: '#9CA3AF', fontSize: '13px' }}>
-            © 2026 봉봉단(BBD). All rights reserved. — bbd.or.kr
-          </p>
-          <p style={{ color: '#D1D5DB', fontSize: '12px' }}>
-            비영리단체 · 사업자등록번호 660-80-03378 · 의협을 실천하는 봉사문파
+            © 2026 봉봉단(BBD). All rights reserved.
           </p>
         </div>
       </div>

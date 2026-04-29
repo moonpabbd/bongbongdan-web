@@ -654,9 +654,9 @@ const activeShelters: ShelterData[] = [
 
 function TabShelters() {
   return (
-    <div>
+    <div style={{ background: G.warmSection, overflowX: 'hidden' }}>
       {/* 도입부 & 보안 안내 */}
-      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px) 40px', background: G.warmSection }}>
+      <div style={{ padding: 'clamp(60px, 10vw, 80px) clamp(20px, 5vw, 40px) 40px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <RevealDiv>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>PARTNER SHELTERS</p>
@@ -671,29 +671,34 @@ function TabShelters() {
         </div>
       </div>
 
-      {/* 매거진 스타일 스크롤바 숨김 CSS */}
+      {/* 마키 애니메이션 CSS */}
       <style>{`
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 8px)); } /* 16px gap의 절반 보정 */
+        }
+        .marquee-track {
+          display: flex;
+          gap: 16px;
+          width: max-content;
+          animation: marquee 40s linear infinite;
+        }
+        .marquee-wrapper:hover .marquee-track {
+          animation-play-state: paused;
+        }
       `}</style>
 
-      {/* 🚀 Quick View Navigation (Option A: Horizontal Scroll) */}
-      <div style={{ background: G.warmSection, paddingBottom: '40px', width: '100%' }}>
+      {/* 🚀 Quick View Navigation (Marquee Infinite Scroll) */}
+      <div style={{ padding: '20px 0 40px', width: '100%', overflow: 'hidden' }}>
         <RevealDiv delay={100}>
-          <div
-            className="hide-scrollbar"
-            style={{
-              display: 'flex', 
-              gap: '16px', 
-              overflowX: 'auto', 
-              paddingBottom: '24px', 
-              scrollSnapType: 'x mandatory',
-              paddingLeft: 'max(clamp(20px, 5vw, 40px), calc((100% - 1200px) / 2))',
-              paddingRight: 'max(clamp(20px, 5vw, 40px), calc((100% - 1200px) / 2))',
-            }}
-          >
-              {activeShelters.map((shelter) => (
+          {/* 마우스 호버 시 일시정지를 위한 wrapper */}
+          <div className="marquee-wrapper" style={{ paddingBottom: '24px' }}>
+            {/* 실제 움직이는 트랙 */}
+            <div className="marquee-track">
+              {/* 리스트를 2배로 복제하여 무한 루프 구현 */}
+              {[...activeShelters, ...activeShelters].map((shelter, idx) => (
                 <div
-                  key={`quick-${shelter.name}`}
+                  key={`quick-${shelter.name}-${idx}`}
                   className="hover-lift"
                   onClick={() => {
                     const el = document.getElementById(`shelter-${shelter.name}`);
@@ -703,10 +708,10 @@ function TabShelters() {
                     }
                   }}
                   style={{
-                    flex: '0 0 auto', scrollSnapAlign: 'start', cursor: 'pointer',
+                    flex: '0 0 auto', cursor: 'pointer',
                     background: '#fff', borderRadius: '20px', padding: '24px',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.05)',
-                    minWidth: '240px', display: 'flex', flexDirection: 'column', gap: '12px'
+                    width: '260px', display: 'flex', flexDirection: 'column', gap: '12px'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -728,11 +733,12 @@ function TabShelters() {
                 </div>
               ))}
             </div>
-          </RevealDiv>
+          </div>
+        </RevealDiv>
       </div>
 
       {/* 정기 출정 보호소 리스트 (매거진 스타일 뷰) */}
-      <div style={{ padding: '40px clamp(20px, 5vw, 40px) 80px', background: G.warmSection }}>
+      <div style={{ padding: '40px clamp(20px, 5vw, 40px) 80px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '80px' }}>
           {activeShelters.map((shelter, i) => {
             const isEven = i % 2 === 0;

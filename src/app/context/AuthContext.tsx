@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { createClient, Session, User } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { prefetchRecord } from '../../utils/apiCache';
 
 const supabase = createClient(`https://${projectId}.supabase.co`, publicAnonKey);
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
@@ -49,6 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         setProfile(data.profile);
+        if (data.profile) {
+          prefetchRecord(data.profile.name, data.profile.phone, data.profile.birthdate).catch(() => {});
+        }
       } else {
         setProfile(null);
       }
