@@ -357,7 +357,7 @@ export function ApplyVolunteer() {
         </div>
 
         {/* 2단 레이아웃 */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', alignItems: 'stretch' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', alignItems: 'stretch' }}>
 
           {/* 왼쪽: 안내 문구 (공식 출정서 스타일) */}
           <div style={{
