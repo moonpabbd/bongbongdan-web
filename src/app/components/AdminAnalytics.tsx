@@ -30,9 +30,12 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
       if (res.ok) {
         const data = await res.json();
         setStats(data);
+      } else {
+        setStats({ trend: [], referrers: {}, devices: {}, countries: {}, events: {}, heatmap: [] });
       }
     } catch (e) {
       console.error('Fetch stats error', e);
+      setStats({ trend: [], referrers: {}, devices: {}, countries: {}, events: {}, heatmap: [] });
     } finally {
       setLoading(false);
     }

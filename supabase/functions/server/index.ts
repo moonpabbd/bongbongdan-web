@@ -143,7 +143,10 @@ app.post("/server/auth/onboard", async (c) => {
     if (error || !user) return c.json({ error: `인증 실패: ${error?.message}` }, 401);
 
     const existingProfile = await kv.get(`bbd:member:profile:${user.id}`);
-    if (existingProfile) return c.json({ error: "이미 프로필이 존재합니다." }, 400);
+    if (existingProfile) {
+      // 이미 연동(생성)된 경우, 에러 대신 성공 반환하여 더블클릭/새로고침 이슈 방지
+      return c.json({ success: true, memberNumber: existingProfile.memberNumber || existingProfile.member_number, message: '이미 프로필이 연동되어 있습니다.' });
+    }
 
     const body = await c.req.json();
     const { name, gender, phone, birthdate, kakaoId, marketingAgreement } = body;
