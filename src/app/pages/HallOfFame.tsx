@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
+import { Helmet } from 'react-helmet-async';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Trophy, Medal, Flame, Calendar, Crown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -34,8 +35,15 @@ export function HallOfFame() {
   }, [profile]);
 
   return (
-    <div>
-      {/* 페이지 히어로 (다크 테마 유지) */}
+    <>
+      <Helmet>
+        <title>봉봉단 소식 & 명예·혜택</title>
+        <meta name="description" content="봉봉단을 빛낸 단원들의 명예의 전당과 다양한 소식을 확인해보세요. 우수 봉사자를 위한 특별한 혜택을 제공합니다." />
+        <meta property="og:title" content="명예의 전당 - 봉봉단" />
+        <meta property="og:description" content="봉봉단과 함께 땀 흘린 우수 봉사자들의 랭킹과 특별한 혜택을 확인하세요." />
+      </Helmet>
+      <div>
+        {/* 페이지 히어로 (다크 테마 유지) */}
       <div className="pt-[140px] px-5 md:px-10" style={{
         background: G.darkHero,
         position: 'relative', overflow: 'hidden',
@@ -108,14 +116,14 @@ export function HallOfFame() {
           {(!loading && data) && (
             <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
               <Tabs.List className="flex bg-gray-200/50 p-1.5 rounded-2xl mb-10 w-full max-w-[400px] mx-auto border border-gray-200/50">
-                <Tabs.Trigger 
-                  value="season" 
+                <Tabs.Trigger
+                  value="season"
                   className={`flex-1 py-3 text-[15px] rounded-xl font-bold transition-all outline-none ${activeTab === 'season' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   <div className="flex items-center justify-center gap-1.5"><Flame size={16} /> {data.seasonYear || '2026'} 시즌</div>
                 </Tabs.Trigger>
-                <Tabs.Trigger 
-                  value="all" 
+                <Tabs.Trigger
+                  value="all"
                   className={`flex-1 py-3 text-[15px] rounded-xl font-bold transition-all outline-none ${activeTab === 'all' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   <div className="flex items-center justify-center gap-1.5"><Crown size={16} /> 역대 누적</div>
@@ -125,7 +133,7 @@ export function HallOfFame() {
               <Tabs.Content value="season" className="outline-none">
                 <RankingList items={data.rankings?.season?.top10 || []} profile={profile} />
               </Tabs.Content>
-              
+
               <Tabs.Content value="all" className="outline-none">
                 <RankingList items={data.rankings?.all?.top10 || []} profile={profile} />
               </Tabs.Content>
@@ -140,7 +148,7 @@ export function HallOfFame() {
           <div className="max-w-[760px] mx-auto">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
-              
+
               <div className="relative z-10">
                 <div className="text-center mb-6 md:mb-8">
                   <div className="inline-flex items-center justify-center mb-3">
@@ -194,6 +202,7 @@ export function HallOfFame() {
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -203,27 +212,27 @@ function RankingList({ items, profile }: any) {
   const top3 = items.slice(0, 3);
   // 2위, 1위, 3위 순으로 시상대 정렬
   const podiumOrder = [top3[1], top3[0], top3[2]].filter(Boolean);
-  
+
   const rest = items.slice(3);
 
   return (
     <div className="animate-[fadeIn_0.5s_ease]">
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-      
+
       {/* 1~3위 시상대 (Podium) */}
       {top3.length > 0 && (
         <div className="flex justify-center items-end gap-3 md:gap-6 mb-12 mt-6">
           {podiumOrder.map((item: any, i: number) => {
             const isRank1 = item.rank === 1;
             const isRank2 = item.rank === 2;
-            
+
             let height = isRank1 ? 'h-52' : isRank2 ? 'h-40' : 'h-32';
             let bg = isRank1 ? 'bg-gradient-to-t from-[#FFF8E1] to-white border-[#FFE082]' :
-                     isRank2 ? 'bg-gradient-to-t from-gray-100 to-white border-gray-200' :
-                               'bg-gradient-to-t from-[#FFF3E0] to-white border-[#FFCC80]';
+              isRank2 ? 'bg-gradient-to-t from-gray-100 to-white border-gray-200' :
+                'bg-gradient-to-t from-[#FFF3E0] to-white border-[#FFCC80]';
             let medalColor = isRank1 ? 'text-[#F5A623]' : isRank2 ? 'text-gray-400' : 'text-[#D97706]';
             let orderClass = isRank1 ? 'order-2 z-10' : isRank2 ? 'order-1' : 'order-3';
-            
+
             return (
               <div key={i} className={`flex flex-col items-center w-[30%] md:w-36 relative ${orderClass} transform transition hover:-translate-y-2`}>
                 <div className="mb-4 text-center">
@@ -235,7 +244,7 @@ function RankingList({ items, profile }: any) {
                   </div>
                   <div className="text-[11px] md:text-xs font-semibold text-gray-500 mt-1">{item.tier}</div>
                 </div>
-                
+
                 <div className={`w-full ${height} ${bg} border rounded-t-3xl shadow-[0_8px_20px_rgb(0,0,0,0.03)] flex flex-col items-center justify-end pb-6 relative overflow-hidden`}>
                   <div className={`text-3xl md:text-4xl font-black opacity-30 ${medalColor}`}>{item.rank}</div>
                   <div className="text-sm md:text-base font-bold text-gray-700 mt-2">{item.count}회</div>
@@ -267,7 +276,7 @@ function RankingList({ items, profile }: any) {
           })}
         </div>
       )}
-      
+
       <p className="text-center text-gray-400 text-xs font-medium mt-10">데이터는 매일 자정에 갱신됩니다.</p>
     </div>
   );

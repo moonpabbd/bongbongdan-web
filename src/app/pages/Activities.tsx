@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router';
+import { Helmet } from 'react-helmet-async';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import {
   MapPin, Phone, Clock,
@@ -465,6 +466,7 @@ function PhotoSlider({ images, shelterName }: { images: string[], shelterName: s
             <img
               src={imgUrl}
               alt={`${shelterName} ${idx + 1}`}
+              loading="lazy"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
@@ -901,10 +903,17 @@ export function Activities() {
   };
 
   return (
-    <div>
-      {/* 페이지 히어로 */}
-      <div style={{
-        padding: '140px clamp(20px, 5vw, 40px) 0',
+    <>
+      <Helmet>
+        <title>유기견 봉사 - 봉봉단</title>
+        <meta name="description" content="봉봉단과 함께하는 유기견 보호소 자원봉사. 뚜벅이도 걱정 없는 AI 픽업 매칭과 체계적인 봉사 시스템을 경험해 보세요." />
+        <meta property="og:title" content="유기견 봉사 안내 및 보호소 소개 - 봉봉단" />
+        <meta property="og:description" content="누구나 쉽게 참여할 수 있는 체계적인 유기견 봉사 시스템. 봉봉단과 함께 따뜻한 나눔을 시작하세요." />
+      </Helmet>
+      <div>
+        {/* 페이지 히어로 */}
+        <div style={{
+          padding: '140px clamp(20px, 5vw, 40px) 0',
         background: G.darkHero,
         position: 'relative', overflow: 'hidden',
       }}>
@@ -971,5 +980,6 @@ export function Activities() {
       {/* 탭 콘텐츠 */}
       {renderTab()}
     </div>
+    </>
   );
 }
