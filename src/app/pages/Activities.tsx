@@ -929,9 +929,9 @@ export function Activities() {
           <h1 style={{ color: '#fff', fontSize: 'clamp(32px,5vw,56px)', fontWeight: '900', marginBottom: '16px', lineHeight: '1.2' }}>
             유기견 봉사
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '17px', lineHeight: '1.7' }}>
-            견사 청소, 보호소 수리, 산책, 사회화 훈련, 목욕, 교감 등<br />
-            봉사자 한 명이 오면 강아지 열 마리의 하루가 달라집니다
+          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 'clamp(15px, 4vw, 17px)', lineHeight: '1.7', wordBreak: 'keep-all' }}>
+            견사 청소, 보호소 수리, 산책, 사회화 훈련, <span style={{ whiteSpace: 'nowrap' }}>목욕, 교감 등</span><br className="hidden md:block" />
+            <span className="block mt-1 md:mt-0 md:inline">봉사자 한 명이 오면 <span style={{ whiteSpace: 'nowrap' }}>강아지 열 마리의 하루가 달라집니다</span></span>
           </p>
         </div>
 
