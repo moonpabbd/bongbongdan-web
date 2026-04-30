@@ -472,8 +472,7 @@ export function Navbar() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
               <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>내 정보 변경</Link>
-              {import.meta.env.DEV && <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>나의 봉사</Link>}
-
+              <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>나의 봉사</Link>
             </div>
           </div>
         )}

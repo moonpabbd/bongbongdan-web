@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Trash2, Edit2, MapPin, Clock, Home, Settings, Check, X } from 'lucide-react';
+import { Plus, Trash2, Edit2, MapPin, Clock, Home, Settings, Check, X, ChevronDown, CalendarDays } from 'lucide-react';
 import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
@@ -95,6 +95,11 @@ export function SchedulesTab() {
   const [editingCategory, setEditingCategory] = useState<Partial<ScheduleCategory> | null>(null);
 
   const [viewingSchedule, setViewingSchedule] = useState<Schedule | null>(null);
+  const [expandedMobileId, setExpandedMobileId] = useState<string | null>(null);
+
+  const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
+  const [pickerYear, setPickerYear] = useState(new Date().getFullYear());
+  const monthPickerRef = useRef<HTMLDivElement>(null);
 
   const [isMobile, setIsMobile] = useState(false);
   const startDateRef = useRef<any>(null);
@@ -114,6 +119,21 @@ export function SchedulesTab() {
   useEffect(() => {
     fetchCalendarData(currentDate);
   }, [currentDate]);
+
+  useEffect(() => {
+    setPickerYear(currentDate.getFullYear());
+  }, [currentDate, isMonthPickerOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (monthPickerRef.current && !monthPickerRef.current.contains(event.target as Node)) {
+        setIsMonthPickerOpen(false);
+      }
+    };
+    if (isMonthPickerOpen) document.addEventListener('mousedown', handleClickOutside);
+    else document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMonthPickerOpen]);
 
   const fetchInitialData = async () => {
     setLoading(true);
@@ -330,19 +350,92 @@ export function SchedulesTab() {
     });
   }, [upcomingSchedules, activeCategories]);
 
+  const nextUpcomingSchedule = useMemo(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const futureSchedules = filteredUpcomingSchedules.filter(s => s.startDate && s.startDate.split('T')[0] >= todayStr);
+    futureSchedules.sort((a, b) => new Date(a.startDate!).getTime() - new Date(b.startDate!).getTime());
+    return futureSchedules[0] || null;
+  }, [filteredUpcomingSchedules]);
+
+  const groupedMobileSchedules = useMemo(() => {
+    const grouped: { date: Date, dateStr: string, schedules: Schedule[] }[] = [];
+    
+    const currentY = currentDate.getFullYear();
+    const currentM = currentDate.getMonth();
+
+    const sorted = [...filteredCalendarSchedules]
+      .filter(s => {
+        if (!s.startDate) return false;
+        const dDate = new Date(s.startDate);
+        return dDate.getFullYear() === currentY && dDate.getMonth() === currentM;
+      })
+      .sort((a, b) => new Date(a.startDate || 0).getTime() - new Date(b.startDate || 0).getTime());
+    
+    sorted.forEach(s => {
+      if (!s.startDate) return;
+      const dDate = new Date(s.startDate);
+      const y = dDate.getFullYear();
+      const m = dDate.getMonth();
+      const d = dDate.getDate();
+      
+      const dateKeyStr = `${y}-${m}-${d}`;
+      const displayDateStr = `${m + 1}월 ${d}일 (${['일','월','화','수','목','금','토'][dDate.getDay()]})`;
+      
+      let group = grouped.find(g => `${g.date.getFullYear()}-${g.date.getMonth()}-${g.date.getDate()}` === dateKeyStr);
+      if (!group) {
+        group = { date: new Date(y, m, d), dateStr: displayDateStr, schedules: [] };
+        grouped.push(group);
+      }
+      group.schedules.push(s);
+    });
+    return grouped;
+  }, [filteredCalendarSchedules]);
+
   if (loading) return <div style={{ padding: '40px', textAlign: 'center', color: '#6B7280' }}>로딩 중...</div>;
 
   const renderScheduleDetailModal = () => {
     if (!viewingSchedule) return null;
     const s = viewingSchedule;
     return (
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-        <div style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', width: '100%', maxWidth: '400px', position: 'relative' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#1E3A5F', margin: 0 }}>{s.title}</h2>
-            <button type="button" onClick={() => setViewingSchedule(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6B7280' }}><X size={24} /></button>
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ background: '#fff', width: '100%', maxWidth: '400px', height: '100%', boxShadow: '-4px 0 24px rgba(0,0,0,0.1)', position: 'relative', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          
+          <div style={{ padding: '24px 24px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #E5E7EB', position: 'sticky', top: 0, background: '#fff', zIndex: 10 }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#1E3A5F', margin: 0, paddingRight: '16px' }}>{s.title}</h2>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button type="button" onClick={() => setViewingSchedule(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6B7280', padding: 0, display: 'flex' }}><X size={24} /></button>
+            </div>
           </div>
-          {s.subtitle && <p style={{ fontSize: '15px', color: '#4B5563', fontWeight: '600', marginBottom: '16px' }}>{s.subtitle}</p>}
+
+          <div style={{ padding: '24px', flex: 1 }}>
+            {isAdmin && (
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setViewingSchedule(null);
+                    setCurrentSchedule(s);
+                    setIsEditing(true);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }} 
+                  style={{ flex: 1, padding: '10px', background: '#EFF6FF', color: '#2563EB', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                >
+                  <Edit2 size={16} /> 수정
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    handleDeleteSchedule(s.id);
+                    setViewingSchedule(null);
+                  }} 
+                  style={{ flex: 1, padding: '10px', background: '#FEF2F2', color: '#DC2626', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                >
+                  <Trash2 size={16} /> 삭제
+                </button>
+              </div>
+            )}
+            
+            {s.subtitle && <p style={{ fontSize: '15px', color: '#4B5563', fontWeight: '600', marginBottom: '16px' }}>{s.subtitle}</p>}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
             <div style={{ display: 'flex', gap: '8px', color: '#4B5563', fontSize: '14px' }}>
               <Clock size={16} color="#C8963E" style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -364,6 +457,7 @@ export function SchedulesTab() {
               {s.description}
             </div>
           )}
+          </div>
         </div>
       </div>
     );
@@ -566,7 +660,6 @@ export function SchedulesTab() {
                     dateFormat="yyyy년 MM월 dd일"
                     placeholderText="날짜 선택"
                     dayClassName={(date) => {
-                      if (date.getMonth() !== (currentSchedule.startDate ? new Date(currentSchedule.startDate).getMonth() : new Date().getMonth())) return 'outside-month';
                       if (date.getDay() === 0) return 'sunday';
                       if (date.getDay() === 6) return 'saturday';
                       return '';
@@ -597,7 +690,7 @@ export function SchedulesTab() {
                         }}
                         showTimeSelect
                         showTimeSelectOnly
-                        timeIntervals={5}
+                        timeIntervals={30}
                         timeCaption="시간"
                         dateFormat="aa hh:mm"
                         locale={ko}
@@ -620,7 +713,7 @@ export function SchedulesTab() {
                         }}
                         showTimeSelect
                         showTimeSelectOnly
-                        timeIntervals={5}
+                        timeIntervals={30}
                         timeCaption="시간"
                         dateFormat="aa hh:mm"
                         locale={ko}
@@ -766,7 +859,16 @@ export function SchedulesTab() {
 
       {/* 카테고리 필터 영역 */}
       {categories.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
+        <div style={{ 
+          display: 'flex', 
+          gap: '8px', 
+          marginBottom: '20px', 
+          overflowX: 'auto', 
+          paddingBottom: '8px', /* 스크롤바 공간 확보 */
+          WebkitOverflowScrolling: 'touch', /* iOS 부드러운 스크롤 */
+          msOverflowStyle: 'none', /* IE and Edge 스크롤바 숨기기 (선택사항) */
+          scrollbarWidth: 'thin' /* Firefox 스크롤바 얇게 */
+        }}>
           {categories.map(cat => {
             const isActive = activeCategories.includes(cat.id);
             return (
@@ -779,7 +881,9 @@ export function SchedulesTab() {
                   border: `1px solid ${isActive ? cat.color : '#E5E7EB'}`,
                   background: isActive ? cat.color : '#fff',
                   color: isActive ? '#fff' : '#6B7280',
-                  fontWeight: '600', fontSize: '13px', transition: 'all 0.2s'
+                  fontWeight: '600', fontSize: '13px', transition: 'all 0.2s',
+                  flexShrink: 0, /* 스크롤을 위해 줄어들지 않도록 설정 */
+                  whiteSpace: 'nowrap' /* 텍스트 줄바꿈 방지 */
                 }}
               >
                 {isActive && <Check size={14} color="#fff" />}
@@ -790,12 +894,80 @@ export function SchedulesTab() {
         </div>
       )}
 
+      {/* 모바일: 다음 주요 일정 (히어로 배너) */}
+      {isMobile && nextUpcomingSchedule && (
+        <div style={{ background: 'linear-gradient(135deg, #FFFFFF, #FFFBEB)', color: '#1E3A5F', padding: '20px', borderRadius: '16px', marginBottom: '20px', border: '1px solid #FDE68A', boxShadow: '0 8px 30px rgba(217,119,6,0.12)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ background: '#FEF3C7', color: '#D97706', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '800' }}>다음 주요 일정</span>
+            <span style={{ fontSize: '14px', fontWeight: '800', background: '#D97706', color: '#FFFFFF', padding: '4px 10px', borderRadius: '20px' }}>{calculateDDay(nextUpcomingSchedule.startDate!)}</span>
+          </div>
+          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800' }}>{nextUpcomingSchedule.title}</h3>
+          <div style={{ display: 'flex', gap: '8px', fontSize: '13px', color: '#4B5563', fontWeight: '600' }}>
+            <span>{formatDateTime(nextUpcomingSchedule.startDate!, nextUpcomingSchedule.endDate, nextUpcomingSchedule.isAllDay)}</span>
+          </div>
+        </div>
+      )}
+
       {/* 캘린더 UI */}
       <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB', marginBottom: '32px', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '16px 16px 16px 16px', gap: '4px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '16px 16px 16px 16px', gap: '4px', position: 'relative', zIndex: 20 }}>
           <button onClick={prevMonth} style={{ padding: '6px 10px', fontSize: '13px', background: '#F3F4F6', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '700', color: '#4B5563', whiteSpace: 'nowrap', flexShrink: 0 }}>&lt; 이전</button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 1, minWidth: 0, justifyContent: 'center' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#1E3A5F', margin: 0, whiteSpace: 'nowrap' }}>{year}년 {month + 1}월</h3>
+            <div style={{ position: 'relative' }} ref={monthPickerRef}>
+              <button 
+                onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
+                style={{ 
+                  display: 'flex', alignItems: 'center', gap: '4px',
+                  background: isMonthPickerOpen ? '#F3F4F6' : 'transparent',
+                  border: 'none', borderRadius: '8px', padding: '4px 8px',
+                  cursor: 'pointer', transition: 'background 0.2s'
+                }}
+              >
+                <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#1E3A5F', margin: 0, whiteSpace: 'nowrap' }}>
+                  {year}년 {month + 1}월
+                </h3>
+                <ChevronDown size={16} color="#1E3A5F" style={{ transform: isMonthPickerOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
+              </button>
+              
+              {isMonthPickerOpen && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '8px',
+                  background: '#fff', borderRadius: '16px', boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+                  border: '1px solid #E5E7EB', padding: '16px', zIndex: 50, width: '280px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <button onClick={() => setPickerYear(y => y - 1)} style={{ background: '#F3F4F6', border: 'none', borderRadius: '8px', padding: '6px', cursor: 'pointer', color: '#4B5563', fontWeight: 'bold' }}>&lt;</button>
+                    <span style={{ fontSize: '16px', fontWeight: '800', color: '#1E3A5F' }}>{pickerYear}년</span>
+                    <button onClick={() => setPickerYear(y => y + 1)} style={{ background: '#F3F4F6', border: 'none', borderRadius: '8px', padding: '6px', cursor: 'pointer', color: '#4B5563', fontWeight: 'bold' }}>&gt;</button>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                    {Array.from({ length: 12 }, (_, i) => i).map(m => {
+                      const isCurrentSelection = currentDate.getFullYear() === pickerYear && currentDate.getMonth() === m;
+                      return (
+                        <button
+                          key={m}
+                          onClick={() => {
+                            setCurrentDate(new Date(pickerYear, m, 1));
+                            setIsMonthPickerOpen(false);
+                          }}
+                          style={{
+                            padding: '12px 0', borderRadius: '8px', border: 'none',
+                            background: isCurrentSelection ? '#FEF3C7' : '#F9FAFB',
+                            color: isCurrentSelection ? '#D97706' : '#4B5563',
+                            fontWeight: isCurrentSelection ? '800' : '600',
+                            fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s',
+                          }}
+                          onMouseEnter={(e) => { if(!isCurrentSelection) e.currentTarget.style.background = '#F3F4F6'; }}
+                          onMouseLeave={(e) => { if(!isCurrentSelection) e.currentTarget.style.background = '#F9FAFB'; }}
+                        >
+                          {m + 1}월
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
             <button onClick={goToToday} style={{ padding: '4px 8px', background: '#FEF3C7', border: 'none', borderRadius: '20px', color: '#D97706', fontWeight: '700', fontSize: '12px', cursor: 'pointer', whiteSpace: 'nowrap' }}>오늘</button>
           </div>
           <button onClick={nextMonth} style={{ padding: '6px 10px', fontSize: '13px', background: '#F3F4F6', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '700', color: '#4B5563', whiteSpace: 'nowrap', flexShrink: 0 }}>다음 &gt;</button>
@@ -803,64 +975,104 @@ export function SchedulesTab() {
         <div style={{ background: '#fff', borderTop: '1px solid #E5E7EB' }}>
           {isMobile ? (
             <div style={{ padding: '0', display: 'flex', flexDirection: 'column' }}>
-              {filteredCalendarSchedules.length === 0 ? (
-                <div style={{ padding: '60px', color: '#9CA3AF', textAlign: 'center', fontSize: '14px' }}>이번 달에 등록된 일정이 없습니다.</div>
+              {groupedMobileSchedules.length === 0 ? (
+                <div style={{ padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: '#F9FAFB', borderRadius: '16px', margin: '16px' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '32px', background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <CalendarDays size={32} color="#D97706" />
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#1E3A5F', margin: '0 0 8px 0' }}>아직 등록된 일정이 없어요!</h4>
+                    <p style={{ fontSize: '14px', color: '#6B7280', margin: 0, lineHeight: '1.5' }}>새로운 봉사 일정이 곧 업데이트될 예정입니다.<br/>조금만 기다려 주시거나 다른 달의 일정을 확인해 보세요.</p>
+                  </div>
+                  {isAdmin && (
+                    <button 
+                      onClick={() => {
+                        setCurrentSchedule({ title: '', subtitle: '', startDate: '', endDate: '', location: '', shelterName: '', description: '', categoryId: categories.length > 0 ? categories[0].id : '', isAllDay: true }); 
+                        setIsEditing(true); 
+                      }}
+                      style={{ marginTop: '8px', padding: '10px 20px', background: '#1E3A5F', color: '#fff', borderRadius: '8px', border: 'none', fontWeight: '700', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <Plus size={16} /> 새 일정 등록하기
+                    </button>
+                  )}
+                </div>
               ) : (
-                filteredCalendarSchedules
-                  .slice()
-                  .sort((a, b) => new Date(a.startDate || 0).getTime() - new Date(b.startDate || 0).getTime())
-                  .map(s => {
-                    const color = getCategoryColor(s.categoryId);
-                    const isAllDay = s.isAllDay;
-                    let timeStr = '';
-                    if (!isAllDay && s.startDate) {
-                       const d = new Date(s.startDate);
-                       if (!isNaN(d.getTime())) {
-                          timeStr = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
-                       }
-                    }
-                    const displayTime = isAllDay ? '하루 종일' : timeStr;
-                    const dDate = s.startDate ? new Date(s.startDate) : new Date();
-                    const dateNum = dDate.getDate();
-                    const dayName = ['일', '월', '화', '수', '목', '금', '토'][dDate.getDay()];
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {groupedMobileSchedules.map(group => {
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    const isPastGroup = group.dateStr < todayStr; // Simplified check
                     
                     return (
-                      <div 
-                        key={s.id}
-                        onClick={() => {
-                          if (isAdmin) {
-                            setCurrentSchedule(s);
-                            setIsEditing(true);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          } else {
-                            setViewingSchedule(s);
+                      <div key={group.dateStr} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ background: '#F3F4F6', padding: '8px 16px', fontSize: '13px', fontWeight: '800', color: '#4B5563', position: 'sticky', top: 0, zIndex: 5 }}>
+                          {group.dateStr}
+                        </div>
+                        {group.schedules.map(s => {
+                          const color = getCategoryColor(s.categoryId);
+                          const isAllDay = s.isAllDay;
+                          let timeStr = '';
+                          if (!isAllDay && s.startDate) {
+                             const d = new Date(s.startDate);
+                             if (!isNaN(d.getTime())) {
+                                timeStr = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+                             }
                           }
-                        }}
-                        style={{ 
-                          display: 'flex', 
-                          gap: '16px', 
-                          padding: '16px', 
-                          borderBottom: '1px solid #E5E7EB',
-                          cursor: 'pointer',
-                          background: '#fff'
-                        }}
-                      >
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '40px' }}>
-                          <span style={{ fontSize: '12px', color: dDate.getDay() === 0 ? '#DC2626' : dDate.getDay() === 6 ? '#2563EB' : '#6B7280', fontWeight: '600' }}>{dayName}</span>
-                          <span style={{ fontSize: '20px', fontWeight: '800', color: dDate.getDay() === 0 ? '#DC2626' : dDate.getDay() === 6 ? '#2563EB' : '#111827', marginTop: '-2px' }}>{dateNum}</span>
-                        </div>
-                        
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color }}></div>
-                            <span style={{ fontSize: '12px', color: '#6B7280', fontWeight: '600' }}>{displayTime}</span>
-                          </div>
-                          <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: '#111827' }}>{s.title}</h4>
-                          {s.subtitle && <span style={{ fontSize: '13px', color: '#6B7280', marginTop: '2px' }}>{s.subtitle}</span>}
-                        </div>
+                          const displayTime = isAllDay ? '하루 종일' : timeStr;
+                          const sDateStr = s.startDate?.split('T')[0];
+                          const isPast = sDateStr && sDateStr < todayStr;
+                          const isToday = sDateStr && sDateStr === todayStr;
+                          
+                          return (
+                            <div 
+                              key={s.id}
+                              onClick={() => setExpandedMobileId(expandedMobileId === s.id ? null : s.id)}
+                              style={{ 
+                                display: 'flex', flexDirection: 'column', padding: '16px', 
+                                borderBottom: '1px solid #E5E7EB', cursor: 'pointer', background: '#fff',
+                                opacity: isPast ? 0.6 : 1
+                              }}
+                            >
+                              <div style={{ display: 'flex', gap: '16px' }}>
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                    {isToday && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981', animation: 'pulse 2s infinite' }}></div>}
+                                    {!isToday && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color }}></div>}
+                                    <span style={{ fontSize: '12px', color: '#6B7280', fontWeight: '600' }}>{displayTime}</span>
+                                    {isToday && <span style={{ fontSize: '11px', color: '#10B981', fontWeight: '800', background: '#D1FAE5', padding: '2px 6px', borderRadius: '4px' }}>오늘</span>}
+                                  </div>
+                                  <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: '#111827' }}>{s.title}</h4>
+                                  {s.subtitle && <span style={{ fontSize: '13px', color: '#6B7280', marginTop: '2px' }}>{s.subtitle}</span>}
+                                </div>
+                              </div>
+
+                              {expandedMobileId === s.id && (
+                                <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px dashed #E5E7EB', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                  {s.location && (
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '14px', color: '#4B5563' }}>
+                                      <MapPin size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
+                                      <span>{s.location}</span>
+                                    </div>
+                                  )}
+                                  {s.description && (
+                                    <div style={{ background: '#F9FAFB', padding: '12px', borderRadius: '8px', fontSize: '13px', color: '#4B5563', whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
+                                      {s.description}
+                                    </div>
+                                  )}
+                                  {isAdmin && (
+                                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                                      <button onClick={(e) => { e.stopPropagation(); setCurrentSchedule(s); setIsEditing(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', padding: '4px' }}><Edit2 size={16} /></button>
+                                      <button onClick={(e) => { e.stopPropagation(); handleDeleteSchedule(s.id); }} style={{ background: 'none', border: 'none', color: '#DC2626', cursor: 'pointer', padding: '4px' }}><Trash2 size={16} /></button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     );
-                  })
+                  })}
+                </div>
               )}
             </div>
           ) : (
@@ -880,7 +1092,38 @@ export function SchedulesTab() {
                 const holidayName = holidays[dateStr];
                 
                 return (
-                  <div key={i} style={{ background: isToday ? '#FFFBEB' : '#fff', padding: '4px', minHeight: '120px', borderTop: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column' }}>
+                  <div 
+                    key={i} 
+                    onClick={() => {
+                      if (!isAdmin) return;
+                      const dStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T00:00:00.000Z`;
+                      setCurrentSchedule({ 
+                        title: '', subtitle: '', 
+                        startDate: dStr, endDate: dStr, 
+                        location: '', shelterName: '', description: '', 
+                        categoryId: categories.length > 0 ? categories[0].id : '', 
+                        isAllDay: true 
+                      }); 
+                      setIsEditing(true);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    onMouseEnter={(e) => {
+                      if (isAdmin && !isToday) e.currentTarget.style.background = '#F9FAFB';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (isAdmin && !isToday) e.currentTarget.style.background = '#fff';
+                    }}
+                    style={{ 
+                      background: isToday ? '#FFFBEB' : '#fff', 
+                      padding: '4px', 
+                      minHeight: '120px', 
+                      borderTop: '1px solid #E5E7EB', 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      cursor: isAdmin ? 'pointer' : 'default',
+                      transition: 'background 0.2s'
+                    }}
+                  >
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '8px', gap: '4px' }}>
                       <div style={{ fontWeight: '600', color: isToday ? '#fff' : (date.getDay() === 0 || holidayName) ? '#DC2626' : date.getDay() === 6 ? '#2563EB' : '#374151', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '22px', height: '22px', borderRadius: '50%', background: isToday ? '#C8963E' : 'transparent', fontSize: '12px' }}>
                         {date.getDate()}
@@ -902,19 +1145,17 @@ export function SchedulesTab() {
                         }
                         const displayTitle = isAllDay ? s.title : `${timeStr} ${s.title}`;
                         
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        const sDateStr = s.startDate?.split('T')[0];
+                        const isPast = sDateStr && sDateStr < todayStr;
+                        
                         return (
                           <div 
                             key={s.id} 
                             title={s.title} 
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (isAdmin) {
-                                setCurrentSchedule(s);
-                                setIsEditing(true);
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                              } else {
-                                setViewingSchedule(s);
-                              }
+                              setViewingSchedule(s);
                             }}
                             style={{ 
                               background: isAllDay ? color : 'transparent', 
@@ -936,9 +1177,10 @@ export function SchedulesTab() {
                               textAlign: 'left',
                               cursor: 'pointer',
                               transition: 'opacity 0.2s',
+                              opacity: isPast ? 0.4 : 1
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = isPast ? '0.6' : '0.8'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = isPast ? '0.4' : '1'}
                           >
                             {displayTitle}
                           </div>
@@ -952,69 +1194,118 @@ export function SchedulesTab() {
           )}
         </div>
       </div>
-      <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#1E3A5F', marginBottom: '16px' }}>다가올 일정 목록</h3>
+      {!isMobile && (
+        <>
+          <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#1E3A5F', marginBottom: '16px' }}>다가올 일정 목록</h3>
 
-      {filteredUpcomingSchedules.length === 0 ? (
-        <div style={{ padding: '60px', textAlign: 'center', color: '#9CA3AF', background: '#fff', borderRadius: '16px', border: '1px dashed #E5E7EB' }}>
-          등록된 일정이 없습니다.
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-          {filteredUpcomingSchedules
-            .filter(s => s.startDate) // Ensure startDate exists
-            .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-            .map(s => (
-            <div key={s.id} style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column' }}>
+          {nextUpcomingSchedule && (
+            <div style={{ background: 'linear-gradient(135deg, #FFFFFF, #FFFBEB)', color: '#1E3A5F', borderRadius: '16px', padding: '32px', marginBottom: '24px', border: '1px solid #FDE68A', boxShadow: '0 8px 30px rgba(217,119,6,0.12)', display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <span style={{ display: 'inline-block', background: '#FEF3C7', color: '#D97706', padding: '4px 10px', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>
-                    {calculateDDay(s.startDate)}
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <span style={{ display: 'inline-block', background: '#D97706', color: '#FFFFFF', padding: '6px 14px', borderRadius: '20px', fontSize: '15px', fontWeight: '900' }}>
+                    {calculateDDay(nextUpcomingSchedule.startDate!)}
                   </span>
-                  {s.categoryId && (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600', color: '#4B5563' }}>
-                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: getCategoryColor(s.categoryId) }}></div>
-                      {categories.find(c => c.id === s.categoryId)?.name}
-                    </span>
-                  )}
+                  <span style={{ background: '#FEF3C7', color: '#D97706', padding: '6px 14px', borderRadius: '20px', fontSize: '14px', fontWeight: '800' }}>다음 주요 일정</span>
                 </div>
-                {isAdmin && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => { setCurrentSchedule(s); setIsEditing(true); }} style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', padding: '4px' }}><Edit2 size={16} /></button>
-                    <button onClick={() => handleDeleteSchedule(s.id)} style={{ background: 'none', border: 'none', color: '#DC2626', cursor: 'pointer', padding: '4px' }}><Trash2 size={16} /></button>
+              </div>
+              <h3 style={{ fontSize: '28px', fontWeight: '900', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>{nextUpcomingSchedule.title}</h3>
+              {nextUpcomingSchedule.subtitle && <p style={{ fontSize: '16px', margin: '0 0 16px 0', color: '#4B5563', fontWeight: '600' }}>{nextUpcomingSchedule.subtitle}</p>}
+              
+              <div style={{ display: 'flex', gap: '24px', fontSize: '15px', fontWeight: '600', color: '#4B5563' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Clock size={18} color="#D97706" />
+                  <span>{formatDateTime(nextUpcomingSchedule.startDate!, nextUpcomingSchedule.endDate, nextUpcomingSchedule.isAllDay)}</span>
+                </div>
+                {nextUpcomingSchedule.location && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <MapPin size={18} color="#D97706" />
+                    <span>{nextUpcomingSchedule.location}</span>
                   </div>
                 )}
               </div>
-              
-              <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#1E3A5F', marginBottom: '4px' }}>{s.title}</h3>
-              {s.subtitle && <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '16px' }}>{s.subtitle}</p>}
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px', color: '#4B5563', marginBottom: '16px', flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                  <Clock size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
-                  <span>{formatDateTime(s.startDate, s.endDate, s.isAllDay)}</span>
-                </div>
-                {s.location && (
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                    <MapPin size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
-                    <span>{s.location}</span>
-                  </div>
-                )}
-                {s.shelterName && (
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                    <Home size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
-                    <span>{s.shelterName}</span>
-                  </div>
-                )}
-              </div>
+            </div>
+          )}
 
-              {s.description && (
-                <div style={{ background: '#F9FAFB', padding: '12px', borderRadius: '8px', fontSize: '13px', color: '#4B5563', whiteSpace: 'pre-wrap' }}>
-                  {s.description}
-                </div>
+          {filteredUpcomingSchedules.length === 0 ? (
+            <div style={{ padding: '80px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: '#F9FAFB', borderRadius: '16px', border: '1px dashed #E5E7EB', margin: '0 0 24px 0' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '32px', background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CalendarDays size={32} color="#D97706" />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <h4 style={{ fontSize: '18px', fontWeight: '800', color: '#1E3A5F', margin: '0 0 8px 0' }}>아직 등록된 일정이 없어요!</h4>
+                <p style={{ fontSize: '15px', color: '#6B7280', margin: 0, lineHeight: '1.5' }}>새로운 봉사 일정이 곧 업데이트될 예정입니다.<br/>조금만 기다려 주시거나 다른 달의 일정을 확인해 보세요.</p>
+              </div>
+              {isAdmin && (
+                <button 
+                  onClick={() => {
+                    setCurrentSchedule({ title: '', subtitle: '', startDate: '', endDate: '', location: '', shelterName: '', description: '', categoryId: categories.length > 0 ? categories[0].id : '', isAllDay: true }); 
+                    setIsEditing(true); 
+                  }}
+                  style={{ marginTop: '8px', padding: '10px 20px', background: '#1E3A5F', color: '#fff', borderRadius: '8px', border: 'none', fontWeight: '700', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <Plus size={16} /> 새 일정 등록하기
+                </button>
               )}
             </div>
-          ))}
-        </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+              {filteredUpcomingSchedules
+                .filter(s => s.startDate && s.id !== nextUpcomingSchedule?.id) // Ensure startDate exists and is not the hero
+                .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+                .map(s => (
+                <div key={s.id} style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <span style={{ display: 'inline-block', background: '#FEF3C7', color: '#D97706', padding: '4px 10px', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>
+                        {calculateDDay(s.startDate)}
+                      </span>
+                      {s.categoryId && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600', color: '#4B5563' }}>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: getCategoryColor(s.categoryId) }}></div>
+                          {categories.find(c => c.id === s.categoryId)?.name}
+                        </span>
+                      )}
+                    </div>
+                    {isAdmin && (
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => { setCurrentSchedule(s); setIsEditing(true); }} style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', padding: '4px' }}><Edit2 size={16} /></button>
+                        <button onClick={() => handleDeleteSchedule(s.id)} style={{ background: 'none', border: 'none', color: '#DC2626', cursor: 'pointer', padding: '4px' }}><Trash2 size={16} /></button>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#1E3A5F', marginBottom: '4px' }}>{s.title}</h3>
+                  {s.subtitle && <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '16px' }}>{s.subtitle}</p>}
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px', color: '#4B5563', marginBottom: '16px', flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                      <Clock size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
+                      <span>{formatDateTime(s.startDate, s.endDate, s.isAllDay)}</span>
+                    </div>
+                    {s.location && (
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                        <MapPin size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
+                        <span>{s.location}</span>
+                      </div>
+                    )}
+                    {s.shelterName && (
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                        <Home size={16} color="#9CA3AF" style={{ marginTop: '2px', flexShrink: 0 }} />
+                        <span>{s.shelterName}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {s.description && (
+                    <div style={{ background: '#F9FAFB', padding: '12px', borderRadius: '8px', fontSize: '13px', color: '#4B5563', whiteSpace: 'pre-wrap' }}>
+                      {s.description}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

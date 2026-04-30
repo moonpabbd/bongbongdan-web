@@ -40,6 +40,7 @@ export function MyRecord() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [pastLimit, setPastLimit] = useState(5);
+  const [cancelingItem, setCancelingItem] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -60,6 +61,46 @@ export function MyRecord() {
     };
     if (profile) fetchRecord();
   }, [profile]);
+
+  const handleCancel = async (scheduleText: string) => {
+    if (!window.confirm(`[${scheduleText}]\n해당 일정을 정말 취소하시겠습니까?`)) return;
+
+    setCancelingItem(scheduleText);
+    try {
+      const url = GAS_URL;
+      const response = await fetch(url, { 
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify({
+          action: 'cancelVolunteer',
+          name: profile.name,
+          phone: profile.phone,
+          birthdate: profile.birthdate,
+          scheduleText: scheduleText
+        })
+      });
+      
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        alert('집결 취소가 완료되었습니다.');
+        
+        // 캐시 대기 없이 UI 즉각 업데이트 (Optimistic Update)
+        setRecord((prev: any) => ({
+          ...prev,
+          upcoming: prev.upcoming.filter((u: any) => u.text !== scheduleText)
+        }));
+      } else {
+        alert(result.message || '취소 처리 중 오류가 발생했습니다.');
+      }
+    } catch (err: any) {
+      alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setCancelingItem(null);
+    }
+  };
 
   if (authLoading || !user || !profile) return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">로딩 중...</div>;
 
@@ -241,14 +282,7 @@ export function MyRecord() {
                     <div className="p-2 bg-blue-50 rounded-xl"><Clock size={20} className="text-blue-500" /></div>
                     <h4 className="text-lg font-bold text-gray-800">예정된 봉사</h4>
                   </div>
-                  <a 
-                    href="https://forms.gle/hMqLS2eMMaqm2Mc1A" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition px-3 py-1.5 rounded-lg"
-                  >
-                    집결 취소
-                  </a>
+                  {/* 기존 집결 취소 전체 링크 제거 및 각 리스트별 버튼으로 대체 */}
                 </div>
 
                 {validUpcoming.length > 0 ? (
@@ -260,7 +294,15 @@ export function MyRecord() {
                             {u.dday === 0 ? 'D-Day' : `D-${u.dday}`}
                           </span>
                         )}
-                        <div className="text-sm font-semibold text-gray-700 leading-relaxed">{u.text}</div>
+                        <div className="flex-1 text-sm font-semibold text-gray-700 leading-relaxed">{u.text}</div>
+                        <button 
+                          onClick={() => handleCancel(u.text)}
+                          disabled={cancelingItem === u.text}
+                          className="shrink-0 text-xs font-bold px-3 py-2 rounded-lg transition
+                                     bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 disabled:opacity-50"
+                        >
+                          {cancelingItem === u.text ? '처리 중...' : '취소하기'}
+                        </button>
                       </div>
                     ))}
                   </div>

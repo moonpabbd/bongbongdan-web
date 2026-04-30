@@ -15,7 +15,7 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
   const [days, setDays] = useState(7);
   const [heatmapDevice, setHeatmapDevice] = useState<'Desktop'|'Mobile'>('Desktop');
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
-
+  
   useEffect(() => {
     fetchStats();
   }, [days]);
@@ -34,62 +34,113 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
         const data = await res.json();
         setStats(data);
       } else {
-        setStats({ trend: [], referrers: {}, devices: {}, countries: {}, events: {}, heatmap: [] });
+        setStats({ trend: [], referrers: {}, devices: {}, countries: {}, events: {}, heatmap: [], pages: {}, scrollDepth: {} });
       }
     } catch (e) {
       console.error('Fetch stats error', e);
-      setStats({ trend: [], referrers: {}, devices: {}, countries: {}, events: {}, heatmap: [] });
+      setStats({ trend: [], referrers: {}, devices: {}, countries: {}, events: {}, heatmap: [], pages: {}, scrollDepth: {} });
     } finally {
       setLoading(false);
     }
   };
 
-  // 얼리 리턴을 여기에서 아래로 이동 (Hook 규칙 준수)
-
   const renderHeatmapInIframe = () => {
-    if (!iframeRef.current) return;
+    if (!iframeRef.current || !stats) return;
     try {
       const doc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
       if (!doc) return;
       
-      const oldContainer = doc.getElementById('bbd-heatmap-overlay');
+      const oldContainer = doc.getElementById('bbd-scroll-heatmap');
       if (oldContainer) oldContainer.remove();
 
       const container = doc.createElement('div');
-      container.id = 'bbd-heatmap-overlay';
+      container.id = 'bbd-scroll-heatmap';
       container.style.position = 'absolute';
       container.style.top = '0';
       container.style.left = '0';
       container.style.width = '100%';
+      // iframe의 전체 스크롤 높이 가져오기
+      const scrollHeight = Math.max(doc.documentElement.scrollHeight, doc.body.scrollHeight);
+      const windowHeight = iframeRef.current.clientHeight;
+      const scrollableHeight = Math.max(0, scrollHeight - windowHeight);
+      
+      container.style.height = `${scrollHeight}px`;
       container.style.pointerEvents = 'none';
       container.style.zIndex = '999999';
 
-      const filteredDots = stats.heatmap?.filter((h: any) => h.device === heatmapDevice) || [];
-      filteredDots.forEach((dot: any) => {
-        const div = doc.createElement('div');
-        div.style.position = 'absolute';
-        div.style.left = `${dot.x}%`;
-        // dot.y가 100 이하면 예전 방식(퍼센트)일 수 있으나 일단 px로 처리
-        div.style.top = `${dot.y > 100 ? dot.y : dot.y + 100}px`; 
-        div.style.width = '24px';
-        div.style.height = '24px';
-        div.style.transform = 'translate(-50%, -50%)';
-        div.style.background = 'radial-gradient(circle, rgba(239,68,68,0.8) 0%, rgba(239,68,68,0) 70%)';
-        div.style.borderRadius = '50%';
-        div.style.mixBlendMode = 'multiply';
-        container.appendChild(div);
-      });
+      const scrollDataArray = Object.entries(stats.scrollDepth || {}).map(([name, value]) => ({ name: parseInt(name), value: value as number }));
+      const maxValue = Math.max(...scrollDataArray.map(s => s.value), 1);
+      
+      // 첫 번째 영역: 스크롤 없이도 보이는 영역 (0% 도달)
+      const topDiv = doc.createElement('div');
+      topDiv.style.height = `${windowHeight}px`;
+      topDiv.style.width = '100%';
+      // 가장 많이 본 곳이므로 가장 빨간색
+      topDiv.style.background = `hsla(0, 100%, 50%, 0.4)`;
+      topDiv.style.display = 'flex';
+      topDiv.style.alignItems = 'flex-end';
+      topDiv.style.justifyContent = 'center';
+      topDiv.style.paddingBottom = '20px';
+      
+      if (maxValue > 0) {
+        const topLabel = doc.createElement('div');
+        topLabel.innerText = `기본 노출 영역 (${maxValue}회)`;
+        topLabel.style.background = 'rgba(0,0,0,0.7)';
+        topLabel.style.color = '#fff';
+        topLabel.style.padding = '4px 12px';
+        topLabel.style.borderRadius = '8px';
+        topLabel.style.fontSize = '12px';
+        topLabel.style.fontWeight = 'bold';
+        topDiv.appendChild(topLabel);
+      }
+      container.appendChild(topDiv);
+
+      // 나머지 영역: 스크롤을 해야 보이는 영역 (1% ~ 100%)
+      if (scrollableHeight > 0) {
+        for (let depth = 1; depth <= 100; depth++) {
+          const entry = scrollDataArray.find(s => s.name === depth);
+          const value = entry ? entry.value : 0;
+          const ratio = value / maxValue;
+          
+          let bg = 'transparent';
+          if (ratio > 0) {
+            const hue = (1 - ratio) * 240; 
+            bg = `hsla(${hue}, 100%, 50%, 0.4)`;
+          }
+
+          const div = doc.createElement('div');
+          div.style.height = `${scrollableHeight / 100}px`;
+          div.style.width = '100%';
+          div.style.background = bg;
+          div.style.display = 'flex';
+          div.style.alignItems = 'center';
+          div.style.justifyContent = 'center';
+          
+          if (value > 0 && depth % 25 === 0) {
+              const label = doc.createElement('div');
+              label.innerText = `상위 ${depth}% 도달 (${value}회)`;
+              label.style.background = 'rgba(0,0,0,0.7)';
+              label.style.color = '#fff';
+              label.style.padding = '4px 12px';
+              label.style.borderRadius = '8px';
+              label.style.fontSize = '12px';
+              label.style.fontWeight = 'bold';
+              div.appendChild(label);
+          }
+          
+          container.appendChild(div);
+        }
+      }
 
       doc.body.appendChild(container);
     } catch (e) {
-      console.warn("Iframe DOM access failed (CORS or loading)", e);
+      console.warn("Iframe DOM access failed", e);
     }
   };
 
-  // 탭 변경이나 디바이스 변경 시 iframe 내부에 점 다시 그리기
   useEffect(() => {
     if (activeTab === 'heatmap' && stats && !loading) {
-      const timer = setTimeout(renderHeatmapInIframe, 1000); // 로드 대기
+      const timer = setTimeout(renderHeatmapInIframe, 1500);
       return () => clearTimeout(timer);
     }
   }, [activeTab, heatmapDevice, stats, loading]);
@@ -106,12 +157,14 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
   const deviceData = Object.entries(stats.devices || {}).map(([name, value]) => ({ name, value }));
   const countryData = Object.entries(stats.countries || {}).map(([name, value]) => ({ name, value }));
   const eventData = Object.entries(stats.events || {}).map(([name, value]) => ({ name, value }));
+  const pageData = Object.entries(stats.pages || {}).map(([name, value]) => ({ name, value }));
+  const scrollData = Object.entries(stats.scrollDepth || {}).map(([name, value]) => ({ name: `${name}% 도달`, value })).sort((a,b) => parseInt(a.name) - parseInt(b.name));
 
   // 탭 네비게이션
   const tabs = [
     { id: 'overview', label: '종합 요약', icon: Activity },
-    { id: 'heatmap', label: '히트맵 분석', icon: MousePointerClick },
     { id: 'behavior', label: '사용자 행동', icon: Eye },
+    { id: 'heatmap', label: '어텐션(이탈률) 분석', icon: MousePointerClick },
     { id: 'acquisition', label: '유입 및 환경', icon: Map },
   ];
 
@@ -186,33 +239,35 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
         </div>
       )}
 
-      {/* 탭: 히트맵 분석 */}
+      {/* 탭: 어텐션 분석 (스크롤 뎁스) */}
       {activeTab === 'heatmap' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p style={{ color: '#6B7280', fontSize: '14px' }}>오늘 접속한 유저들의 실제 클릭 좌표를 시각화합니다. (기기별로 다르게 보일 수 있습니다)</p>
+            <p style={{ color: '#6B7280', fontSize: '14px' }}>실제 홈페이지 화면 위에 사용자들이 어디까지 스크롤을 내렸는지 색상으로 표시합니다.</p>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button onClick={() => setHeatmapDevice('Desktop')} style={{ padding: '6px 12px', background: heatmapDevice === 'Desktop' ? '#1E3A5F' : '#E5E7EB', color: heatmapDevice === 'Desktop' ? '#fff' : '#4B5563', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>PC</button>
               <button onClick={() => setHeatmapDevice('Mobile')} style={{ padding: '6px 12px', background: heatmapDevice === 'Mobile' ? '#1E3A5F' : '#E5E7EB', color: heatmapDevice === 'Mobile' ? '#fff' : '#4B5563', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>모바일</button>
             </div>
           </div>
           
-          <div style={{ 
-            position: 'relative', 
-            width: heatmapDevice === 'Desktop' ? '100%' : '375px', 
-            height: '800px', 
-            margin: '0 auto', 
-            border: '8px solid #1E3A5F', 
-            borderRadius: '24px', 
-            overflow: 'hidden',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-          }}>
-            <iframe 
-              ref={iframeRef}
-              src="/" 
-              onLoad={renderHeatmapInIframe}
-              style={{ width: '100%', height: '100%', border: 'none' }} 
-            />
+          <div style={{ display: 'flex', justifyContent: 'center', background: '#F9FAFB', padding: '40px', borderRadius: '16px', border: '1px solid #E5E7EB' }}>
+            <div style={{ 
+              position: 'relative', 
+              width: heatmapDevice === 'Desktop' ? '100%' : '375px', 
+              height: '800px', 
+              background: '#fff', 
+              borderRadius: '24px', 
+              boxShadow: '0 20px 40px rgba(0,0,0,0.1)', 
+              border: '8px solid #1E3A5F',
+              overflow: 'hidden'
+            }}>
+              <iframe 
+                ref={iframeRef}
+                src="/" 
+                onLoad={renderHeatmapInIframe}
+                style={{ width: '100%', height: '100%', border: 'none' }} 
+              />
+            </div>
           </div>
         </div>
       )}
@@ -221,22 +276,41 @@ export function AdminAnalytics({ adminPassword }: { adminPassword: string }) {
       {activeTab === 'behavior' && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
           <div style={{ background: '#fff', padding: '24px', borderRadius: '16px', border: '1px solid #E5E7EB' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1E3A5F', marginBottom: '20px' }}>주요 버튼 클릭(전환) 순위</h3>
-            {eventData.length === 0 ? <p style={{color: '#9CA3AF'}}>데이터가 없습니다.</p> : (
+            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1E3A5F', marginBottom: '20px' }}>인기 페이지 랭킹</h3>
+            {pageData.length === 0 ? <p style={{color: '#9CA3AF'}}>데이터가 없습니다.</p> : (
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {eventData.sort((a,b)=>b.value-a.value).map((e, idx) => (
-                  <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#F9FAFB', borderRadius: '8px' }}>
-                    <span style={{ fontWeight: '600', color: '#374151' }}>{e.name === 'Apply_Volunteer' ? '봉사 신청 버튼' : e.name === 'Kakao_Inquiry' ? '카카오톡 문의' : e.name}</span>
-                    <span style={{ color: '#C8963E', fontWeight: '700' }}>{e.value}회</span>
-                  </li>
-                ))}
+                {pageData.sort((a,b)=>b.value-a.value).slice(0, 10).map((p, idx) => {
+                  let pathName = p.name;
+                  if (pathName === '/') pathName = '메인 페이지';
+                  else if (pathName.includes('/about')) pathName = '보호소 소개';
+                  else if (pathName.includes('/news')) pathName = '소식/일정';
+                  else if (pathName.includes('/apply')) pathName = '봉사 신청';
+                  else if (pathName.includes('/faq')) pathName = 'FAQ';
+                  return (
+                    <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#F9FAFB', borderRadius: '8px' }}>
+                      <span style={{ fontWeight: '600', color: '#374151' }}>{idx + 1}. {pathName}</span>
+                      <span style={{ color: '#1E3A5F', fontWeight: '700' }}>{p.value} view</span>
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </div>
           
           <div style={{ background: '#fff', padding: '24px', borderRadius: '16px', border: '1px solid #E5E7EB' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1E3A5F', marginBottom: '20px' }}>스크롤 뎁스 (준비 중)</h3>
-            <p style={{ color: '#6B7280', fontSize: '14px' }}>유저들이 페이지를 어디까지 읽고 나갔는지 나타내는 퍼널 차트가 들어갈 자리입니다.</p>
+            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1E3A5F', marginBottom: '20px' }}>상세 버튼 클릭(전환) 순위</h3>
+            {eventData.length === 0 ? <p style={{color: '#9CA3AF'}}>데이터가 없습니다.</p> : (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {eventData.sort((a,b)=>b.value-a.value).slice(0, 10).map((e, idx) => (
+                  <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#F9FAFB', borderRadius: '8px' }}>
+                    <span style={{ fontWeight: '600', color: '#374151', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', paddingRight: '12px' }}>
+                      {e.name === 'Apply_Volunteer' ? '봉사 신청 버튼 (외부)' : e.name === 'Kakao_Inquiry' ? '카카오톡 문의' : e.name}
+                    </span>
+                    <span style={{ color: '#C8963E', fontWeight: '700', flexShrink: 0 }}>{e.value}회</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       )}

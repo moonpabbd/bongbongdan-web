@@ -9,6 +9,13 @@ import { supabase } from '../../utils/supabaseClient';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
+const isNewNotice = (createdAt: string) => {
+  const now = new Date();
+  const noticeDate = new Date(createdAt);
+  const diffTime = now.getTime() - noticeDate.getTime();
+  return diffTime >= 0 && diffTime <= 7 * 24 * 60 * 60 * 1000; // 7일(ms) 이내
+};
+
 interface Notice {
   id: string;
   title: string;
@@ -308,6 +315,9 @@ export function NoticesTab() {
                       </span>
                       <h4 style={{ margin: 0, fontSize: '15px', fontWeight: n.isPinned ? '700' : '600', color: '#111827', flex: 1, lineHeight: '1.4' }}>
                         {n.title}
+                        {isNewNotice(n.createdAt) && (
+                          <span style={{ marginLeft: '8px', padding: '2px 6px', background: '#EF4444', color: '#fff', fontSize: '10px', fontWeight: '800', borderRadius: '4px', verticalAlign: 'middle', letterSpacing: '0.5px' }}>NEW</span>
+                        )}
                       </h4>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6B7280', marginLeft: '32px' }}>
@@ -386,7 +396,12 @@ export function NoticesTab() {
                         </td>
                         <td style={{ padding: '16px', textAlign: 'left', fontWeight: n.isPinned ? '700' : '500', color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           {n.isPinned && <Pin size={14} color="#D97706" />}
-                          <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.title}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', flex: 1 }}>
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.title}</span>
+                            {isNewNotice(n.createdAt) && (
+                              <span style={{ padding: '2px 6px', background: '#EF4444', color: '#fff', fontSize: '10px', fontWeight: '800', borderRadius: '4px', flexShrink: 0, letterSpacing: '0.5px' }}>NEW</span>
+                            )}
+                          </div>
                           {isAdmin && n.viewCount !== undefined && (
                             <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#9CA3AF', background: '#F3F4F6', padding: '2px 6px', borderRadius: '12px' }}>
                               <Eye size={12} /> {n.viewCount}

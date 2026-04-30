@@ -56,6 +56,7 @@ export function useAnalytics() {
 
   // 이벤트 버퍼에 추가
   const logEvent = (type: AnalyticsEvent['type'], data: any) => {
+    if (location.pathname.startsWith('/admin')) return;
     eventsBuffer.current.push({
       type,
       path: location.pathname,
@@ -126,16 +127,25 @@ export function useAnalytics() {
       const scrollY = window.scrollY;
       const totalHeight = document.documentElement.scrollHeight;
       
-      // 전환 액션 체크 (봉사 신청, 카카오톡 등)
+      // 전환 액션 체크 (봉사 신청, 카카오톡 등) 및 범용 버튼 클릭 추적
       let isConversion = false;
       let actionName = '';
-      if (target.closest('a[href*="forms.gle"]') || target.closest('a[href*="docs.google.com"]') || target.closest('a[href="/apply"]')) {
+      
+      const aTag = target.closest('a');
+      const btnTag = target.closest('button');
+
+      if (aTag && (aTag.href.includes('forms.gle') || aTag.href.includes('docs.google.com') || aTag.getAttribute('href') === '/apply')) {
         isConversion = true;
         actionName = 'Apply_Volunteer';
-      } else if (target.closest('a[href*="pf.kakao.com"]')) {
+      } else if (aTag && aTag.href.includes('pf.kakao.com')) {
         isConversion = true;
         actionName = 'Kakao_Inquiry';
+      } else if (btnTag || aTag) {
+        // 일반 버튼이나 링크 클릭 시 텍스트 추출
+        const text = (btnTag?.innerText || aTag?.innerText || '').trim().substring(0, 30);
+        if (text) actionName = text;
       }
+
 
       logEvent('click', {
         x: e.clientX,
@@ -164,14 +174,13 @@ export function useAnalytics() {
       const documentHeight = document.documentElement.scrollHeight - windowHeight;
       if (documentHeight <= 0) return;
 
-      const scrollPercent = (scrollY / documentHeight) * 100;
-      
-      const milestones = [25, 50, 75, 100];
-      for (const m of milestones) {
-        if (scrollPercent >= m && lastScrollDepth.current < m) {
-          lastScrollDepth.current = m;
+      const currentDepth = Math.floor(scrollPercent);
+      if (currentDepth > lastScrollDepth.current) {
+        for (let m = lastScrollDepth.current + 1; m <= currentDepth; m++) {
+          if (m > 100) break;
           logEvent('scroll', { depth: m });
         }
+        lastScrollDepth.current = currentDepth;
       }
     };
 

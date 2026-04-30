@@ -512,7 +512,9 @@ app.post("/server/analytics", async (c) => {
         referrers: {},
         devices: {},
         countries: {},
-        events: {}
+        events: {},
+        pages: {},
+        scrollDepth: {}
       };
 
       stats.visitors += 1;
@@ -547,9 +549,17 @@ app.post("/server/analytics", async (c) => {
       for (const ev of events) {
         if (ev.type === 'pageview') {
           pageviews++;
-        } else if (ev.type === 'click' && ev.data?.isConversion) {
+          const path = ev.path || '/';
+          stats.pages = stats.pages || {};
+          stats.pages[path] = (stats.pages[path] || 0) + 1;
+        } else if (ev.type === 'click' && ev.data?.actionName) {
           const action = ev.data.actionName;
+          stats.events = stats.events || {};
           stats.events[action] = (stats.events[action] || 0) + 1;
+        } else if (ev.type === 'scroll' && ev.data?.depth) {
+          const depth = ev.data.depth;
+          stats.scrollDepth = stats.scrollDepth || {};
+          stats.scrollDepth[depth] = (stats.scrollDepth[depth] || 0) + 1;
         }
       }
       
@@ -626,6 +636,12 @@ app.get("/server/analytics/stats", async (c) => {
         for (const [k, v] of Object.entries(stats.devices || {})) result.devices[k] = (result.devices[k] || 0) + (v as number);
         for (const [k, v] of Object.entries(stats.countries || {})) result.countries[k] = (result.countries[k] || 0) + (v as number);
         for (const [k, v] of Object.entries(stats.events || {})) result.events[k] = (result.events[k] || 0) + (v as number);
+        
+        result.pages = result.pages || {};
+        for (const [k, v] of Object.entries(stats.pages || {})) result.pages[k] = (result.pages[k] || 0) + (v as number);
+        
+        result.scrollDepth = result.scrollDepth || {};
+        for (const [k, v] of Object.entries(stats.scrollDepth || {})) result.scrollDepth[k] = (result.scrollDepth[k] || 0) + (v as number);
       } else {
         result.trend.unshift({ date: dateStr, visitors: 0, pageviews: 0 });
       }
