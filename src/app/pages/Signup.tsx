@@ -186,24 +186,10 @@ export function Signup() {
             <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: '700', marginBottom: '12px' }}>
               🎉 입문을 환영합니다!
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '28px', lineHeight: '1.7' }}>
-              봉봉단의 새로운 단원이 되셨습니다.<br />
-              아래 회원 고유번호를 꼭 기억해주세요.
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '32px', lineHeight: '1.7' }}>
+              봉봉단의 새로운 단원이 되신 것을 진심으로 환영합니다!<br />
+              이제 로그인하여 봉사 활동을 신청해보세요.
             </p>
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(200,150,62,0.15), rgba(200,150,62,0.05))',
-              border: '1px solid rgba(200,150,62,0.4)',
-              borderRadius: '14px',
-              padding: '24px',
-              marginBottom: '32px',
-            }}>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', fontWeight: '700', letterSpacing: '2px', marginBottom: '10px' }}>
-                회원 고유번호
-              </p>
-              <p style={{ color: '#F5C875', fontSize: '30px', fontWeight: '800', letterSpacing: '3px' }}>
-                {memberNumber}
-              </p>
-            </div>
             <button
               onClick={() => navigate('/login')}
               style={{
