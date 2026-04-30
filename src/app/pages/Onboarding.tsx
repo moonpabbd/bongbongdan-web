@@ -20,7 +20,7 @@ interface FormState {
 
 export function Onboarding() {
   const navigate = useNavigate();
-  const { user, needsOnboarding, refreshProfile } = useAuth();
+  const { user, needsOnboarding, refreshProfile, logout } = useAuth();
   const [step, setStep] = useState<'form' | 'done'>('form');
   const [memberNumber, setMemberNumber] = useState('');
   const [loading, setLoading] = useState(false);
@@ -302,8 +302,27 @@ export function Onboarding() {
             </div>
           </div>
 
-          <button type="submit" disabled={loading} style={{ width: '100%', background: loading ? 'rgba(200,150,62,0.5)' : G.goldBtn, color: '#fff', border: 'none', borderRadius: '12px', padding: '18px', fontSize: '16px', fontWeight: '700', cursor: loading ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: '0 8px 24px rgba(200,150,62,0.25)' }}>
+          <button type="submit" disabled={loading} style={{ width: '100%', background: loading ? 'rgba(200,150,62,0.5)' : G.goldBtn, color: '#fff', border: 'none', borderRadius: '12px', padding: '18px', fontSize: '16px', fontWeight: '700', cursor: loading ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: '0 8px 24px rgba(200,150,62,0.25)', marginBottom: '16px' }}>
             {loading ? '처리 중...' : '가입 완료하기'}
+          </button>
+          
+          <button 
+            type="button" 
+            onClick={async () => {
+              await logout();
+              navigate('/');
+            }}
+            style={{ width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.color = '#fff';
+              (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)';
+              (e.currentTarget as HTMLElement).style.background = 'transparent';
+            }}
+          >
+            가입 취소하기
           </button>
         </form>
 
