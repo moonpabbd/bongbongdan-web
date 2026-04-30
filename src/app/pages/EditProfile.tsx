@@ -198,17 +198,6 @@ export function EditProfile() {
             }}
           >
             {/* 변경 가능 정보 */}
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                계정 유형 (가입 경로)
-              </label>
-              <div style={{
-                width: '100%', padding: '14px 16px', borderRadius: '12px',
-                border: '1px solid #E5E7EB', background: '#F3F4F6', fontSize: '15px', color: '#6B7280', boxSizing: 'border-box'
-              }}>
-                {profile.joinPath || profile.join_path || '일반 회원가입'}
-              </div>
-            </div>
 
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#374151' }}>

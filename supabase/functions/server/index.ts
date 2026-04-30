@@ -825,5 +825,353 @@ app.get("/server/alimtalk/logs", async (c) => {
     return c.json({ error: `서버 오류: ${err}` }, 500);
   }
 });
+// ─── 관리자: 회원 권한 변경 (isAdmin) ──────────────────────────────────────────
+app.put("/server/admin/members/role", async (c) => {
+  try {
+    const adminPassword = c.req.header('X-Admin-Password');
+    if (adminPassword !== 'pjb0812') {
+      return c.json({ error: "접근 권한이 없습니다." }, 403);
+    }
+
+    const { userId, isAdmin } = await c.req.json();
+    if (!userId) return c.json({ error: "회원 ID가 필요합니다." }, 400);
+
+    const profile = await kv.get(`bbd:member:profile:${userId}`);
+    if (!profile) return c.json({ error: "프로필을 찾을 수 없습니다." }, 404);
+
+    profile.isAdmin = !!isAdmin;
+    await kv.set(`bbd:member:profile:${userId}`, profile);
+
+    return c.json({ success: true, profile });
+  } catch (err) {
+    console.log("Admin update role error:", err);
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+// ─── 유틸리티: 관리자 권한 체크 ──────────────────────────────────────────────
+const requireAdmin = async (c: any) => {
+  const accessToken = c.req.header('Authorization')?.split(' ')[1];
+  if (!accessToken) return null;
+
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(accessToken);
+  if (error || !user) return null;
+
+  const profile = await kv.get(`bbd:member:profile:${user.id}`);
+  if (!profile || !profile.isAdmin) return null;
+
+  return profile;
+};
+
+// ─── 공지사항 (Notices) API ──────────────────────────────────────────────────
+app.get("/server/notices", async (c) => {
+  try {
+    const page = parseInt(c.req.query("page") || "1", 10);
+    const limit = parseInt(c.req.query("limit") || "10", 10);
+    const query = (c.req.query("query") || "").trim().toLowerCase();
+
+    const allNotices = await kv.getByPrefix('bbd:notice:');
+    
+    // 1. 검색 필터링
+    const filteredNotices = allNotices.filter(n => {
+      if (!query) return true;
+      return (n.title || '').toLowerCase().includes(query) || (n.content || '').toLowerCase().includes(query);
+    });
+
+    // 2. 상단 고정(isPinned) 우선, 그 다음 최신순 정렬
+    filteredNotices.sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+    });
+
+    // 3. 페이지네이션
+    const total = filteredNotices.length;
+    const startIndex = (page - 1) * limit;
+    const notices = filteredNotices.slice(startIndex, startIndex + limit);
+
+    return c.json({ notices, total, page, limit });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+// 공지사항 조회수 증가
+app.post("/server/notices/:id/view", async (c) => {
+  try {
+    const id = c.req.param("id");
+    const existing = await kv.get(`bbd:notice:${id}`);
+    if (!existing) return c.json({ error: "공지사항을 찾을 수 없습니다." }, 404);
+
+    const notice = {
+      ...existing,
+      viewCount: (existing.viewCount || 0) + 1
+    };
+
+    await kv.set(`bbd:notice:${id}`, notice);
+    return c.json({ success: true, viewCount: notice.viewCount });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.post("/server/notices", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const body = await c.req.json();
+    const { title, content, isPinned, attachments } = body;
+    if (!title || !content) return c.json({ error: "제목과 내용을 입력해주세요." }, 400);
+
+    const noticeId = crypto.randomUUID();
+    const notice = {
+      id: noticeId,
+      title,
+      content,
+      author: adminProfile.name,
+      authorId: adminProfile.userId,
+      isPinned: !!isPinned,
+      attachments: attachments || [],
+      viewCount: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await kv.set(`bbd:notice:${noticeId}`, notice);
+    return c.json({ success: true, notice });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.put("/server/notices/:id", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const id = c.req.param("id");
+    const body = await c.req.json();
+    
+    const existing = await kv.get(`bbd:notice:${id}`);
+    if (!existing) return c.json({ error: "공지사항을 찾을 수 없습니다." }, 404);
+
+    const notice = {
+      ...existing,
+      title: body.title ?? existing.title,
+      content: body.content ?? existing.content,
+      isPinned: body.isPinned ?? existing.isPinned,
+      attachments: body.attachments ?? existing.attachments,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await kv.set(`bbd:notice:${id}`, notice);
+    return c.json({ success: true, notice });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.delete("/server/notices/:id", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const id = c.req.param("id");
+    await kv.del(`bbd:notice:${id}`);
+    return c.json({ success: true });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+// ─── 주요일정 카테고리 (Schedule Categories) API ────────────────────────────────────────────────
+app.get("/server/schedule-categories", async (c) => {
+  try {
+    const categories = await kv.getByPrefix('bbd:schedule_category:');
+    categories.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    return c.json({ categories });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.post("/server/schedule-categories", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const body = await c.req.json();
+    const { name, color } = body;
+    if (!name || !color) return c.json({ error: "카테고리 이름과 색상을 입력해주세요." }, 400);
+
+    const categoryId = crypto.randomUUID();
+    const category = {
+      id: categoryId,
+      name,
+      color,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await kv.set(`bbd:schedule_category:${categoryId}`, category);
+    return c.json({ success: true, category });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.put("/server/schedule-categories/:id", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const id = c.req.param("id");
+    const body = await c.req.json();
+    
+    const existing = await kv.get(`bbd:schedule_category:${id}`);
+    if (!existing) return c.json({ error: "카테고리를 찾을 수 없습니다." }, 404);
+
+    const category = {
+      ...existing,
+      name: body.name ?? existing.name,
+      color: body.color ?? existing.color,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await kv.set(`bbd:schedule_category:${id}`, category);
+    return c.json({ success: true, category });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.delete("/server/schedule-categories/:id", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const id = c.req.param("id");
+    await kv.del(`bbd:schedule_category:${id}`);
+    
+    return c.json({ success: true });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+// ─── 주요일정 (Schedules) API ────────────────────────────────────────────────
+app.get("/server/schedules", async (c) => {
+  try {
+    const startStr = c.req.query("startDate");
+    const endStr = c.req.query("endDate");
+    
+    let schedules = await kv.getByPrefix('bbd:schedule:');
+    
+    // 시작일(startDate) 기준 오름차순 (다가오는 일정 우선)
+    schedules.sort((a, b) => new Date(a.startDate || 0).getTime() - new Date(b.startDate || 0).getTime());
+    
+    if (startStr && endStr) {
+      // 기간 필터링이 요청된 경우 (달력 뷰 등)
+      const queryStart = new Date(startStr).getTime();
+      const queryEnd = new Date(endStr).getTime();
+      
+      schedules = schedules.filter(s => {
+        const sStart = new Date(s.startDate).getTime();
+        const sEnd = new Date(s.endDate || s.startDate).getTime();
+        // 일정이 조회 기간과 겹치는지 확인
+        return sEnd >= queryStart && sStart <= queryEnd;
+      });
+      return c.json({ schedules });
+    } else {
+      // 파라미터가 없으면 기존처럼 오늘 이후 다가오는 일정만 표시
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const upcomingSchedules = schedules.filter(s => new Date(s.endDate || s.startDate).getTime() >= now.getTime());
+      
+      return c.json({ schedules: upcomingSchedules });
+    }
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.post("/server/schedules", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const body = await c.req.json();
+    const { title, subtitle, startDate, endDate, location, shelterName, description, isAllDay, categoryId } = body;
+    if (!title || !startDate) return c.json({ error: "제목과 일시를 입력해주세요." }, 400);
+
+    const scheduleId = crypto.randomUUID();
+    const schedule = {
+      id: scheduleId,
+      title,
+      subtitle: subtitle || '',
+      startDate, // ISO String
+      endDate: endDate || startDate, // ISO String
+      location: location || '',
+      shelterName: shelterName || '',
+      description: description || '',
+      isAllDay: !!isAllDay,
+      categoryId: categoryId || null,
+      author: adminProfile.name,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await kv.set(`bbd:schedule:${scheduleId}`, schedule);
+    return c.json({ success: true, schedule });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.put("/server/schedules/:id", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const id = c.req.param("id");
+    const body = await c.req.json();
+    
+    const existing = await kv.get(`bbd:schedule:${id}`);
+    if (!existing) return c.json({ error: "일정을 찾을 수 없습니다." }, 404);
+
+    const schedule = {
+      ...existing,
+      title: body.title ?? existing.title,
+      subtitle: body.subtitle ?? existing.subtitle,
+      startDate: body.startDate ?? existing.startDate,
+      endDate: body.endDate ?? existing.endDate,
+      location: body.location ?? existing.location,
+      shelterName: body.shelterName ?? existing.shelterName,
+      description: body.description ?? existing.description,
+      isAllDay: body.isAllDay ?? existing.isAllDay,
+      categoryId: body.categoryId !== undefined ? body.categoryId : existing.categoryId,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await kv.set(`bbd:schedule:${id}`, schedule);
+    return c.json({ success: true, schedule });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
+app.delete("/server/schedules/:id", async (c) => {
+  try {
+    const adminProfile = await requireAdmin(c);
+    if (!adminProfile) return c.json({ error: "게시판 관리자 권한이 없습니다." }, 403);
+
+    const id = c.req.param("id");
+    await kv.del(`bbd:schedule:${id}`);
+    return c.json({ success: true });
+  } catch (err) {
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
 
 Deno.serve(app.fetch);

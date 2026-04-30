@@ -90,6 +90,31 @@ export function AdminDB() {
     }
   };
 
+  const handleToggleAdmin = async (userId: string, currentStatus: boolean, memberName: string) => {
+    if (!confirm(`'${memberName}' 회원의 게시판 관리자 권한을 ${currentStatus ? '해제' : '부여'}하시겠습니까?`)) return;
+    
+    try {
+      const res = await fetch(`${SERVER}/admin/members/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${publicAnonKey}`,
+          'X-Admin-Password': ADMIN_PASSWORD
+        },
+        body: JSON.stringify({ userId, isAdmin: !currentStatus })
+      });
+      if (res.ok) {
+        alert('권한이 성공적으로 변경되었습니다.');
+        fetchMembers(); // 새로고침
+      } else {
+        const data = await res.json();
+        alert(`권한 변경 실패: ${data.error}`);
+      }
+    } catch (err) {
+      alert(`네트워크 오류가 발생했습니다: ${err}`);
+    }
+  };
+
   const fetchAlimtalkLogs = async () => {
     setLoadingLogs(true);
     try {
@@ -290,6 +315,7 @@ export function AdminDB() {
                     <th style={{ padding: '16px', fontWeight: '700' }}>계정 유형</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>마케팅동의</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>가입일</th>
+                    <th style={{ padding: '16px', fontWeight: '700' }}>게시판 관리자</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>관리</th>
                   </tr>
                 </thead>
@@ -325,6 +351,14 @@ export function AdminDB() {
                       </td>
                       <td style={{ padding: '16px', color: '#9CA3AF', fontSize: '13px' }}>
                         {m.createdAt || m.created_at ? new Date(m.createdAt || m.created_at).toLocaleDateString() : '-'}
+                      </td>
+                      <td style={{ padding: '16px', textAlign: 'center' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={!!m.isAdmin}
+                          onChange={() => handleToggleAdmin(m.userId || m.user_id, !!m.isAdmin, m.name)}
+                          style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                        />
                       </td>
                       <td style={{ padding: '16px' }}>
                         <button 

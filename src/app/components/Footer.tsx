@@ -5,6 +5,8 @@ import { logoSloganImg } from '../imageAssets';
 import { G, gradientText } from '../styles/gradients';
 
 const footerLinks = [
+  { label: '공지사항', path: '/news?tab=notices' },
+  { label: '주요 일정', path: '/news?tab=schedules' },
   { label: '봉사 문파', path: '/about?tab=intro' },
   { label: '직급·직책', path: '/about?tab=ranks' },
   { label: '조직도', path: '/about?tab=orgchart' },

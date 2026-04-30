@@ -347,19 +347,19 @@ export function ApplyVolunteer() {
               onClick={() => handleTabClick('dog')}
               style={{ padding: '12px 24px', background: activeTab === 'dog' ? '#1E3A5F' : '#fff', color: activeTab === 'dog' ? '#fff' : '#6B7280', border: activeTab === 'dog' ? 'none' : '1px solid #E5E7EB', borderRadius: '30px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}
             >
-              🐶 유기견 봉사
+              유기견 봉사
             </button>
             <button
               onClick={() => handleTabClick('plogging')}
               style={{ padding: '12px 24px', background: '#fff', color: '#9CA3AF', border: '1px solid #E5E7EB', borderRadius: '30px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              🌱 플로깅 (준비중)
+              플로깅 (준비중)
             </button>
             <button
               onClick={() => handleTabClick('mural')}
               style={{ padding: '12px 24px', background: '#fff', color: '#9CA3AF', border: '1px solid #E5E7EB', borderRadius: '30px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              🎨 벽화 봉사 (준비중)
+              벽화 봉사 (준비중)
             </button>
           </div>
         </div>

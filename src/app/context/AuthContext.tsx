@@ -22,6 +22,7 @@ export interface MemberProfile {
   kakaoId: string;
   marketingAgreement: boolean;
   createdAt: string;
+  isAdmin?: boolean;
 }
 
 interface AuthContextType {

@@ -7,7 +7,7 @@ import {
   Shield, Star, Users, Clock,
   Heart, Eye, TrendingUp, Flame,
   Crown, BookOpen, Swords, Flag,
-  CheckCircle, Award, Trophy, User,
+  CheckCircle, Award, Trophy, User, PawPrint, HeartHandshake, Leaf, Baby, PlusSquare
 } from 'lucide-react';
 import { G, gradientText } from '../styles/gradients';
 
@@ -351,11 +351,11 @@ function TabIntro() {
                 {/* 5가지 심볼 설명 */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   {[
-                    { icon: '🐾', title: '유기견 봉사', sub: '강아지 발자국' },
-                    { icon: '🤝', title: '복지 봉사', sub: '두 손' },
-                    { icon: '🌿', title: '환경 봉사', sub: '나뭇잎' },
-                    { icon: '🖐', title: '아동 봉사', sub: '손바닥' },
-                    { icon: '✚', title: '의료 봉사', sub: '십자가' },
+                    { icon: <PawPrint size={18} />, title: '유기견 봉사', sub: '강아지 발자국' },
+                    { icon: <HeartHandshake size={18} />, title: '복지 봉사', sub: '두 손' },
+                    { icon: <Leaf size={18} />, title: '환경 봉사', sub: '나뭇잎' },
+                    { icon: <Baby size={18} />, title: '아동 봉사', sub: '손바닥' },
+                    { icon: <PlusSquare size={18} />, title: '의료 봉사', sub: '십자가' },
                   ].map(item => (
                     <div key={item.title} style={{
                       display: 'flex', alignItems: 'center', gap: '8px',

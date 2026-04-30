@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams, useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Trophy, Medal, Flame, Calendar, Crown } from 'lucide-react';
@@ -7,13 +7,32 @@ import { useAuth } from '../context/AuthContext';
 import { G, gradientText } from '../styles/gradients';
 import { prefetchRankings, prefetchRecord } from '../../utils/apiCache';
 
+import { NoticesTab } from '../components/NoticesTab';
+import { SchedulesTab } from '../components/SchedulesTab';
+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxIm5xbRwSV9f0I0oCfITu6UWr5Zofd8f_CYx90sXl0g4PL_z2B4ATNSVgRjrSbR1mAlw/exec";
 
 export function HallOfFame() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const tabParam = searchParams.get('tab') as 'notices' | 'schedules' | 'halloffame';
+
   const { session, profile, user } = useAuth();
+  const [mainTab, setMainTab] = useState<'notices' | 'schedules' | 'halloffame'>(tabParam || 'notices');
   const [activeTab, setActiveTab] = useState('season');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (tabParam && tabParam !== mainTab) {
+      setMainTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tabId: string) => {
+    setMainTab(tabId as any);
+    navigate(`/news?tab=${tabId}`, { replace: true });
+  };
 
   useEffect(() => {
     const fetchRankings = async () => {
@@ -44,165 +63,179 @@ export function HallOfFame() {
       </Helmet>
       <div>
         {/* 페이지 히어로 (다크 테마 유지) */}
-      <div className="pt-[140px] px-5 md:px-10" style={{
-        background: G.darkHero,
-        position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{ position: 'absolute', top: '-120px', left: '50%', transform: 'translateX(-50%)', width: '700px', height: '700px', background: G.heroOrb1, filter: 'blur(100px)', pointerEvents: 'none' }} />
-
-        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-          <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>
-            BONGBONGDAN NEWS
-          </p>
-          <h1 style={{ color: '#fff', fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', marginBottom: '16px', lineHeight: '1.2' }}>
-            봉봉단 소식
-          </h1>
-          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '17px', lineHeight: '1.7' }}>
-            봉봉단을 빛낸 단원들의 랭킹과 <br className="hidden md:block" /> 다양한 소식들을 확인해보세요
-          </p>
-        </div>
-
-        {/* 탭 바 */}
-        <div style={{
-          position: 'relative', zIndex: 1,
-          maxWidth: '700px', margin: '48px auto 0',
-          display: 'flex', gap: '4px',
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '18px 18px 0 0',
-          padding: '6px 6px 0',
-          overflowX: 'auto',
-          backdropFilter: 'blur(10px)'
+        <div className="pt-[140px] px-5 md:px-10" style={{
+          background: G.darkHero,
+          position: 'relative', overflow: 'hidden',
         }}>
-          {['공지사항', '주요일정', '명예·혜택'].map((tabLabel) => {
-            const isActive = tabLabel === '명예·혜택';
-            return (
-              <div
-                key={tabLabel}
-                style={{
-                  flex: '1 1 0',
-                  minWidth: '0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 'clamp(4px, 1.5vw, 7px)',
-                  padding: '13px clamp(4px, 2vw, 16px)',
-                  borderRadius: '13px 13px 0 0',
-                  textDecoration: 'none',
-                  fontSize: 'clamp(12px, 3.5vw, 14px)',
-                  fontWeight: isActive ? '700' : '500',
-                  color: isActive ? '#F5C875' : 'rgba(255,255,255,0.5)',
-                  background: isActive ? 'rgba(200,150,62,0.15)' : 'transparent',
-                  borderBottom: isActive ? '2px solid #C8963E' : '2px solid transparent',
-                  cursor: isActive ? 'default' : 'pointer',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {tabLabel === '명예·혜택' ? <Trophy size={14} /> : tabLabel === '공지사항' ? <Flame size={14} /> : <Calendar size={14} />}
-                {tabLabel}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+          <div style={{ position: 'absolute', top: '-120px', left: '50%', transform: 'translateX(-50%)', width: '700px', height: '700px', background: G.heroOrb1, filter: 'blur(100px)', pointerEvents: 'none' }} />
 
-      {/* 본문 영역 (프리미엄 라이트 모드) */}
-      <div className="min-h-screen bg-[#F4F6F8] pt-12 pb-24 px-5">
-        <div className="max-w-[760px] mx-auto">
+          <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+            <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText('linear-gradient(135deg,#C8963E,#F5C875)') }}>
+              BONGBONGDAN NEWS
+            </p>
+            <h1 style={{ color: '#fff', fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: '900', marginBottom: '16px', lineHeight: '1.2' }}>
+              소식
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '17px', lineHeight: '1.7' }}>
+              봉봉단의 다양한 소식과 <br className="hidden md:block" /> 단원들의 빛나는 명예를 확인해보세요
+            </p>
+          </div>
 
-
-          {(loading) && <div className="flex items-center justify-center gap-2 text-gray-500 font-medium py-20"><Trophy size={18} /> 랭킹 데이터를 불러오는 중입니다...</div>}
-
-          {(!loading && data) && (
-            <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-              <Tabs.List className="flex bg-gray-200/50 p-1.5 rounded-2xl mb-10 w-full max-w-[400px] mx-auto border border-gray-200/50">
-                <Tabs.Trigger
-                  value="season"
-                  className={`flex-1 py-3 text-[15px] rounded-xl font-bold transition-all outline-none ${activeTab === 'season' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          {/* 탭 바 */}
+          <div style={{
+            position: 'relative', zIndex: 1,
+            maxWidth: '700px', margin: '48px auto 0',
+            display: 'flex', gap: '4px',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '18px 18px 0 0',
+            padding: '6px 6px 0',
+            overflowX: 'auto',
+            backdropFilter: 'blur(10px)'
+          }}>
+            {[
+              { id: 'notices', label: '공지사항', icon: Flame },
+              { id: 'schedules', label: '주요일정', icon: Calendar },
+              { id: 'halloffame', label: '명예·혜택', icon: Trophy }
+            ].map((tab) => {
+              const isActive = mainTab === tab.id;
+              const Icon = tab.icon;
+              return (
+                <div
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  style={{
+                    flex: '1 1 0',
+                    minWidth: '0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 'clamp(4px, 1.5vw, 7px)',
+                    padding: '13px clamp(4px, 2vw, 16px)',
+                    borderRadius: '13px 13px 0 0',
+                    textDecoration: 'none',
+                    fontSize: 'clamp(12px, 3.5vw, 14px)',
+                    fontWeight: isActive ? '700' : '500',
+                    color: isActive ? '#F5C875' : 'rgba(255,255,255,0.5)',
+                    background: isActive ? 'rgba(200,150,62,0.15)' : 'transparent',
+                    borderBottom: isActive ? '2px solid #C8963E' : '2px solid transparent',
+                    cursor: isActive ? 'default' : 'pointer',
+                    transition: 'all 0.2s ease',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
-                  <div className="flex items-center justify-center gap-1.5"><Flame size={16} /> {data.seasonYear || '2026'} 시즌</div>
-                </Tabs.Trigger>
-                <Tabs.Trigger
-                  value="all"
-                  className={`flex-1 py-3 text-[15px] rounded-xl font-bold transition-all outline-none ${activeTab === 'all' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  <div className="flex items-center justify-center gap-1.5"><Crown size={16} /> 역대 누적</div>
-                </Tabs.Trigger>
-              </Tabs.List>
-
-              <Tabs.Content value="season" className="outline-none">
-                <RankingList items={data.rankings?.season?.top10 || []} profile={profile} />
-              </Tabs.Content>
-
-              <Tabs.Content value="all" className="outline-none">
-                <RankingList items={data.rankings?.all?.top10 || []} profile={profile} />
-              </Tabs.Content>
-            </Tabs.Root>
-          )}
+                  <Icon size={14} />
+                  {tab.label}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* 비로그인 유저 홍보 배너 섹션 (전체 너비 배경 다름) */}
-      {(!user && !loading && data) && (
-        <div className="w-full bg-white py-12 md:py-20 px-4 md:px-5 border-t border-gray-100">
+        {/* 본문 영역 (프리미엄 라이트 모드) */}
+        <div className="min-h-screen bg-[#F4F6F8] pt-12 pb-24 px-5">
           <div className="max-w-[760px] mx-auto">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
 
-              <div className="relative z-10">
-                <div className="text-center mb-6 md:mb-8">
-                  <div className="inline-flex items-center justify-center mb-3">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[11px] md:text-xs font-bold rounded-full">봉봉단 전용 기능</span>
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-black text-gray-800 mb-2 break-keep">단원이 되면 더 많은 것을 누릴 수 있어요!</h3>
-                  <p className="text-gray-600 leading-relaxed text-[13px] md:text-sm break-keep">
-                    봉봉단에 가입하고 '나의 봉사' 메뉴에서 특별한 혜택들을 확인해 보세요.
-                  </p>
-                </div>
+            {mainTab === 'notices' && <NoticesTab />}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
-                    <div className="p-2 bg-blue-100/50 rounded-xl h-fit"><Medal size={20} className="text-blue-600" /></div>
-                    <div>
-                      <h4 className="font-bold text-gray-800 text-sm mb-1">내 순위 확인</h4>
-                      <p className="text-xs text-gray-500 leading-snug">전체 단원 중 나의 위치와 목표를 확인하세요.</p>
-                    </div>
-                  </div>
-                  <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
-                    <div className="p-2 bg-purple-100/50 rounded-xl h-fit"><Trophy size={20} className="text-purple-600" /></div>
-                    <div>
-                      <h4 className="font-bold text-gray-800 text-sm mb-1">직급 승급 및 특별 혜택</h4>
-                      <p className="text-xs text-gray-500 leading-snug">봉사 횟수에 따라 새로운 혜택이 열립니다.</p>
-                    </div>
-                  </div>
-                  <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
-                    <div className="p-2 bg-green-100/50 rounded-xl h-fit"><Calendar size={20} className="text-green-600" /></div>
-                    <div>
-                      <h4 className="font-bold text-gray-800 text-sm mb-1">체계적인 일정 관리</h4>
-                      <p className="text-xs text-gray-500 leading-snug">예정된 봉사의 디데이와 지난 기록을 한눈에 확인하세요.</p>
-                    </div>
-                  </div>
-                  <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
-                    <div className="p-2 bg-yellow-100/50 rounded-xl h-fit"><Flame size={20} className="text-yellow-600" /></div>
-                    <div>
-                      <h4 className="font-bold text-gray-800 text-sm mb-1">역대 누적 횟수</h4>
-                      <p className="text-xs text-gray-500 leading-snug">지금까지의 모든 봉사 기록을 체계적으로 관리합니다.</p>
-                    </div>
-                  </div>
-                </div>
+            {mainTab === 'schedules' && <SchedulesTab />}
 
-                <div className="mt-6 text-center">
-                  <p className="text-[14px] font-medium text-gray-500">
-                    아직 봉봉단 단원이 아니신가요? <Link to="/signup" className="text-blue-600 font-bold hover:underline ml-1">회원가입 하러가기</Link>
-                  </p>
+            {mainTab === 'halloffame' && (
+              <>
+                {(loading) && <div className="flex items-center justify-center gap-2 text-gray-500 font-medium py-20"><Trophy size={18} /> 랭킹 데이터를 불러오는 중입니다...</div>}
+
+                {(!loading && data) && (
+                  <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
+                    <Tabs.List className="flex bg-gray-200/50 p-1.5 rounded-2xl mb-10 w-full max-w-[400px] mx-auto border border-gray-200/50">
+                      <Tabs.Trigger
+                        value="season"
+                        className={`flex-1 py-3 text-[15px] rounded-xl font-bold transition-all outline-none ${activeTab === 'season' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                      >
+                        <div className="flex items-center justify-center gap-1.5"><Flame size={16} /> {data.seasonYear || '2026'} 시즌</div>
+                      </Tabs.Trigger>
+                      <Tabs.Trigger
+                        value="all"
+                        className={`flex-1 py-3 text-[15px] rounded-xl font-bold transition-all outline-none ${activeTab === 'all' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                      >
+                        <div className="flex items-center justify-center gap-1.5"><Crown size={16} /> 역대 누적</div>
+                      </Tabs.Trigger>
+                    </Tabs.List>
+
+                    <Tabs.Content value="season" className="outline-none">
+                      <RankingList items={data.rankings?.season?.top10 || []} profile={profile} />
+                    </Tabs.Content>
+
+                    <Tabs.Content value="all" className="outline-none">
+                      <RankingList items={data.rankings?.all?.top10 || []} profile={profile} />
+                    </Tabs.Content>
+                  </Tabs.Root>
+                )}
+              </>
+            )}
+
+          </div>
+        </div>
+
+        {/* 비로그인 유저 홍보 배너 섹션 (명예의 전당 탭에서만 보임) */}
+        {(mainTab === 'halloffame' && !user && !loading && data) && (
+          <div className="w-full bg-white py-12 md:py-20 px-4 md:px-5 border-t border-gray-100">
+            <div className="max-w-[760px] mx-auto">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
+
+                <div className="relative z-10">
+                  <div className="text-center mb-6 md:mb-8">
+                    <div className="inline-flex items-center justify-center mb-3">
+                      <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[11px] md:text-xs font-bold rounded-full">봉봉단 전용 기능</span>
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-black text-gray-800 mb-2 break-keep">단원이 되면 더 많은 것을 누릴 수 있어요!</h3>
+                    <p className="text-gray-600 leading-relaxed text-[13px] md:text-sm break-keep">
+                      봉봉단에 가입하고 '나의 봉사' 메뉴에서 특별한 혜택들을 확인해 보세요.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
+                      <div className="p-2 bg-blue-100/50 rounded-xl h-fit"><Medal size={20} className="text-blue-600" /></div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 text-sm mb-1">내 순위 확인</h4>
+                        <p className="text-xs text-gray-500 leading-snug">전체 단원 중 나의 위치와 목표를 확인하세요.</p>
+                      </div>
+                    </div>
+                    <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
+                      <div className="p-2 bg-purple-100/50 rounded-xl h-fit"><Trophy size={20} className="text-purple-600" /></div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 text-sm mb-1">직급 승급 및 특별 혜택</h4>
+                        <p className="text-xs text-gray-500 leading-snug">봉사 횟수에 따라 새로운 혜택이 열립니다.</p>
+                      </div>
+                    </div>
+                    <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
+                      <div className="p-2 bg-green-100/50 rounded-xl h-fit"><Calendar size={20} className="text-green-600" /></div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 text-sm mb-1">체계적인 일정 관리</h4>
+                        <p className="text-xs text-gray-500 leading-snug">예정된 봉사의 디데이와 지난 기록을 한눈에 확인하세요.</p>
+                      </div>
+                    </div>
+                    <div className="bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-white flex gap-3">
+                      <div className="p-2 bg-yellow-100/50 rounded-xl h-fit"><Flame size={20} className="text-yellow-600" /></div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 text-sm mb-1">역대 누적 횟수</h4>
+                        <p className="text-xs text-gray-500 leading-snug">지금까지의 모든 봉사 기록을 체계적으로 관리합니다.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 text-center">
+                    <p className="text-[14px] font-medium text-gray-500">
+                      아직 봉봉단 단원이 아니신가요? <Link to="/signup" className="text-blue-600 font-bold hover:underline ml-1">회원가입 하러가기</Link>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </>
   );
 }

@@ -184,11 +184,11 @@ export function Signup() {
               </div>
             </div>
             <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: '700', marginBottom: '12px' }}>
-              🎉 입문을 환영합니다!
+              입문을 환영합니다!
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '32px', lineHeight: '1.7' }}>
               봉봉단의 새로운 단원이 되신 것을 진심으로 환영합니다!<br />
-              이제 로그인하여 봉사 활동을 신청해보세요.
+              봉사 활동을 신청해보세요.
             </p>
             <button
               onClick={() => navigate('/login')}

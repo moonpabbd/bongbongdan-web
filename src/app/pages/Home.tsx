@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Helmet } from 'react-helmet-async';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, PawPrint, Paintbrush, Leaf, Baby, HeartHandshake } from 'lucide-react';
 import { useScrollReveal, useCounter } from '../hooks/useScrollReveal';
 import { symbol3DImg, homeImages, homeSection1Img } from '../imageAssets';
 import { G, gradientText } from '../styles/gradients';
@@ -336,11 +336,11 @@ export function Home() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
-              { emoji: '🐾', title: '유기견 봉사', status: '진행 중', statusBg: G.greenBadge, delay: 0 },
-              { emoji: '🎨', title: '벽화 봉사', status: '준비 중', statusBg: G.goldBadge, delay: 80 },
-              { emoji: '🌿', title: '플로깅 봉사', status: '준비 중', statusBg: G.goldBadge, delay: 160 },
-              { emoji: '🖐', title: '아동 봉사', status: '예정', statusBg: G.purpleBadge, delay: 240 },
-              { emoji: '🤝', title: '복지·의료 봉사', status: '예정', statusBg: G.purpleBadge, delay: 320 },
+              { icon: <PawPrint size={24} color="#A87830" />, title: '유기견 봉사', status: '진행 중', statusBg: G.greenBadge, delay: 0 },
+              { icon: <Paintbrush size={24} color="#A87830" />, title: '벽화 봉사', status: '준비 중', statusBg: G.goldBadge, delay: 80 },
+              { icon: <Leaf size={24} color="#A87830" />, title: '플로깅 봉사', status: '준비 중', statusBg: G.goldBadge, delay: 160 },
+              { icon: <Baby size={24} color="#A87830" />, title: '아동 봉사', status: '예정', statusBg: G.purpleBadge, delay: 240 },
+              { icon: <HeartHandshake size={24} color="#A87830" />, title: '복지·의료 봉사', status: '예정', statusBg: G.purpleBadge, delay: 320 },
             ].map(item => (
               <Reveal key={item.title} delay={item.delay}>
                 <div style={{
@@ -349,7 +349,7 @@ export function Home() {
                   background: 'linear-gradient(135deg,#FAFAFA,#F5F0E8)',
                   border: '1px solid rgba(200,150,62,0.12)',
                 }}>
-                  <span style={{ fontSize: '24px' }}>{item.emoji}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</span>
                   <span style={{ color: '#1E3A5F', fontWeight: '700', fontSize: '17px', flex: 1 }}>{item.title}</span>
                   <span style={{
                     background: item.statusBg, color: '#fff',

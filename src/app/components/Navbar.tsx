@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { Menu, X, User, LogOut, ChevronDown, PawPrint, ClipboardList, Shield, Star, Users, Clock, Award, Trophy } from 'lucide-react';
+import { Menu, X, User, LogOut, ChevronDown, PawPrint, ClipboardList, Shield, Star, Users, Clock, Award, Trophy, Flame } from 'lucide-react';
 import { logoImg, logoSloganImg } from '../imageAssets';
 import { G } from '../styles/gradients';
 import { useAuth } from '../context/AuthContext';
@@ -20,9 +20,11 @@ const navItems = [
   },
   {
     label: '소식',
-    path: '/news',
+    path: '/news?tab=notices',
     children: [
-      { label: '명예·혜택', path: '/news', Icon: Trophy },
+      { label: '공지사항', path: '/news?tab=notices', Icon: Flame },
+      { label: '주요일정', path: '/news?tab=schedules', Icon: Clock },
+      { label: '명예·혜택', path: '/news?tab=halloffame', Icon: Trophy },
     ],
   },
   {
