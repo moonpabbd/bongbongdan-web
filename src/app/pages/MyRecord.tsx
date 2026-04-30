@@ -63,7 +63,8 @@ export function MyRecord() {
   }, [profile]);
 
   const handleCancel = async (scheduleText: string) => {
-    if (!window.confirm(`[${scheduleText}]\n해당 일정을 정말 취소하시겠습니까?`)) return;
+    const confirmMsg = `[${scheduleText}]\n해당 일정을 정말 취소하시겠습니까?\n\n※ 취소 전 반드시 확인해 주세요!\n본 봉사는 신청 인원을 기준으로 사전에 픽업 차량 배정, 봉사 물품 준비, 보호소 지원 등이 진행됩니다. 참가비는 노쇼 방지를 위한 필수 운영비로 사용되므로, 봉봉단 측 사유가 아닌 개인 사정으로 인한 취소 시 참가비 환불이 어렵습니다.\n\n위 내용을 모두 확인하였으며, 그래도 취소를 진행하시겠습니까?`;
+    if (!window.confirm(confirmMsg)) return;
 
     setCancelingItem(scheduleText);
     try {
@@ -85,7 +86,7 @@ export function MyRecord() {
       const result = await response.json();
 
       if (result.status === 'success') {
-        alert('집결 취소가 완료되었습니다.');
+        alert('집결 취소 처리가 완료되었습니다.\n다음 봉사에서 또 뵙기를 기다리고 있겠습니다! 💛');
         
         // 캐시 대기 없이 UI 즉각 업데이트 (Optimistic Update)
         setRecord((prev: any) => ({
