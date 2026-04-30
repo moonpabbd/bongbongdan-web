@@ -65,6 +65,31 @@ export function AdminDB() {
     }
   };
 
+  const handleDeleteMember = async (userId: string, memberName: string) => {
+    if (!confirm(`정말로 '${memberName}' 회원을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`)) return;
+    
+    try {
+      const res = await fetch(`${SERVER}/admin/members`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${publicAnonKey}`,
+          'X-Admin-Password': ADMIN_PASSWORD
+        },
+        body: JSON.stringify({ userId })
+      });
+      if (res.ok) {
+        alert('성공적으로 삭제되었습니다.');
+        fetchMembers(); // 새로고침
+      } else {
+        const data = await res.json();
+        alert(`삭제 실패: ${data.error}`);
+      }
+    } catch (err) {
+      alert(`네트워크 오류가 발생했습니다: ${err}`);
+    }
+  };
+
   const fetchAlimtalkLogs = async () => {
     setLoadingLogs(true);
     try {
@@ -262,9 +287,10 @@ export function AdminDB() {
                     <th style={{ padding: '16px', fontWeight: '700' }}>생년월일</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>연락처</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>카카오ID</th>
-                    <th style={{ padding: '16px', fontWeight: '700' }}>가입경로</th>
+                    <th style={{ padding: '16px', fontWeight: '700' }}>계정 유형</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>마케팅동의</th>
                     <th style={{ padding: '16px', fontWeight: '700' }}>가입일</th>
+                    <th style={{ padding: '16px', fontWeight: '700' }}>관리</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -278,8 +304,15 @@ export function AdminDB() {
                       <td style={{ padding: '16px' }}>{m.phone || '-'}</td>
                       <td style={{ padding: '16px' }}>{m.kakaoId || m.kakao_id || '-'}</td>
                       <td style={{ padding: '16px' }}>
-                        {m.joinPath || m.join_path || '-'} 
-                        {(m.joinPathDetail || m.join_path_detail) && <span style={{ color: '#9CA3AF' }}> ({m.joinPathDetail || m.join_path_detail})</span>}
+                        {(m.joinPath?.includes('구글') || m.join_path?.includes('구글')) ? (
+                          <span style={{ background: '#EFF6FF', color: '#1D4ED8', padding: '4px 8px', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>
+                            구글 연동
+                          </span>
+                        ) : (
+                          <span style={{ background: '#F3F4F6', color: '#4B5563', padding: '4px 8px', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>
+                            일반 가입
+                          </span>
+                        )}
                       </td>
                       <td style={{ padding: '16px' }}>
                         <span style={{ 
@@ -292,6 +325,17 @@ export function AdminDB() {
                       </td>
                       <td style={{ padding: '16px', color: '#9CA3AF', fontSize: '13px' }}>
                         {m.createdAt || m.created_at ? new Date(m.createdAt || m.created_at).toLocaleDateString() : '-'}
+                      </td>
+                      <td style={{ padding: '16px' }}>
+                        <button 
+                          onClick={() => handleDeleteMember(m.userId || m.user_id, m.name)}
+                          style={{
+                            background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '6px 12px',
+                            borderRadius: '6px', fontSize: '12px', fontWeight: '700', cursor: 'pointer'
+                          }}
+                        >
+                          삭제
+                        </button>
                       </td>
                     </tr>
                   ))}

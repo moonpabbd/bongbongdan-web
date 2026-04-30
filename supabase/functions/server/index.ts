@@ -272,6 +272,40 @@ app.get("/server/admin/members", async (c) => {
   }
 });
 
+// ─── 관리자: 특정 회원 삭제 ──────────────────────────────────────────────────
+app.delete("/server/admin/members", async (c) => {
+  try {
+    const adminPassword = c.req.header('X-Admin-Password');
+    if (adminPassword !== 'pjb0812') {
+      return c.json({ error: "접근 권한이 없습니다." }, 403);
+    }
+
+    const { userId } = await c.req.json();
+    if (!userId) return c.json({ error: "삭제할 회원의 ID가 필요합니다." }, 400);
+
+    // KV에서 프로필 및 아이디 인덱스 조회 및 삭제
+    const profile = await kv.get(`bbd:member:profile:${userId}`);
+    if (profile) {
+      await kv.delete(`bbd:member:profile:${userId}`);
+      if (profile.username) {
+        await kv.delete(`bbd:member:username:${profile.username}`);
+      }
+    }
+
+    // Supabase Auth에서 사용자 삭제
+    try {
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+    } catch (authError) {
+      console.log("Admin deleteUser auth error (ignored):", authError);
+    }
+
+    return c.json({ success: true, message: "회원 삭제 완료" });
+  } catch (err) {
+    console.log("Admin member delete error:", err);
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
 // ─── 아이디 찾기 ───────────────────────────────────────────────────────────────
 app.post("/server/auth/find-id", async (c) => {
   try {
