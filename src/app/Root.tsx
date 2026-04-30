@@ -14,9 +14,18 @@ function RouteGuard({ children }: { children: React.ReactNode }) {
   const { needsOnboarding, loading } = useAuth();
   const location = useLocation();
 
+  useEffect(() => {
+    if (!loading && typeof window !== 'undefined') {
+      sessionStorage.removeItem('oauth_pending');
+    }
+  }, [loading]);
+
   // 아직 로딩 중일 때: OAuth 콜백 처리 중이면 홈 화면이 번쩍이는 것을 막기 위해 빈 화면 유지
   if (loading) {
-    if (typeof window !== 'undefined' && window.location.hash.includes('access_token=')) {
+    const isOauthCallback = typeof window !== 'undefined' && 
+      (window.location.hash.includes('access_token=') || sessionStorage.getItem('oauth_pending') === 'true');
+      
+    if (isOauthCallback) {
       return <div style={{ minHeight: '100vh', background: '#121F33' }} />;
     }
     return <>{children}</>;

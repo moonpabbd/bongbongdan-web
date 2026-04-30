@@ -119,6 +119,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signInWithGoogle = async (redirectTo?: string) => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('oauth_pending', 'true');
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
