@@ -81,7 +81,7 @@ export function EditProfile() {
   );
 
   const handleDeleteAccount = async () => {
-    if (!confirm('정말로 탈퇴하시겠습니까? 탈퇴 후에는 모든 봉사 기록과 정보가 삭제되며 복구할 수 없습니다.')) return;
+    if (!confirm('정말로 탈퇴하시겠습니까? 웹사이트 로그인 계정 정보가 삭제됩니다.\n(단, 실제 봉사 참여 기록은 봉봉단 장부에 안전하게 보존되며, 추후 동일한 이름과 연락처로 재가입 시 다시 연동됩니다.)')) return;
     
     setLoading(true);
     try {
