@@ -44,7 +44,7 @@ export function Navbar() {
   const location = useLocation();
   const [userRank, setUserRank] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { user, profile, logout } = useAuth();
+  const { user, profile, logout, needsOnboarding } = useAuth();
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -286,6 +286,32 @@ export function Navbar() {
 
             {/* 로그인/사용자 메뉴 */}
             {user ? (
+              needsOnboarding ? (
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    color: textColor,
+                    background: 'none',
+                    border: isSolid ? '1px solid rgba(30,58,95,0.2)' : '1px solid rgba(255,255,255,0.15)',
+                    padding: '8px 16px',
+                    borderRadius: '10px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.color = '#ef4444';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(239,68,68,0.4)';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.color = textColor;
+                    (e.currentTarget as HTMLElement).style.borderColor = isSolid ? 'rgba(30,58,95,0.2)' : 'rgba(255,255,255,0.15)';
+                  }}
+                >
+                  로그아웃
+                </button>
+              ) : (
               <div ref={userMenuRef} style={{ position: 'relative' }}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -363,6 +389,7 @@ export function Navbar() {
                   </div>
                 )}
               </div>
+              )
             ) : (
               <Link
                 to="/login"
