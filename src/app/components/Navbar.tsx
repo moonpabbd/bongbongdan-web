@@ -334,7 +334,7 @@ export function Navbar() {
                         </div>
                       </div>
                     )}
-                    {import.meta.env.DEV && <DropdownItem to="/my-record" label="나의 봉사" isSolid={isSolid} />}
+                    <DropdownItem to="/my-record" label="나의 봉사" isSolid={isSolid} />
                     <DropdownItem to="/profile-edit" label="내 정보 변경" isSolid={isSolid} />
 
                     <button

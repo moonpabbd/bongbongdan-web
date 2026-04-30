@@ -92,9 +92,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.access_token) {
-        fetchProfile(session.access_token);
+        setLoading(true);
+        fetchProfile(session.access_token).finally(() => setLoading(false));
       } else {
         setProfile(null);
+        setLoading(false);
       }
     });
 
@@ -102,17 +104,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (username: string, password: string): Promise<{ error?: string }> => {
+    setLoading(true);
     const email = usernameToEmail(username);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
+      setLoading(false);
       if (error.message.includes('Invalid login credentials')) {
         return { error: '아이디 또는 비밀번호가 올바르지 않습니다.' };
       }
       return { error: `로그인 오류: ${error.message}` };
     }
-    if (data.session?.access_token) {
-      await fetchProfile(data.session.access_token);
-    }
+    // fetchProfile은 onAuthStateChange에서 처리하므로 여기서 중복 호출하지 않음
     return {};
   };
 
