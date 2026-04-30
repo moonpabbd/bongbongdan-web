@@ -183,7 +183,7 @@ app.post("/server/auth/onboard", async (c) => {
       
       // 기존 userId 기준 데이터 삭제
       if (oldUserId && oldUserId !== userId) {
-        await kv.delete(`bbd:member:profile:${oldUserId}`);
+        await kv.del(`bbd:member:profile:${oldUserId}`);
         // 중복을 막기 위해 구 Auth 계정은 Admin API로 삭제 시도
         try {
           await supabaseAdmin.auth.admin.deleteUser(oldUserId);
@@ -286,9 +286,9 @@ app.delete("/server/admin/members", async (c) => {
     // KV에서 프로필 및 아이디 인덱스 조회 및 삭제
     const profile = await kv.get(`bbd:member:profile:${userId}`);
     if (profile) {
-      await kv.delete(`bbd:member:profile:${userId}`);
+      await kv.del(`bbd:member:profile:${userId}`);
       if (profile.username) {
-        await kv.delete(`bbd:member:username:${profile.username}`);
+        await kv.del(`bbd:member:username:${profile.username}`);
       }
     }
 
