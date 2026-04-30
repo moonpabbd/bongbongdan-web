@@ -302,6 +302,7 @@ export function Onboarding() {
             type="button" 
             onClick={async () => {
               await logout();
+              alert('로그아웃 되었습니다.');
               navigate('/');
             }}
             style={{ width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}
