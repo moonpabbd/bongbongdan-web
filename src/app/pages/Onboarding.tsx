@@ -25,6 +25,7 @@ export function Onboarding() {
   const [memberNumber, setMemberNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [privacyExpanded, setPrivacyExpanded] = useState(false);
   const [marketingExpanded, setMarketingExpanded] = useState(false);
 
@@ -109,6 +110,7 @@ export function Onboarding() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setMemberNumber(data.memberNumber);
+        setSuccessMessage(data.message || '🎉 가입을 환영합니다!');
         await refreshProfile(); // Refresh profile so needsOnboarding becomes false
         setStep('done');
       }
@@ -131,11 +133,20 @@ export function Onboarding() {
               </div>
             </div>
             <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: '700', marginBottom: '12px' }}>
-              🎉 가입을 환영합니다!
+              {successMessage.includes('연동') ? '✨ 계정 통합 완료!' : '🎉 가입을 환영합니다!'}
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '28px', lineHeight: '1.7' }}>
-              봉봉단의 새로운 단원이 되셨습니다.<br />
-              아래 회원 고유번호를 꼭 기억해주세요.
+              {successMessage.includes('연동') ? (
+                <>
+                  기존 봉봉단 계정이 구글 계정으로 성공적으로 통합되었습니다.<br />
+                  앞으로는 구글 로그인만 하시면 됩니다!
+                </>
+              ) : (
+                <>
+                  봉봉단의 새로운 단원이 되셨습니다.<br />
+                  아래 회원 고유번호를 꼭 기억해주세요.
+                </>
+              )}
             </p>
             <div style={{ background: 'linear-gradient(135deg, rgba(200,150,62,0.15), rgba(200,150,62,0.05))', border: '1px solid rgba(200,150,62,0.4)', borderRadius: '14px', padding: '24px', marginBottom: '32px' }}>
               <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', fontWeight: '700', letterSpacing: '2px', marginBottom: '10px' }}>

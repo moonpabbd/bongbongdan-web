@@ -651,7 +651,7 @@ export function Signup() {
 
           <button
             type="button"
-            onClick={() => signInWithGoogle()}
+            onClick={() => signInWithGoogle('/onboarding')}
             style={{
               background: '#fff',
               color: '#333',
