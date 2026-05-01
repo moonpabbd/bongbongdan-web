@@ -113,14 +113,30 @@ export function MyRecord() {
       });
       const result = await response.json();
       if (result.status === 'success') {
-        alert('일정 변경 처리가 완료되었습니다.\n새로운 일정에서 뵙겠습니다! 💛');
+        alert('일정 변경 처리가 완료되었습니다.\n새로운 일정에서 뵙겠습니다!');
         setRecord((prev: any) => {
+          let newDday: number | '?' = '?';
+          let newTime = 9999999999999;
+          const match = selectedNewDate.match(/(\d{2})년\s*(\d{2})월\s*(\d{2})일/);
+          if (match) {
+            const year = 2000 + parseInt(match[1]);
+            const month = parseInt(match[2]) - 1;
+            const day = parseInt(match[3]);
+            const activityDate = new Date(year, month, day);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const diffTime = activityDate.getTime() - today.getTime();
+            newDday = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            newTime = activityDate.getTime();
+          }
+
           const newUpcoming = prev.upcoming.map((u: any) => {
             if (u.text === changingItem) {
-              return { ...u, text: selectedNewDate, dday: '?', time: 9999999999999 };
+              return { ...u, text: selectedNewDate, dday: newDday, time: newTime };
             }
             return u;
           });
+          newUpcoming.sort((a: any, b: any) => a.time - b.time);
           return { ...prev, upcoming: newUpcoming };
         });
         setChangingItem(null);
@@ -158,7 +174,7 @@ export function MyRecord() {
       const result = await response.json();
 
       if (result.status === 'success') {
-        alert('집결 취소 처리가 완료되었습니다.\n다음 봉사에서 또 뵙기를 기다리고 있겠습니다! 💛');
+        alert('집결 취소 처리가 완료되었습니다.\n다음 봉사에서 또 뵙기를 기다리고 있겠습니다!');
         
         // 캐시 대기 없이 UI 즉각 업데이트 (Optimistic Update)
         setRecord((prev: any) => ({
