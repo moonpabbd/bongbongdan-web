@@ -5,6 +5,7 @@ import { G } from '../styles/gradients';
 import { projectId } from '/utils/supabase/info';
 import { formatPhoneNumber } from '../../utils/format';
 import { useAuth } from '../context/AuthContext';
+import { useDialog } from '../contexts/DialogContext';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
@@ -21,6 +22,7 @@ interface FormState {
 export function Onboarding() {
   const navigate = useNavigate();
   const { user, needsOnboarding, refreshProfile, logout } = useAuth();
+  const { showAlert } = useDialog();
   const [step, setStep] = useState<'form' | 'done'>('form');
   const [memberNumber, setMemberNumber] = useState('');
   const [loading, setLoading] = useState(false);
@@ -302,7 +304,7 @@ export function Onboarding() {
             type="button"
             onClick={async () => {
               await logout();
-              alert('가입 절차가 취소되었습니다.');
+              await showAlert('가입 절차가 취소되었습니다.');
               navigate('/');
             }}
             style={{ width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '16px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}

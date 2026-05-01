@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Mail, Instagram, ExternalLink } from 'lucide-react';
 import { logoSloganImg } from '../imageAssets';
 import { G, gradientText } from '../styles/gradients';
+import { useDialog } from '../contexts/DialogContext';
 
 const footerLinks = [
   { label: '공지사항', path: '/news?tab=notices' },
@@ -22,6 +23,7 @@ const policyLinks = [
 ];
 
 export function Footer() {
+  const { showAlert } = useDialog();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < 768);
@@ -96,9 +98,9 @@ export function Footer() {
           <div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: isMobile ? '0' : '33px' }}>
               <button
-                onClick={() => {
+                onClick={async () => {
                   navigator.clipboard.writeText('Info@bbd.or.kr');
-                  alert('이메일 주소(Info@bbd.or.kr)가 복사되었습니다.');
+                  await showAlert('이메일 주소(Info@bbd.or.kr)가 복사되었습니다.');
                 }}
                 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', background: 'none', border: 'none', padding: 0, fontSize: '14px', fontWeight: '500', cursor: 'pointer', fontFamily: 'inherit' }}
               >

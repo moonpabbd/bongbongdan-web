@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { Plus, Pin, Trash2, Edit2, Paperclip, X, Eye, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '../../utils/supabaseClient';
+import { useDialog } from '../contexts/DialogContext';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
@@ -32,6 +33,7 @@ interface Notice {
 export function NoticesTab() {
   const { profile, session } = useAuth();
   const isAdmin = profile?.isAdmin === true;
+  const { showConfirm } = useDialog();
   
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -166,7 +168,7 @@ export function NoticesTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('정말 삭제하시겠습니까?')) return;
+    if (!(await showConfirm('정말 삭제하시겠습니까?'))) return;
     try {
       const res = await fetch(`${SERVER}/notices/${id}`, {
         method: 'DELETE',

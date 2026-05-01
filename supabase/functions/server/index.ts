@@ -821,6 +821,37 @@ app.post("/server/alimtalk/send", async (c) => {
   }
 });
 
+// ─── 알림톡 발송 현황 기록 API (GAS 연동용) ───────────────────────────────────
+app.post("/server/alimtalk/log", async (c) => {
+  try {
+    const { phone, userName, volunteerDate, templateId, success, response } = await c.req.json();
+    
+    if (!phone) {
+      return c.json({ error: "필수 데이터(phone)가 누락되었습니다." }, 400);
+    }
+
+    const isoDate = new Date().toISOString();
+    const logData = {
+      timestamp: isoDate,
+      phone,
+      userName: userName || '알 수 없음',
+      volunteerDate: volunteerDate || '알 수 없음',
+      templateId: templateId || '',
+      success: !!success,
+      response: response || ''
+    };
+
+    const salt = Math.random().toString(36).substring(2, 12);
+    const logId = Date.now() + salt;
+    await kv.set(`bbd:alimtalk:log:${logId}`, logData);
+
+    return c.json({ success: true });
+  } catch (err) {
+    console.log("Alimtalk log save error:", err);
+    return c.json({ error: `서버 오류: ${err}` }, 500);
+  }
+});
+
 // ─── 알림톡 발송 현황 조회 API (관리자용) ───────────────────────────────────────
 app.get("/server/alimtalk/logs", async (c) => {
   try {

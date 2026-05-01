@@ -5,6 +5,7 @@ import { logoImg, logoSloganImg } from '../imageAssets';
 import { G } from '../styles/gradients';
 import { useAuth } from '../context/AuthContext';
 import { prefetchRecord } from '../../utils/apiCache';
+import { useDialog } from '../contexts/DialogContext';
 
 const APPLY_URL = '/apply';
 
@@ -47,6 +48,7 @@ export function Navbar() {
   const [userRank, setUserRank] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user, profile, logout, needsOnboarding } = useAuth();
+  const { showAlert } = useDialog();
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -85,7 +87,7 @@ export function Navbar() {
   const handleLogout = async () => {
     await logout();
     setUserMenuOpen(false);
-    alert('로그아웃 되었습니다.');
+    await showAlert('로그아웃 되었습니다.');
     navigate('/');
   };
 

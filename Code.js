@@ -763,11 +763,40 @@ function sendAlimtalk(phone, templateId, variables) {
     muteHttpExceptions: true
   };
 
+  var isSuccess = false;
+  var responseText = '';
+
   try {
     var response = UrlFetchApp.fetch('https://api.solapi.com/messages/v4/send-many', options);
-    Logger.log('[알림톡 응답] ' + response.getContentText());
+    isSuccess = response.getResponseCode() === 200;
+    responseText = response.getContentText();
+    Logger.log('[알림톡 응답] ' + responseText);
   } catch (error) {
     Logger.log('[알림톡 실패] ' + error.message);
+    responseText = error.message;
+  }
+
+  // ─── Supabase KV 서버에 알림톡 발송 현황 기록 ───
+  try {
+    var logPayload = {
+      phone: cleanPhone,
+      userName: variables['#{이름}'] || variables['#{리더이름}'] || variables['#{취소자이름}'] || '알 수 없음',
+      volunteerDate: variables['#{봉사명}'] || variables['#{모임명}'] || variables['#{취소봉사명}'] || '알 수 없음',
+      templateId: templateId,
+      success: isSuccess,
+      response: responseText
+    };
+    
+    var logOptions = {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(logPayload),
+      muteHttpExceptions: true
+    };
+    
+    UrlFetchApp.fetch('https://ibvnydmuooorpuopdywr.supabase.co/functions/v1/server/alimtalk/log', logOptions);
+  } catch (error) {
+    Logger.log('[로그 저장 실패] ' + error.message);
   }
 }
 

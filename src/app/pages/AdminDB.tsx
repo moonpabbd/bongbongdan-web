@@ -3,6 +3,7 @@ import { Lock, Search, Download, Users } from 'lucide-react';
 import { projectId, publicAnonKey } from '/utils/supabase/info';
 import { G } from '../styles/gradients';
 import { AdminAnalytics } from '../components/AdminAnalytics';
+import { useDialog } from '../contexts/DialogContext';
 
 const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 const ADMIN_PASSWORD = 'pjb0812';
@@ -17,6 +18,7 @@ export function AdminDB() {
   const [mainTab, setMainTab] = useState<'members' | 'analytics' | 'alimtalk'>('analytics');
   const [alimtalkLogs, setAlimtalkLogs] = useState<any[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(false);
+  const { showAlert, showConfirm } = useDialog();
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
@@ -66,7 +68,7 @@ export function AdminDB() {
   };
 
   const handleDeleteMember = async (userId: string, memberName: string) => {
-    if (!confirm(`정말로 '${memberName}' 회원을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!(await showConfirm(`정말로 '${memberName}' 회원을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`))) return;
     
     try {
       const res = await fetch(`${SERVER}/admin/members`, {
@@ -79,19 +81,19 @@ export function AdminDB() {
         body: JSON.stringify({ userId })
       });
       if (res.ok) {
-        alert('성공적으로 삭제되었습니다.');
+        await showAlert('성공적으로 삭제되었습니다.');
         fetchMembers(); // 새로고침
       } else {
         const data = await res.json();
-        alert(`삭제 실패: ${data.error}`);
+        await showAlert(`삭제 실패: ${data.error}`);
       }
     } catch (err) {
-      alert(`네트워크 오류가 발생했습니다: ${err}`);
+      await showAlert(`네트워크 오류가 발생했습니다: ${err}`);
     }
   };
 
   const handleToggleAdmin = async (userId: string, currentStatus: boolean, memberName: string) => {
-    if (!confirm(`'${memberName}' 회원의 게시판 관리자 권한을 ${currentStatus ? '해제' : '부여'}하시겠습니까?`)) return;
+    if (!(await showConfirm(`'${memberName}' 회원의 게시판 관리자 권한을 ${currentStatus ? '해제' : '부여'}하시겠습니까?`))) return;
     
     try {
       const res = await fetch(`${SERVER}/admin/members/role`, {
@@ -104,14 +106,14 @@ export function AdminDB() {
         body: JSON.stringify({ userId, isAdmin: !currentStatus })
       });
       if (res.ok) {
-        alert('권한이 성공적으로 변경되었습니다.');
+        await showAlert('권한이 성공적으로 변경되었습니다.');
         fetchMembers(); // 새로고침
       } else {
         const data = await res.json();
-        alert(`권한 변경 실패: ${data.error}`);
+        await showAlert(`권한 변경 실패: ${data.error}`);
       }
     } catch (err) {
-      alert(`네트워크 오류가 발생했습니다: ${err}`);
+      await showAlert(`네트워크 오류가 발생했습니다: ${err}`);
     }
   };
 

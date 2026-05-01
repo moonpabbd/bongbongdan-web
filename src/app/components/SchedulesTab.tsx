@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import { format, parseISO } from 'date-fns';
+import { useDialog } from '../contexts/DialogContext';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/toss-datepicker.css';
 
@@ -77,6 +78,7 @@ const CustomTimeInput = ({ date, value, onChange }: any) => {
 export function SchedulesTab() {
   const { profile, session } = useAuth();
   const isAdmin = profile?.isAdmin === true;
+  const { showConfirm } = useDialog();
   
   const [calendarSchedules, setCalendarSchedules] = useState<Schedule[]>([]);
   const [upcomingSchedules, setUpcomingSchedules] = useState<Schedule[]>([]);
@@ -216,7 +218,7 @@ export function SchedulesTab() {
   };
 
   const handleDeleteSchedule = async (id: string) => {
-    if (!window.confirm('정말 삭제하시겠습니까?')) return;
+    if (!(await showConfirm('정말 삭제하시겠습니까?'))) return;
     try {
       const res = await fetch(`${SERVER}/schedules/${id}`, {
         method: 'DELETE',
@@ -276,7 +278,7 @@ export function SchedulesTab() {
   };
 
   const handleDeleteCategory = async (id: string) => {
-    if (!window.confirm('이 카테고리를 삭제하시겠습니까? (이 카테고리를 사용하는 기존 일정은 기본색으로 표시됩니다)')) return;
+    if (!(await showConfirm('이 카테고리를 삭제하시겠습니까? (이 카테고리를 사용하는 기존 일정은 기본색으로 표시됩니다)'))) return;
     try {
       const res = await fetch(`${SERVER}/schedule-categories/${id}`, {
         method: 'DELETE',

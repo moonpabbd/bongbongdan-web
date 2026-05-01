@@ -281,7 +281,7 @@ function RankingList({ items, profile }: any) {
             const isRank1 = item.rank === 1;
             const isRank2 = item.rank === 2;
 
-            let height = isRank1 ? 'h-52' : isRank2 ? 'h-40' : 'h-32';
+            let height = isRank1 ? 'h-32' : isRank2 ? 'h-28' : 'h-24';
             let bg = isRank1 ? 'bg-gradient-to-t from-[#FFF8E1] to-white border-[#FFE082]' :
               isRank2 ? 'bg-gradient-to-t from-gray-100 to-white border-gray-200' :
                 'bg-gradient-to-t from-[#FFF3E0] to-white border-[#FFCC80]';

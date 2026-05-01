@@ -148,7 +148,15 @@ export function FAQ() {
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           {/* Search */}
           <RevealDiv style={{ marginBottom: '48px' }}>
-            <div style={{ position: 'relative' }}>
+            <form 
+              onSubmit={(e) => { 
+                e.preventDefault(); 
+                if (document.activeElement instanceof HTMLElement) {
+                  document.activeElement.blur();
+                }
+              }} 
+              style={{ position: 'relative', display: 'flex', width: '100%' }}
+            >
               <Search size={20} color="#9CA3AF" style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="text"
@@ -156,7 +164,7 @@ export function FAQ() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{
-                  width: '100%', padding: '18px 20px 18px 52px',
+                  width: '100%', padding: '18px 84px 18px 52px',
                   border: '2px solid #E5E7EB', borderRadius: '16px',
                   fontSize: '16px', outline: 'none', boxSizing: 'border-box',
                   background: 'linear-gradient(135deg, #FFFFFF, #FDFBF7)',
@@ -173,7 +181,28 @@ export function FAQ() {
                   e.target.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)';
                 }}
               />
-            </div>
+              <button
+                type="submit"
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: '#1E3A5F',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(30, 58, 95, 0.2)',
+                  fontFamily: 'inherit'
+                }}
+              >
+                검색
+              </button>
+            </form>
           </RevealDiv>
 
           {/* Category Tabs */}

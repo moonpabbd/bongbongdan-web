@@ -4,6 +4,7 @@ import { CheckCircle2, ChevronRight, Calendar, User, Phone, AlertCircle, MapPin,
 import { G } from '../styles/gradients';
 import { useAuth } from '../context/AuthContext';
 import { prefetchRecord } from '../../utils/apiCache';
+import { useDialog } from '../contexts/DialogContext';
 import { SUBWAY_STATIONS } from '../constants/subwayStations';
 import { projectId } from '/utils/supabase/info';
 
@@ -14,6 +15,7 @@ export function ApplyVolunteer() {
   const navigate = useNavigate();
   const location = useLocation();
   const { profile } = useAuth();
+  const { showAlert } = useDialog();
   const [activeTab, setActiveTab] = useState('dog');
   const [userVolCount, setUserVolCount] = useState<number | null>(null);
 
@@ -167,9 +169,9 @@ export function ApplyVolunteer() {
     }
   };
 
-  const handleTabClick = (tab: string) => {
+  const handleTabClick = async (tab: string) => {
     if (tab === 'dog' || tab === 'gathering') setActiveTab(tab);
-    else alert('현재 준비 중인 활동입니다. 멋진 기획으로 곧 찾아뵙겠습니다!');
+    else await showAlert('현재 준비 중인 활동입니다. 멋진 기획으로 곧 찾아뵙겠습니다!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,12 +182,12 @@ export function ApplyVolunteer() {
       if (step === 1) {
         if (!formData.q1) return setErrorMsg('참여하실 모임을 선택해주세요.');
         if (!profile) {
-          alert("회원가입한 단원만 신청 가능합니다.");
+          await showAlert("회원가입한 단원만 신청 가능합니다.");
           return;
         }
         const selectedOpt = gatherings.find(o => o.name === formData.q1);
         if (selectedOpt && (userVolCount === null || userVolCount < selectedOpt.minCount)) {
-          alert(`해당 모임은 봉사 신청 ${selectedOpt.minCount}회 이상 단원만 참여 가능합니다.\n현재 봉사 신청 횟수: ${userVolCount || 0}회`);
+          await showAlert(`해당 모임은 봉사 신청 ${selectedOpt.minCount}회 이상 단원만 참여 가능합니다.\n현재 봉사 신청 횟수: ${userVolCount || 0}회`);
           return;
         }
         setStep(2); return;
@@ -1333,9 +1335,9 @@ export function ApplyVolunteer() {
                             <span>국민은행 <strong style={{ color: '#1E3A5F' }}>349401-04-363779</strong> 봉봉단(BBD)</span>
                             <button
                               type="button"
-                              onClick={() => {
+                              onClick={async () => {
                                 navigator.clipboard.writeText('349401-04-363779');
-                                alert('계좌번호가 복사되었습니다.');
+                                await showAlert('계좌번호가 복사되었습니다.');
                               }}
                               style={{
                                 background: '#F3F4F6',
@@ -1470,9 +1472,9 @@ export function ApplyVolunteer() {
                             <span>국민은행 <strong style={{ color: '#1E3A5F' }}>349401-04-363779</strong> 봉봉단(BBD)</span>
                             <button
                               type="button"
-                              onClick={() => {
+                              onClick={async () => {
                                 navigator.clipboard.writeText('349401-04-363779');
-                                alert('계좌번호가 복사되었습니다.');
+                                await showAlert('계좌번호가 복사되었습니다.');
                               }}
                               style={{
                                 background: '#F3F4F6',

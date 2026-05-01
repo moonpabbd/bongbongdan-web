@@ -1,6 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
+import { useDialog } from '../contexts/DialogContext';
 import { projectId } from '/utils/supabase/info';
 import { G } from '../styles/gradients';
 import { formatPhoneNumber } from '../../utils/format';
@@ -9,6 +10,7 @@ const SERVER = `https://${projectId}.supabase.co/functions/v1/server`;
 
 export function EditProfile() {
   const { user, profile, session, refreshProfile, logout, loading: authLoading } = useAuth();
+  const { showAlert, showConfirm } = useDialog();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState(false);
@@ -55,7 +57,7 @@ export function EditProfile() {
         <button onClick={() => navigate('/')} style={{ padding: '10px 20px', background: '#C8963E', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>홈으로 돌아가기</button>
         <button 
           onClick={async () => {
-            if (confirm('이 손상된 계정을 완전히 삭제하시겠습니까? 삭제 후 다시 정상적으로 회원가입할 수 있습니다.')) {
+            if (await showConfirm('이 손상된 계정을 완전히 삭제하시겠습니까? 삭제 후 다시 정상적으로 회원가입할 수 있습니다.')) {
               try {
                 const res = await fetch(`${SERVER}/auth/profile`, {
                   method: 'DELETE',
@@ -66,10 +68,10 @@ export function EditProfile() {
                   throw new Error(data.error || '계정 삭제 실패');
                 }
                 await logout();
-                alert('계정이 삭제되었습니다.');
+                await showAlert('계정이 삭제되었습니다.');
                 navigate('/signup');
               } catch (e: any) {
-                alert(`계정 삭제 중 오류가 발생했습니다: ${e.message}`);
+                await showAlert(`계정 삭제 중 오류가 발생했습니다: ${e.message}`);
               }
             }
           }}
@@ -81,7 +83,7 @@ export function EditProfile() {
   );
 
   const handleDeleteAccount = async () => {
-    if (!confirm('정말로 탈퇴하시겠습니까? 웹사이트 로그인 계정 정보가 삭제됩니다.\n(단, 실제 봉사 참여 기록은 봉봉단 장부에 안전하게 보존되며, 추후 동일한 이름과 연락처로 재가입 시 다시 연동됩니다.)')) return;
+    if (!(await showConfirm('정말로 탈퇴하시겠습니까? 웹사이트 로그인 계정 정보가 삭제됩니다.\n(단, 실제 봉사 참여 기록은 봉봉단 장부에 안전하게 보존되며, 추후 동일한 이름과 연락처로 재가입 시 다시 연동됩니다.)'))) return;
     
     setLoading(true);
     try {
@@ -90,7 +92,7 @@ export function EditProfile() {
         headers: { Authorization: `Bearer ${session?.access_token}` },
       });
       if (res.ok) {
-        alert('회원 탈퇴가 완료되었습니다. 그동안 봉봉단과 함께 해주셔서 감사합니다.');
+        await showAlert('회원 탈퇴가 완료되었습니다. 그동안 봉봉단과 함께 해주셔서 감사합니다.');
         await logout();
         navigate('/');
       } else {
@@ -157,7 +159,7 @@ export function EditProfile() {
         
         // 비밀번호를 변경한 경우, 세션이 끊길 수 있으므로 로그아웃 처리 유도
         if (newPassword) {
-          alert('비밀번호가 변경되었습니다. 다시 로그인해주세요.');
+          await showAlert('비밀번호가 변경되었습니다. 다시 로그인해주세요.');
           await logout();
           navigate('/login');
         }
