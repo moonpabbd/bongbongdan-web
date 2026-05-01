@@ -1,0 +1,4 @@
+project_id = "ibvnydmuooorpuopdywr"
+
+[functions.server]
+verify_jwt = false
