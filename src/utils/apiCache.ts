@@ -27,3 +27,9 @@ export function prefetchRecord(name: string, phone: string, birthdate: string) {
   }
   return cache.get(url)!;
 }
+
+export function invalidateRecordCache(name: string, phone: string, birthdate: string) {
+  if (!name || !phone || !birthdate) return;
+  const url = `${GAS_URL}?action=getRecord&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&birthdate=${encodeURIComponent(birthdate)}`;
+  cache.delete(url);
+}

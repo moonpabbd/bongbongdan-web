@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Clock, History, ChevronDown, User, Award, CheckCircle, Lock, Sparkles, Star, Trophy, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router';
-import { prefetchRecord } from '../../utils/apiCache';
+import { prefetchRecord, invalidateRecordCache } from '../../utils/apiCache';
 
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxIm5xbRwSV9f0I0oCfITu6UWr5Zofd8f_CYx90sXl0g4PL_z2B4ATNSVgRjrSbR1mAlw/exec";
 
@@ -29,11 +29,11 @@ const TIER_BENEFITS: Record<string, string[]> = {
 };
 
 const TIER_ORDER = [
-  '예비 단원', '입문 단원', '정식 단원', '숙련 단원', 
+  '예비 단원', '입문 단원', '정식 단원', '숙련 단원',
   '고참 단원', '사형/사자', '원로', '종사'
 ];
 
-export function MyRecord() {
+export function MyRecord() { // MyRecord 탭 렌더링 로직 최종 반영 완료
   const { session, profile, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [record, setRecord] = useState<any>(null);
@@ -46,6 +46,7 @@ export function MyRecord() {
   const [isLoadingDates, setIsLoadingDates] = useState(false);
   const [selectedNewDate, setSelectedNewDate] = useState<string>('');
   const [isChangeProcessing, setIsChangeProcessing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dog' | 'gathering'>('dog');
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -139,6 +140,7 @@ export function MyRecord() {
           newUpcoming.sort((a: any, b: any) => a.time - b.time);
           return { ...prev, upcoming: newUpcoming };
         });
+        invalidateRecordCache(profile.name, profile.phone, profile.birthdate);
         setChangingItem(null);
       } else {
         alert(result.message || '일정 변경 중 오류가 발생했습니다.');
@@ -150,15 +152,26 @@ export function MyRecord() {
     }
   };
 
-  const handleCancel = async (scheduleText: string) => {
-    const confirmMsg = `[${scheduleText}]\n해당 일정을 정말 취소하시겠습니까?\n\n※ 취소 전 반드시 확인해 주세요!\n본 봉사는 신청 인원을 기준으로 사전에 픽업 차량 배정, 봉사 물품 준비, 보호소 지원 등이 진행됩니다. 참가비는 노쇼 방지를 위한 필수 운영비로 사용되므로, 봉봉단 측 사유가 아닌 개인 사정으로 인한 취소 시 참가비 환불이 어렵습니다.\n\n위 내용을 모두 확인하였으며, 그래도 취소를 진행하시겠습니까?`;
+  const handleCancel = async (scheduleText: string, category: string = '유기견 봉사', dday: number | '?' = '?') => {
+    let confirmMsg = `[${scheduleText}]\n해당 일정을 정말 취소하시겠습니까?`;
+
+    if (category === '모임 활동') {
+      if (typeof dday === 'number' && dday >= 14) {
+        confirmMsg += `\n\n모임 시작 14일 전 취소이므로 참가비 환불이 가능합니다.\n취소 완료 후 홈페이지 우측 하단의 카카오 문의나 봉봉단 플러스 친구를 검색해서 취소한 모임명과 환불 받으실 계좌번호를 남겨주시면 환불 처리를 도와드리겠습니다.`;
+      } else {
+        confirmMsg += `\n\n※ 취소 전 반드시 확인해 주세요!\n모임 시작 14일 미만 남은 일정은 노쇼 방지 및 필수 운영비 사용 등의 사유로 참가비 환불이 불가능합니다. (봉봉단 측 사유 예외)\n위 내용을 모두 확인하였으며, 그래도 취소를 진행하시겠습니까?`;
+      }
+    } else {
+      confirmMsg += `\n\n※ 취소 전 반드시 확인해 주세요!\n본 봉사는 신청 인원을 기준으로 사전에 픽업 차량 배정, 봉사 물품 준비, 보호소 지원 등이 진행됩니다. 참가비는 노쇼 방지를 위한 필수 운영비로 사용되므로, 봉봉단 측 사유가 아닌 개인 사정으로 인한 취소 시 참가비 환불이 어렵습니다.\n\n위 내용을 모두 확인하였으며, 그래도 취소를 진행하시겠습니까?`;
+    }
+
     if (!window.confirm(confirmMsg)) return;
 
     setCancelingItem(scheduleText);
     try {
       const url = GAS_URL;
-      const response = await fetch(url, { 
-        method: 'POST', 
+      const response = await fetch(url, {
+        method: 'POST',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8',
         },
@@ -167,20 +180,33 @@ export function MyRecord() {
           name: profile.name,
           phone: profile.phone,
           birthdate: profile.birthdate,
-          scheduleText: scheduleText
+          scheduleText: scheduleText,
+          category: category
         })
       });
-      
+
       const result = await response.json();
 
       if (result.status === 'success') {
-        alert('집결 취소 처리가 완료되었습니다.\n다음 봉사에서 또 뵙기를 기다리고 있겠습니다!');
-        
+        const categoryName = category === '모임 활동' ? '모임' : '봉사';
+        alert(`집결 취소 처리가 완료되었습니다.\n다른 ${categoryName}에서 또 뵙기를 기다리고 있겠습니다!`);
+
+        invalidateRecordCache(profile.name, profile.phone, profile.birthdate);
+
         // 캐시 대기 없이 UI 즉각 업데이트 (Optimistic Update)
-        setRecord((prev: any) => ({
-          ...prev,
-          upcoming: prev.upcoming.filter((u: any) => u.text !== scheduleText)
-        }));
+        setRecord((prev: any) => {
+          if (category === '모임 활동') {
+            return {
+              ...prev,
+              upcomingGathering: prev.upcomingGathering.filter((u: any) => u.text !== scheduleText)
+            };
+          } else {
+            return {
+              ...prev,
+              upcoming: prev.upcoming.filter((u: any) => u.text !== scheduleText)
+            };
+          }
+        });
       } else {
         alert(result.message || '취소 처리 중 오류가 발생했습니다.');
       }
@@ -195,10 +221,10 @@ export function MyRecord() {
 
   const validUpcoming = record?.upcoming?.filter((u: any) => u.text && u.text.trim() !== '') || [];
   const validPast = record?.past?.filter((p: any) => p.text && p.text.trim() !== '') || [];
-  
+
   const currentRank = record?.currentTier || record?.rank;
   const tierStyle = gradeColors[currentRank] || gradeColors['정식 단원'];
-  
+
   let currentBenefits: string[] = [];
   const rankIndex = TIER_ORDER.indexOf(currentRank);
   if (rankIndex !== -1) {
@@ -208,7 +234,7 @@ export function MyRecord() {
   } else {
     currentBenefits = TIER_BENEFITS[currentRank] || [];
   }
-  
+
   const nextBenefits = record?.nextTier ? (TIER_BENEFITS[record.nextTier] || []) : [];
 
   return (
@@ -217,8 +243,8 @@ export function MyRecord() {
 
         {/* 헤더 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-[#1E3A5F]">나의 봉사</h1>
-          <p className="text-gray-500 mt-2">{profile.name} 님의 눈부신 봉사 여정입니다.</p>
+          <h1 className="text-3xl font-extrabold text-[#1E3A5F]">나의 활동</h1>
+          <p className="text-gray-500 mt-2">{profile.name} 님의 눈부신 활동 여정입니다.</p>
         </div>
 
         {loading ? (
@@ -257,7 +283,7 @@ export function MyRecord() {
                         style={{ width: `${Math.min(100, Math.max(0, 100 - (record.nextTierGap / (record.count + record.nextTierGap) * 100)))}%` }}
                       />
                     </div>
-                    
+
                     {nextBenefits.length > 0 && (
                       <div className="mt-4 bg-white border border-blue-100 rounded-xl p-4 shadow-sm">
                         <p className="text-[13px] font-bold text-gray-800 mb-3 leading-snug">
@@ -285,12 +311,12 @@ export function MyRecord() {
                     </div>
                     <h4 className="text-lg font-black text-yellow-800 mb-2">최고 명예 달성</h4>
                     <p className="text-sm text-yellow-700 font-medium leading-relaxed">
-                      봉봉단 최고의 명예에 도달하셨습니다.<br/>
+                      봉봉단 최고의 명예에 도달하셨습니다.<br />
                       그동안의 헌신과 열정에 깊이 감사드립니다.
                     </p>
                   </div>
                 )}
-                
+
                 {/* 🏆 나의 명예 순위 & 봉사 횟수 */}
                 {record.rankings && (
                   <div className="p-6 border-b border-gray-100">
@@ -298,7 +324,7 @@ export function MyRecord() {
                       <Trophy size={18} className="text-blue-500" />
                       <h4 className="text-[15px] font-bold text-gray-800">나의 명예 순위</h4>
                     </div>
-                    
+
                     <div className="flex flex-col gap-3 mb-5">
                       <div className="flex justify-between items-center bg-gray-50 rounded-xl p-3.5 border border-gray-100">
                         <span className="text-[13px] sm:text-sm text-gray-500 font-semibold shrink-0">역대 누적 랭킹</span>
@@ -327,7 +353,7 @@ export function MyRecord() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-white rounded-xl p-3 text-center border border-gray-200 shadow-sm">
                         <p className="text-gray-400 text-[11px] font-bold mb-0.5">역대 누적 횟수</p>
@@ -340,7 +366,7 @@ export function MyRecord() {
                     </div>
                   </div>
                 )}
-                
+
                 {/* 현재 직급 혜택 안내 */}
                 {currentBenefits.length > 0 && (
                   <div className="p-6 bg-white">
@@ -364,99 +390,194 @@ export function MyRecord() {
             {/* 우측: 타임라인 & 리스트 영역 */}
             <div className="flex flex-col gap-8">
 
-              {/* 예정된 봉사 */}
-              <div className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 bg-blue-50 rounded-xl"><Clock size={20} className="text-blue-500" /></div>
-                    <h4 className="text-lg font-bold text-gray-800">예정된 봉사</h4>
-                  </div>
-                  {/* 기존 집결 취소 전체 링크 제거 및 각 리스트별 버튼으로 대체 */}
-                </div>
-
-                {validUpcoming.length > 0 ? (
-                  <div className="flex flex-col gap-4">
-                    {validUpcoming.map((u: any, i: number) => (
-                      <div key={i} className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 transition hover:border-blue-100 hover:bg-blue-50/30">
-                        {u.dday !== '?' && (
-                          <span className="shrink-0 inline-flex items-center justify-center px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200">
-                            {u.dday === 0 ? 'D-Day' : `D-${u.dday}`}
-                          </span>
-                        )}
-                        <div className="flex-1 text-sm font-semibold text-gray-700 leading-relaxed">{u.text}</div>
-                        <div className="flex gap-2 shrink-0">
-                          <button 
-                            onClick={() => handleChangeClick(u.text, u.dday)}
-                            disabled={cancelingItem === u.text}
-                            className={`text-xs font-bold px-3 py-2 rounded-lg transition border disabled:opacity-50 ${
-                              u.dday !== '?' && u.dday < 7 
-                                ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed' 
-                                : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100'
-                            }`}
-                          >
-                            일정 변경
-                          </button>
-                          <button 
-                            onClick={() => handleCancel(u.text)}
-                            disabled={cancelingItem === u.text}
-                            className="text-xs font-bold px-3 py-2 rounded-lg transition bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 disabled:opacity-50"
-                          >
-                            {cancelingItem === u.text ? '처리 중...' : '취소하기'}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-10 text-center text-gray-400 text-sm font-medium bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
-                    예정된 봉사가 없습니다.
-                  </div>
-                )}
-
-                <div className="mt-5 px-2">
-                  <p className="text-[12px] text-gray-400 leading-relaxed">
-                    * 봉사 일정 변경 및 취소는 <strong className="font-semibold text-gray-500">봉사일 기준 최소 1주일 전</strong>까지만 가능합니다.<br/>
-                    * 일정 변경은 <strong className="font-semibold text-gray-500">현재 모집 중인 봉사</strong>로만 가능합니다.
-                  </p>
-                </div>
+              {/* 봉사/모임 탭 */}
+              <div className="flex bg-gray-50 p-1.5 rounded-xl border border-gray-100">
+                <button 
+                  onClick={() => setActiveTab('dog')}
+                  className={`flex-1 py-2.5 text-[14px] font-bold rounded-lg transition-all ${activeTab === 'dog' ? 'bg-white text-blue-800 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  봉사 활동
+                </button>
+                <button 
+                  onClick={() => setActiveTab('gathering')}
+                  className={`flex-1 py-2.5 text-[14px] font-bold rounded-lg transition-all ${activeTab === 'gathering' ? 'bg-white text-yellow-800 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  모임 활동
+                </button>
               </div>
 
-              {/* 이전 봉사 기록 (타임라인 구조) */}
-              <div className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8">
-                <div className="flex items-center gap-2 mb-8">
-                  <div className="p-2 bg-green-50 rounded-xl"><History size={20} className="text-green-600" /></div>
-                  <h4 className="text-lg font-bold text-gray-800">이전 봉사 기록</h4>
-                  <span className="ml-auto text-sm font-semibold text-gray-400">총 {validPast.length}건</span>
-                </div>
-
-                {validPast.length > 0 ? (
-                  <div className="pl-4">
-                    <div className="relative border-l-2 border-gray-100 pb-4">
-                      {validPast.slice(0, pastLimit).map((p: any, i: number) => (
-                        <div key={i} className="relative pl-6 pb-8 last:pb-2">
-                          <div className="absolute w-3.5 h-3.5 bg-white border-2 border-green-500 rounded-full -left-[9px] top-1"></div>
-                          <div className="text-sm font-medium text-gray-600 bg-gray-50 inline-block px-4 py-2.5 rounded-xl border border-gray-100 shadow-sm leading-relaxed">
-                            {p.text}
-                          </div>
-                        </div>
-                      ))}
+              {activeTab === 'dog' ? (
+                <>
+                  {/* 예정된 봉사 */}
+                  <div className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 bg-blue-50 rounded-xl"><Clock size={20} className="text-blue-500" /></div>
+                        <h4 className="text-lg font-bold text-gray-800">예정된 봉사</h4>
+                      </div>
                     </div>
 
-                    {validPast.length > pastLimit && (
-                      <button
-                        onClick={() => setPastLimit(prev => prev + 5)}
-                        className="mt-6 w-full py-4 bg-white border border-gray-200 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-50 hover:border-gray-300 transition flex items-center justify-center gap-2 shadow-sm"
-                      >
-                        이전 기록 더보기 <ChevronDown size={16} />
-                      </button>
+                    {validUpcoming.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {validUpcoming.map((u: any, i: number) => (
+                          <div key={i} className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 transition hover:border-blue-100 hover:bg-blue-50/30">
+                            {u.dday !== '?' && (
+                              <span className="shrink-0 inline-flex items-center justify-center px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200">
+                                {u.dday === 0 ? 'D-Day' : `D-${u.dday}`}
+                              </span>
+                            )}
+                            <div className="flex-1 text-sm font-semibold text-gray-700 leading-relaxed">{u.text}</div>
+                            <div className="flex gap-2 shrink-0">
+                              <button
+                                onClick={() => handleChangeClick(u.text, u.dday)}
+                                disabled={cancelingItem === u.text}
+                                className={`text-xs font-bold px-3 py-2 rounded-lg transition border disabled:opacity-50 ${u.dday !== '?' && u.dday < 7
+                                    ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
+                                    : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100'
+                                  }`}
+                              >
+                                일정 변경
+                              </button>
+                              <button
+                                onClick={() => handleCancel(u.text)}
+                                disabled={cancelingItem === u.text}
+                                className="text-xs font-bold px-3 py-2 rounded-lg transition bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 disabled:opacity-50"
+                              >
+                                {cancelingItem === u.text ? '처리 중...' : '취소하기'}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-10 text-center text-gray-400 text-sm font-medium bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
+                        예정된 봉사가 없습니다.
+                      </div>
+                    )}
+
+                    <div className="mt-5 px-2">
+                      <p className="text-[12px] text-gray-400 leading-relaxed">
+                        * 봉사 일정 변경 및 취소는 <strong className="font-semibold text-gray-500">봉사일 기준 최소 1주일 전</strong>까지만 가능합니다.<br />
+                        * 일정 변경은 <strong className="font-semibold text-gray-500">현재 모집 중인 봉사</strong>로만 가능합니다.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 이전 봉사 기록 (타임라인 구조) */}
+                  <div className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8">
+                    <div className="flex items-center gap-2 mb-8">
+                      <div className="p-2 bg-green-50 rounded-xl"><History size={20} className="text-green-600" /></div>
+                      <h4 className="text-lg font-bold text-gray-800">이전 봉사 기록</h4>
+                      <span className="ml-auto text-sm font-semibold text-gray-400">총 {validPast.length}건</span>
+                    </div>
+
+                    {validPast.length > 0 ? (
+                      <div className="pl-4">
+                        <div className="relative border-l-2 border-gray-100 pb-4">
+                          {validPast.slice(0, pastLimit).map((p: any, i: number) => (
+                            <div key={i} className="relative pl-6 pb-8 last:pb-2">
+                              <div className="absolute w-3.5 h-3.5 bg-white border-2 border-green-500 rounded-full -left-[9px] top-1"></div>
+                              <div className="text-sm font-medium text-gray-600 bg-gray-50 inline-block px-4 py-2.5 rounded-xl border border-gray-100 shadow-sm leading-relaxed">
+                                {p.text}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {validPast.length > pastLimit && (
+                          <button
+                            onClick={() => setPastLimit(prev => prev + 5)}
+                            className="mt-6 w-full py-4 bg-white border border-gray-200 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-50 hover:border-gray-300 transition flex items-center justify-center gap-2 shadow-sm"
+                          >
+                            이전 기록 더보기 <ChevronDown size={16} />
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="py-10 text-center text-gray-400 text-sm font-medium bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
+                        이전 봉사 기록이 없습니다.
+                      </div>
                     )}
                   </div>
-                ) : (
-                  <div className="py-10 text-center text-gray-400 text-sm font-medium bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
-                    이전 봉사 기록이 없습니다.
+                </>
+              ) : (
+                <>
+                  {/* 예정된 모임 */}
+                  <div className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-yellow-100 p-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 bg-yellow-50 rounded-xl"><Clock size={20} className="text-yellow-600" /></div>
+                        <h4 className="text-lg font-bold text-gray-800">예정된 모임</h4>
+                      </div>
+                    </div>
+
+                    {record?.upcomingGathering && record.upcomingGathering.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {record.upcomingGathering.map((u: any, i: number) => (
+                          <div key={i} className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 transition hover:border-yellow-100 hover:bg-yellow-50/30">
+                            {u.dday !== '?' && (
+                              <span className="shrink-0 inline-flex items-center justify-center px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-lg border border-yellow-200">
+                                {u.dday === 0 ? 'D-Day' : `D-${u.dday}`}
+                              </span>
+                            )}
+                            <div className="flex-1 text-sm font-semibold text-gray-700 leading-relaxed">{u.text}</div>
+                            <div className="flex gap-2 shrink-0">
+                              <button
+                                onClick={() => handleCancel(u.text, '모임 활동', u.dday)}
+                                disabled={cancelingItem === u.text}
+                                className="text-xs font-bold px-3 py-2 rounded-lg transition bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 disabled:opacity-50"
+                              >
+                                {cancelingItem === u.text ? '처리 중...' : '취소하기'}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-10 text-center text-gray-400 text-sm font-medium bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
+                        예정된 모임이 없습니다.
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+
+                  {/* 이전 모임 기록 (타임라인 구조) */}
+                  <div className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8">
+                    <div className="flex items-center gap-2 mb-8">
+                      <div className="p-2 bg-gray-100 rounded-xl"><History size={20} className="text-gray-500" /></div>
+                      <h4 className="text-lg font-bold text-gray-800">이전 모임 기록</h4>
+                      <span className="ml-auto text-sm font-semibold text-gray-400">총 {record?.pastGathering?.length || 0}건</span>
+                    </div>
+
+                    {record?.pastGathering && record.pastGathering.length > 0 ? (
+                      <div className="pl-4">
+                        <div className="relative border-l-2 border-gray-100 pb-4">
+                          {record.pastGathering.slice(0, pastLimit).map((p: any, i: number) => (
+                            <div key={i} className="relative pl-6 pb-8 last:pb-2">
+                              <div className="absolute w-3.5 h-3.5 bg-white border-2 border-gray-400 rounded-full -left-[9px] top-1"></div>
+                              <div className="text-sm font-medium text-gray-600 bg-gray-50 inline-block px-4 py-2.5 rounded-xl border border-gray-100 shadow-sm leading-relaxed">
+                                {p.text || p}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {record.pastGathering.length > pastLimit && (
+                          <button
+                            onClick={() => setPastLimit(prev => prev + 5)}
+                            className="mt-6 w-full py-4 bg-white border border-gray-200 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-50 hover:border-gray-300 transition flex items-center justify-center gap-2 shadow-sm"
+                          >
+                            이전 기록 더보기 <ChevronDown size={16} />
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="py-10 text-center text-gray-400 text-sm font-medium bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
+                        이전 모임 기록이 없습니다.
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
 
             </div>
           </div>
@@ -473,14 +594,14 @@ export function MyRecord() {
                 <X size={20} />
               </button>
             </div>
-            
+
             <div className="p-5 overflow-y-auto flex-1">
               <div className="mb-5 bg-blue-50 text-blue-800 text-sm font-semibold p-3 rounded-xl border border-blue-100 leading-snug">
                 현재 일정:<br /> <span className="font-bold">{changingItem}</span>
               </div>
-              
+
               <h4 className="text-sm font-bold text-gray-700 mb-3">변경할 일정을 선택해주세요</h4>
-              
+
               {isLoadingDates ? (
                 <div className="py-10 text-center text-gray-500 text-sm font-medium">봉사 일정을 불러오는 중...</div>
               ) : availableDates.length === 0 ? (
@@ -488,19 +609,18 @@ export function MyRecord() {
               ) : (
                 <div className="flex flex-col gap-3">
                   {availableDates.map((opt, i) => (
-                    <label 
-                      key={i} 
-                      className={`flex flex-col gap-1.5 p-4 border rounded-xl cursor-pointer transition ${
-                        selectedNewDate === opt.name ? 'border-blue-500 bg-blue-50/30 ring-1 ring-blue-500' : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                    <label
+                      key={i}
+                      className={`flex flex-col gap-1.5 p-4 border rounded-xl cursor-pointer transition ${selectedNewDate === opt.name ? 'border-blue-500 bg-blue-50/30 ring-1 ring-blue-500' : 'border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                       <div className="flex items-start gap-3">
-                        <input 
-                          type="radio" 
-                          name="newDate" 
+                        <input
+                          type="radio"
+                          name="newDate"
                           value={opt.name}
-                          checked={selectedNewDate === opt.name} 
-                          onChange={(e) => setSelectedNewDate(e.target.value)} 
+                          checked={selectedNewDate === opt.name}
+                          onChange={(e) => setSelectedNewDate(e.target.value)}
                           className="mt-1 w-4 h-4 text-blue-600"
                         />
                         <div className="flex-1 text-sm text-gray-800 font-medium leading-relaxed break-keep">
@@ -512,15 +632,15 @@ export function MyRecord() {
                 </div>
               )}
             </div>
-            
+
             <div className="p-4 border-t border-gray-100 flex gap-3 bg-white">
-              <button 
+              <button
                 onClick={() => setChangingItem(null)}
                 className="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition"
               >
                 닫기
               </button>
-              <button 
+              <button
                 onClick={submitChange}
                 disabled={!selectedNewDate || isChangeProcessing || availableDates.length === 0}
                 className="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"

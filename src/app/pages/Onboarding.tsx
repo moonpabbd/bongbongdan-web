@@ -110,7 +110,7 @@ export function Onboarding() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setMemberNumber(data.memberNumber);
-        setSuccessMessage(data.message || '가입을 환영합니다!');
+        setSuccessMessage(data.message || '🎉 가입을 환영합니다!');
         await refreshProfile(); // Refresh profile so needsOnboarding becomes false
         setStep('done');
       }
@@ -133,7 +133,7 @@ export function Onboarding() {
               </div>
             </div>
             <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: '700', marginBottom: '12px' }}>
-              {successMessage.includes('연동') ? '계정 통합 완료!' : '가입을 환영합니다!'}
+              {successMessage.includes('연동') ? '✨ 계정 통합 완료!' : '🎉 가입을 환영합니다!'}
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '32px', lineHeight: '1.7' }}>
               {successMessage.includes('연동') ? (
@@ -297,9 +297,9 @@ export function Onboarding() {
           <button type="submit" disabled={loading} style={{ width: '100%', background: loading ? 'rgba(200,150,62,0.5)' : G.goldBtn, color: '#fff', border: 'none', borderRadius: '12px', padding: '18px', fontSize: '16px', fontWeight: '700', cursor: loading ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: '0 8px 24px rgba(200,150,62,0.25)', marginBottom: '16px' }}>
             {loading ? '처리 중...' : '가입 완료하기'}
           </button>
-          
-          <button 
-            type="button" 
+
+          <button
+            type="button"
             onClick={async () => {
               await logout();
               alert('가입 절차가 취소되었습니다.');

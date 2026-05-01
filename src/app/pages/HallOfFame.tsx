@@ -176,10 +176,29 @@ export function HallOfFame() {
           </div>
         </div>
 
-        {/* 비로그인 유저 홍보 배너 섹션 (명예의 전당 탭에서만 보임) */}
-        {(mainTab === 'halloffame' && !user && !loading && data) && (
+        {/* 홍보 배너 섹션 (명예의 전당 탭에서만 보임) */}
+        {(mainTab === 'halloffame' && !loading && data) && (
           <div className="w-full bg-white py-12 md:py-20 px-4 md:px-5 border-t border-gray-100">
             <div className="max-w-[760px] mx-auto">
+              {/* 운영진 혜택 안내 배너 */}
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden mb-6 md:mb-8">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-5 md:gap-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shrink-0">
+                    <Crown size={32} color="#fff" />
+                  </div>
+                  <div className="text-center md:text-left">
+                    <div className="inline-flex items-center justify-center mb-2 md:hidden">
+                      <span className="px-2.5 py-1 bg-amber-100 text-amber-700 text-[11px] font-bold rounded-full">운영진 전용 혜택</span>
+                    </div>
+                    <h3 className="text-lg md:text-xl font-black text-gray-800 mb-2">핵심 운영진 특별 혜택</h3>
+                    <p className="text-gray-600 leading-relaxed text-[13px] md:text-sm break-keep">
+                      봉봉단을 이끌어가는 <strong className="text-gray-800">핵심 운영진(선봉대 제외)</strong>이 봉사에 참여할 시, 감사와 격려의 마음을 담아 해당 봉사의 <strong className="text-amber-700">참가비를 100% 전액 환급</strong>해 드립니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
 
@@ -225,11 +244,13 @@ export function HallOfFame() {
                     </div>
                   </div>
 
-                  <div className="mt-6 text-center">
-                    <p className="text-[14px] font-medium text-gray-500">
-                      아직 봉봉단 단원이 아니신가요? <Link to="/signup" className="text-blue-600 font-bold hover:underline ml-1">회원가입 하러가기</Link>
-                    </p>
-                  </div>
+                  {!user && (
+                    <div className="mt-6 text-center">
+                      <p className="text-[14px] font-medium text-gray-500">
+                        아직 봉봉단 단원이 아니신가요? <Link to="/signup" className="text-blue-600 font-bold hover:underline ml-1">회원가입 하러가기</Link>
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

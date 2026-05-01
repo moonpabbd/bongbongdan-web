@@ -7,7 +7,7 @@ import {
   Shield, Star, Users, Clock,
   Heart, Eye, TrendingUp, Flame,
   Crown, BookOpen, Swords, Flag,
-  CheckCircle, Award, Trophy, User, PawPrint, HeartHandshake, Leaf, Baby, PlusSquare
+  CheckCircle, Award, Trophy, User,
 } from 'lucide-react';
 import { G, gradientText } from '../styles/gradients';
 
@@ -98,11 +98,11 @@ function TabIntro() {
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '16px', ...gradientText(G.goldTextBg) }}>
               BONGBONGDAN · BBD
             </p>
-            <h2 style={{ 
-              color: '#1E3A5F', 
-              fontSize: 'clamp(26px, 4.5vw, 46px)', 
-              fontWeight: '900', 
-              lineHeight: '1.25', 
+            <h2 style={{
+              color: '#1E3A5F',
+              fontSize: 'clamp(26px, 4.5vw, 46px)',
+              fontWeight: '900',
+              lineHeight: '1.25',
               marginBottom: '24px',
               wordBreak: 'keep-all'
             }}>
@@ -132,17 +132,17 @@ function TabIntro() {
             </div>
           </RevealDiv>
           <RevealDiv delay={200} style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-            <img 
-              src={groupPhotoImg} 
-              alt="봉봉단 봉사 활동" 
-              style={{ 
-                width: '100%', 
-                maxWidth: '900px', 
-                borderRadius: '32px', 
+            <img
+              src={groupPhotoImg}
+              alt="봉봉단 봉사 활동"
+              style={{
+                width: '100%',
+                maxWidth: '900px',
+                borderRadius: '32px',
                 boxShadow: '0 20px 50px rgba(0,0,0,0.12)',
                 objectFit: 'cover',
                 aspectRatio: '16/10'
-              }} 
+              }}
             />
           </RevealDiv>
         </div>
@@ -351,11 +351,11 @@ function TabIntro() {
                 {/* 5가지 심볼 설명 */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   {[
-                    { icon: <PawPrint size={18} />, title: '유기견 봉사', sub: '강아지 발자국' },
-                    { icon: <HeartHandshake size={18} />, title: '복지 봉사', sub: '두 손' },
-                    { icon: <Leaf size={18} />, title: '환경 봉사', sub: '나뭇잎' },
-                    { icon: <Baby size={18} />, title: '아동 봉사', sub: '손바닥' },
-                    { icon: <PlusSquare size={18} />, title: '의료 봉사', sub: '십자가' },
+                    { icon: '🐾', title: '유기견 봉사', sub: '강아지 발자국' },
+                    { icon: '🤝', title: '복지 봉사', sub: '두 손' },
+                    { icon: '🌿', title: '환경 봉사', sub: '나뭇잎' },
+                    { icon: '🖐', title: '아동 봉사', sub: '손바닥' },
+                    { icon: '✚', title: '의료 봉사', sub: '십자가' },
                   ].map(item => (
                     <div key={item.title} style={{
                       display: 'flex', alignItems: 'center', gap: '8px',
@@ -485,7 +485,7 @@ const rankData = [
     gradient: 'linear-gradient(135deg,#163366,#2E5298)',
     cardBg: 'linear-gradient(135deg,#D9E6F5,#C4D8EF)',
     border: 'rgba(30,58,95,0.25)', color: '#1E3A5F',
-    perks: ['간부진(기획·운영·홍보당 당원) 지원 자격', '선봉장 지원 자격'],
+    perks: ['운영진(기획·운영·홍보당 당원) 지원 자격', '선봉장 지원 자격'],
   },
   {
     title: '고참 단원', count: '20 ~ 49회', badge: '고참',
@@ -681,7 +681,7 @@ function TabRanks() {
           <RevealDiv style={{ marginBottom: '56px' }}>
             <div style={{
               background: '#f8fafc', borderRadius: '24px', padding: isMobile ? '40px 20px' : '60px 40px',
-              border: '1px solid #e2e8f0', overflowX: isMobile ? 'visible' : 'auto', 
+              border: '1px solid #e2e8f0', overflowX: isMobile ? 'visible' : 'auto',
               boxShadow: '0 4px 24px rgba(0,0,0,0.04)'
             }}>
               {/* 상단: 단장 (MASTER) */}
@@ -699,13 +699,13 @@ function TabRanks() {
               </div>
 
               {/* 중단: 장로 (ELDER) */}
-              <div style={{ 
-                display: 'flex', 
+              <div style={{
+                display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                gap: isMobile ? '8px' : '40px', 
-                marginBottom: '30px' 
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: isMobile ? '8px' : '40px',
+                marginBottom: '30px'
               }}>
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
                 <HierarchyNode title="장로" en="ELDER" gradient={G.purpleBadge} Icon={BookOpen} inline />
@@ -756,11 +756,11 @@ function TabRanks() {
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '2px', height: '24px', background: 'rgba(200,150,62,0.4)' }} />
               </div>
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', 
-                maxWidth: '1000px', 
-                margin: '0 auto', 
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
+                maxWidth: '1000px',
+                margin: '0 auto',
                 width: '100%',
                 gap: isMobile ? '20px' : '0'
               }}>
@@ -853,6 +853,11 @@ function TabRanks() {
                 <p>• <strong>당원 선발:</strong> 대장·부대장·장로·단장이 의논하여 선발
                   <p></p> • <strong>당주 선발:</strong> 대장·부대장·장로·단장이 후보 지정 → 당원 투표로 선출</p>
                 <p>• <strong>선봉장:</strong> 선봉대 소속으로, 숙련 단원 중 지원자가 운영당 교육 이수 후 선봉장 자격 취득 </p>
+                <div style={{ marginTop: '16px', padding: '12px', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed #CBD5E1' }}>
+                  <p style={{ margin: 0, color: '#334155' }}>
+                    <strong style={{ color: '#0F172A' }}>운영진 특별 혜택:</strong> 봉봉단의 운영을 책임지는 핵심 운영진(선봉대 제외)이 봉사에 참여할 경우, 해당 활동의 <strong style={{ color: '#0F172A' }}>참가비를 전액 환급</strong>해 드립니다.
+                  </p>
+                </div>
               </div>
             </div>
           </RevealDiv>
@@ -909,7 +914,7 @@ function TabOrgChart() {
     {
       label: '선봉대', en: 'VANGUARD', gradient: 'linear-gradient(135deg,#8B1C1C,#C24B3B)',
       bg: 'linear-gradient(135deg,#FEF0EE,#FADDDA)', border: 'rgba(194,75,59,0.2)',
-      Icon: Flag, names: ['박진범', '강경민', '김지현', '고승아'], nameColor: '#9B2C1D', nameBorder: 'rgba(194,75,59,0.2)', nameBg: 'rgba(194,75,59,0.1)',
+      Icon: Flag, names: ['박진범', '강경민', '김지현', '고승아', '안주선'], nameColor: '#9B2C1D', nameBorder: 'rgba(194,75,59,0.2)', nameBg: 'rgba(194,75,59,0.1)',
     },
     { label: '기획당', en: 'PLANNING', gradient: G.greenBadge, bg: G.greenCard, border: 'rgba(45,92,64,0.2)', Icon: Star, nameColor: '#4A7C59', nameBorder: 'rgba(45,92,64,0.3)', nameBg: 'rgba(45,92,64,0.08)' },
     { label: '운영당', en: 'OPERATION', gradient: G.purpleBadge, bg: G.purpleCard, border: 'rgba(90,60,120,0.2)', Icon: BookOpen, nameColor: '#5A3C78', nameBorder: 'rgba(90,60,120,0.3)', nameBg: 'rgba(90,60,120,0.08)' },
@@ -924,7 +929,7 @@ function TabOrgChart() {
           <RevealDiv style={{ textAlign: 'center', marginBottom: '56px' }}>
             <p style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', marginBottom: '12px', ...gradientText(G.goldTextBg) }}>ORG CHART</p>
             <h2 style={{ color: '#1E3A5F', fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: '900' }}>조직도</h2>
-            <p style={{ color: '#6B7280', fontSize: '16px', marginTop: '12px' }}>봉봉단의 지휘 체계와 간부진을 소개합니다</p>
+            <p style={{ color: '#6B7280', fontSize: '16px', marginTop: '12px' }}>봉봉단의 지휘 체계와 운영진을 소개합니다</p>
           </RevealDiv>
 
           {/* ── 레이어 1: 자문단 ── */}

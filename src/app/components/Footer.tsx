@@ -112,7 +112,7 @@ export function Footer() {
                 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4B5563', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}
               >
                 <Instagram size={16} color="#C8963E" />
-                @bongbongdan_official
+                bongbongdan_official
               </a>
               <a
                 href="https://blog.naver.com/moonpabbd"

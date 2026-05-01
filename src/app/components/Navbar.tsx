@@ -57,7 +57,7 @@ export function Navbar() {
             setUserRank(res.currentTier || res.rank);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [profile]);
 
@@ -337,7 +337,7 @@ export function Navbar() {
                         </div>
                       </div>
                     )}
-                    <DropdownItem to="/my-record" label="나의 봉사" isSolid={isSolid} />
+                    <DropdownItem to="/my-record" label="나의 활동" isSolid={isSolid} />
                     <DropdownItem to="/profile-edit" label="내 정보 변경" isSolid={isSolid} />
 
                     <button
@@ -472,10 +472,34 @@ export function Navbar() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
               <Link to="/profile-edit" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>내 정보 변경</Link>
-              <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>나의 봉사</Link>
+              <Link to="/my-record" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', textDecoration: 'none' }}>나의 활동</Link>
             </div>
           </div>
         )}
+
+        {/* 봉사 신청 버튼 (모바일) */}
+        <Link
+          to={APPLY_URL}
+          rel="noopener noreferrer"
+          className="hover-scale"
+          style={{
+            marginBottom: '16px',
+            background: G.goldBtn,
+            color: '#fff',
+            padding: '14px 20px',
+            borderRadius: '12px',
+            textDecoration: 'none',
+            fontSize: '15px',
+            fontWeight: '700',
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+          }}
+        >
+          집결 신청하기
+        </Link>
 
         {navItems.map((item) => {
           const active = location.pathname === item.path;
@@ -521,29 +545,6 @@ export function Navbar() {
           );
         })}
 
-        {/* 봉사 신청 버튼 (모바일) */}
-        <Link
-          to={APPLY_URL}
-          rel="noopener noreferrer"
-          className="hover-scale"
-          style={{
-            marginTop: '16px',
-            background: G.goldBtn,
-            color: '#fff',
-            padding: '14px 20px',
-            borderRadius: '12px',
-            textDecoration: 'none',
-            fontSize: '15px',
-            fontWeight: '700',
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-          }}
-        >
-          집결 신청하기
-        </Link>
 
         {/* 하단 여백 유지용 */}
         <div style={{ marginTop: 'auto', paddingBottom: '24px' }}></div>
