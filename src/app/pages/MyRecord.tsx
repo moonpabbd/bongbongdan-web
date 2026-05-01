@@ -398,7 +398,7 @@ export function MyRecord() {
 
                 <div className="mt-5 px-2">
                   <p className="text-[12px] text-gray-400 leading-relaxed">
-                    * 봉사 일정 변경은 <strong className="font-semibold text-gray-500">봉사일 기준 최소 1주일 전</strong>까지 카카오톡 문의를 통해 요청해 주셔야 합니다.<br/>
+                    * 봉사 일정 변경 및 취소는 <strong className="font-semibold text-gray-500">봉사일 기준 최소 1주일 전</strong>까지만 가능합니다.<br/>
                     * 일정 변경은 <strong className="font-semibold text-gray-500">현재 모집 중인 봉사</strong>로만 가능합니다.
                   </p>
                 </div>
@@ -489,9 +489,6 @@ export function MyRecord() {
                         <div className="flex-1 text-sm text-gray-800 font-medium leading-relaxed break-keep">
                           {opt.name}
                         </div>
-                      </div>
-                      <div className="pl-7 text-xs font-bold text-blue-600">
-                        잔여 인원: {opt.remaining}명
                       </div>
                     </label>
                   ))}
