@@ -633,17 +633,13 @@ function TabRanks() {
                       borderRadius: '10px', padding: '7px 14px',
                       boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
                     }}>
-                      <rank.Icon size={14} color="#fff" />
-                      <span style={{ color: '#fff', fontSize: '13px', fontWeight: '800' }}>{rank.badge}</span>
+                      <rank.Icon size={16} color="#fff" />
+                      <span style={{ color: '#fff', fontSize: '15px', fontWeight: '800' }}>{rank.title}</span>
                     </div>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: rank.color, background: `${rank.color}15`, padding: '4px 10px', borderRadius: '50px', border: `1px solid ${rank.border}` }}>
+                    <span style={{ fontSize: '13px', fontWeight: '700', color: rank.color, background: `${rank.color}15`, padding: '4px 10px', borderRadius: '50px', border: `1px solid ${rank.border}` }}>
                       {rank.count}
                     </span>
                   </div>
-
-                  <h3 style={{ color: '#1E3A5F', fontSize: '18px', fontWeight: '900', marginBottom: '14px' }}>
-                    {rank.title}
-                  </h3>
 
                   <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {rank.perks.map(p => (
