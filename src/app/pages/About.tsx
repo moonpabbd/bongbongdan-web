@@ -622,21 +622,21 @@ function TabRanks() {
                   background: rank.cardBg,
                   borderRadius: '22px',
                   border: `1px solid ${rank.border}`,
-                  padding: '28px',
+                  padding: '24px',
                   height: '100%',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', gap: '6px' }}>
                     <div style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '7px',
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
                       background: rank.gradient,
-                      borderRadius: '10px', padding: '7px 14px',
+                      borderRadius: '10px', padding: '6px 12px',
                       boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
                     }}>
-                      <rank.Icon size={16} color="#fff" />
-                      <span style={{ color: '#fff', fontSize: '15px', fontWeight: '800' }}>{rank.title}</span>
+                      <rank.Icon size={15} color="#fff" />
+                      <span style={{ color: '#fff', fontSize: '14px', fontWeight: '800', whiteSpace: 'nowrap' }}>{rank.title}</span>
                     </div>
-                    <span style={{ fontSize: '13px', fontWeight: '700', color: rank.color, background: `${rank.color}15`, padding: '4px 10px', borderRadius: '50px', border: `1px solid ${rank.border}` }}>
+                    <span style={{ fontSize: '13px', fontWeight: '700', color: rank.color, background: `${rank.color}15`, padding: '4px 8px', borderRadius: '50px', border: `1px solid ${rank.border}`, whiteSpace: 'nowrap' }}>
                       {rank.count}
                     </span>
                   </div>
