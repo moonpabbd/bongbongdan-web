@@ -7,6 +7,7 @@ const SOLAPI_API_SECRET  = '5XBABORHQJFEDT3SJYUOGWOXZ2WRDH8M';
 const SOLAPI_PF_ID       = 'KA01PF260220043757420jLYwT98C7yO';
 const SOLAPI_CANCEL_TEMPLATE_ID  = 'KA01TP260319051252554RUTb2PCmxJM';
 const SOLAPI_LEADER_TEMPLATE_ID  = 'KA01TP260319053226307zqWRbC3lzWJ';
+const SOLAPI_GATHERING_APPLY_TEMPLATE_ID = 'KA01TP2605010614275575G5WTtJ6WRe';
 const SOLAPI_SENDER      = '01050646613';
 
 // 직급 기준표
@@ -184,7 +185,16 @@ function doPost(e) {
       gatherRange.setFontWeight("normal");
       gatheringSheet.getRange(2, 6).setHorizontalAlignment("right");
       
-      // 운영진 이메일 알림 발송 (카톡 발송 생략)
+      // 신청자 본인에게 알림톡 발송
+      if (data.phone) {
+        sendAlimtalk(data.phone, SOLAPI_GATHERING_APPLY_TEMPLATE_ID, {
+          '#{이름}': data.name || "미상",
+          '#{모임명}': data.q1 || "미상",
+          '#{봉사명}': data.q1 || "미상"
+        });
+      }
+      
+      // 운영진 이메일 알림 발송
       try {
         var emailTitle = "[모임 활동] " + (data.name || "미상") + " 단원님 - " + (data.q1 || "미상") + " 신청";
         var emailBody = "새로운 모임 활동 신청이 접수되었습니다!\n\n" +
