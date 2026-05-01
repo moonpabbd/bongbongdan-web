@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock, History, ChevronDown, User, Award, CheckCircle, Lock, Sparkles, Star, Trophy } from 'lucide-react';
+import { Clock, History, ChevronDown, User, Award, CheckCircle, Lock, Sparkles, Star, Trophy, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router';
 import { prefetchRecord } from '../../utils/apiCache';
@@ -41,6 +41,11 @@ export function MyRecord() {
   const [error, setError] = useState('');
   const [pastLimit, setPastLimit] = useState(5);
   const [cancelingItem, setCancelingItem] = useState<string | null>(null);
+  const [changingItem, setChangingItem] = useState<string | null>(null);
+  const [availableDates, setAvailableDates] = useState<any[]>([]);
+  const [isLoadingDates, setIsLoadingDates] = useState(false);
+  const [selectedNewDate, setSelectedNewDate] = useState<string>('');
+  const [isChangeProcessing, setIsChangeProcessing] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -61,6 +66,72 @@ export function MyRecord() {
     };
     if (profile) fetchRecord();
   }, [profile]);
+
+  const handleChangeClick = async (scheduleText: string, dday: number | '?') => {
+    if (dday !== '?' && dday < 7) {
+      alert('일정 변경은 봉사일 기준 최소 1주일(7일) 전까지만 가능합니다.');
+      return;
+    }
+    setChangingItem(scheduleText);
+    setIsLoadingDates(true);
+    setSelectedNewDate('');
+    try {
+      const res = await fetch(GAS_URL);
+      const data = await res.json();
+      if (data && data.dates) {
+        setAvailableDates(data.dates.filter((d: any) => d.remaining > 0 && d.capacity > 0 && d.name !== scheduleText));
+      } else {
+        setAvailableDates([]);
+      }
+    } catch (err) {
+      alert('일정 목록을 불러오지 못했습니다.');
+    } finally {
+      setIsLoadingDates(false);
+    }
+  };
+
+  const submitChange = async () => {
+    if (!selectedNewDate) {
+      alert('변경할 일정을 선택해주세요.');
+      return;
+    }
+    if (!window.confirm('정말 해당 일정으로 변경하시겠습니까?\n기존에 입력하신 교통수단, 지하철역 등은 그대로 유지됩니다.')) return;
+
+    setIsChangeProcessing(true);
+    try {
+      const response = await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'changeVolunteer',
+          name: profile.name,
+          phone: profile.phone,
+          oldScheduleText: changingItem,
+          newScheduleText: selectedNewDate
+        })
+      });
+      const result = await response.json();
+      if (result.status === 'success') {
+        alert('일정 변경 처리가 완료되었습니다.\n새로운 일정에서 뵙겠습니다! 💛');
+        setRecord((prev: any) => {
+          const newUpcoming = prev.upcoming.map((u: any) => {
+            if (u.text === changingItem) {
+              return { ...u, text: selectedNewDate, dday: '?', time: 9999999999999 };
+            }
+            return u;
+          });
+          return { ...prev, upcoming: newUpcoming };
+        });
+        setChangingItem(null);
+      } else {
+        alert(result.message || '일정 변경 중 오류가 발생했습니다.');
+      }
+    } catch (err) {
+      alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setIsChangeProcessing(false);
+    }
+  };
 
   const handleCancel = async (scheduleText: string) => {
     const confirmMsg = `[${scheduleText}]\n해당 일정을 정말 취소하시겠습니까?\n\n※ 취소 전 반드시 확인해 주세요!\n본 봉사는 신청 인원을 기준으로 사전에 픽업 차량 배정, 봉사 물품 준비, 보호소 지원 등이 진행됩니다. 참가비는 노쇼 방지를 위한 필수 운영비로 사용되므로, 봉봉단 측 사유가 아닌 개인 사정으로 인한 취소 시 참가비 환불이 어렵습니다.\n\n위 내용을 모두 확인하였으며, 그래도 취소를 진행하시겠습니까?`;
@@ -296,14 +367,26 @@ export function MyRecord() {
                           </span>
                         )}
                         <div className="flex-1 text-sm font-semibold text-gray-700 leading-relaxed">{u.text}</div>
-                        <button 
-                          onClick={() => handleCancel(u.text)}
-                          disabled={cancelingItem === u.text}
-                          className="shrink-0 text-xs font-bold px-3 py-2 rounded-lg transition
-                                     bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 disabled:opacity-50"
-                        >
-                          {cancelingItem === u.text ? '처리 중...' : '취소하기'}
-                        </button>
+                        <div className="flex gap-2 shrink-0">
+                          <button 
+                            onClick={() => handleChangeClick(u.text, u.dday)}
+                            disabled={cancelingItem === u.text}
+                            className={`text-xs font-bold px-3 py-2 rounded-lg transition border disabled:opacity-50 ${
+                              u.dday !== '?' && u.dday < 7 
+                                ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed' 
+                                : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100'
+                            }`}
+                          >
+                            일정 변경
+                          </button>
+                          <button 
+                            onClick={() => handleCancel(u.text)}
+                            disabled={cancelingItem === u.text}
+                            className="text-xs font-bold px-3 py-2 rounded-lg transition bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 disabled:opacity-50"
+                          >
+                            {cancelingItem === u.text ? '처리 중...' : '취소하기'}
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -362,6 +445,78 @@ export function MyRecord() {
           </div>
         ) : null}
       </div>
+
+      {/* 일정 변경 모달 */}
+      {changingItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-[fadeIn_0.2s_ease]">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <h3 className="font-bold text-gray-800 text-lg">봉사 일정 변경</h3>
+              <button onClick={() => setChangingItem(null)} className="text-gray-400 hover:text-gray-600 transition">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-5 overflow-y-auto flex-1">
+              <div className="mb-5 bg-blue-50 text-blue-800 text-sm font-semibold p-3 rounded-xl border border-blue-100 leading-snug">
+                현재 일정:<br /> <span className="font-bold">{changingItem}</span>
+              </div>
+              
+              <h4 className="text-sm font-bold text-gray-700 mb-3">변경할 일정을 선택해주세요</h4>
+              
+              {isLoadingDates ? (
+                <div className="py-10 text-center text-gray-500 text-sm font-medium">봉사 일정을 불러오는 중...</div>
+              ) : availableDates.length === 0 ? (
+                <div className="py-10 text-center text-red-500 text-sm font-bold bg-red-50 rounded-xl">현재 변경 가능한 모집 중인 일정이 없습니다.</div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {availableDates.map((opt, i) => (
+                    <label 
+                      key={i} 
+                      className={`flex flex-col gap-1.5 p-4 border rounded-xl cursor-pointer transition ${
+                        selectedNewDate === opt.name ? 'border-blue-500 bg-blue-50/30 ring-1 ring-blue-500' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <input 
+                          type="radio" 
+                          name="newDate" 
+                          value={opt.name}
+                          checked={selectedNewDate === opt.name} 
+                          onChange={(e) => setSelectedNewDate(e.target.value)} 
+                          className="mt-1 w-4 h-4 text-blue-600"
+                        />
+                        <div className="flex-1 text-sm text-gray-800 font-medium leading-relaxed break-keep">
+                          {opt.name}
+                        </div>
+                      </div>
+                      <div className="pl-7 text-xs font-bold text-blue-600">
+                        잔여 인원: {opt.remaining}명
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 border-t border-gray-100 flex gap-3 bg-white">
+              <button 
+                onClick={() => setChangingItem(null)}
+                className="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition"
+              >
+                닫기
+              </button>
+              <button 
+                onClick={submitChange}
+                disabled={!selectedNewDate || isChangeProcessing || availableDates.length === 0}
+                className="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isChangeProcessing ? '변경 중...' : '변경 확정'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
