@@ -79,7 +79,8 @@ export function MyRecord() {
       const res = await fetch(GAS_URL);
       const data = await res.json();
       if (data && data.dates) {
-        setAvailableDates(data.dates.filter((d: any) => d.remaining > 0 && d.capacity > 0 && d.name !== scheduleText));
+        const myUpcomingSchedules = record?.upcoming?.map((u: any) => u.text) || [];
+        setAvailableDates(data.dates.filter((d: any) => d.remaining > 0 && d.capacity > 0 && !myUpcomingSchedules.includes(d.name)));
       } else {
         setAvailableDates([]);
       }
