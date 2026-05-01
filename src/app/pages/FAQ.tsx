@@ -240,7 +240,7 @@ export function FAQ() {
                           </div>
                           {isOpen && (
                             <div style={{ padding: '0 24px 22px' }}>
-                              <p style={{ color: '#4B5563', fontSize: '14px', lineHeight: '1.8', borderTop: '1px solid rgba(200,150,62,0.15)', paddingTop: '16px' }}>
+                              <p style={{ color: '#4B5563', fontSize: '14px', lineHeight: '1.8', borderTop: '1px solid rgba(200,150,62,0.15)', paddingTop: '16px', whiteSpace: 'pre-wrap' }}>
                                 {item.a}
                               </p>
                             </div>
